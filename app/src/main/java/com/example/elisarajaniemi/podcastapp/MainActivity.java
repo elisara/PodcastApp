@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,11 +26,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private ImageButton menuBtn;
     private Spinner spinner;
-
     private MenuFragment mf;
     private TextView title;
-
-    private boolean menuOpen;
+    private boolean menuOpen, categoryOpen;
+    private Button categoryBtn;
+    private CategoryFragment cf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         addItemsOnSpinner();
 
         menuOpen = false;
+        categoryOpen = false;
+
+        mf = new MenuFragment();
+        cf = new CategoryFragment();
 
         menuBtn = (ImageButton) findViewById(R.id.menuBtn);
         menuBtn.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +68,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
+
+        categoryBtn = (Button) findViewById(R.id.categoryBtn);
+        categoryBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                if(categoryOpen == false) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frag_container, cf).commit();
+                    categoryOpen = true;
+                }
+                else{
+                    getSupportFragmentManager().beginTransaction()
+                            .remove(cf).commit();
+                    categoryOpen = false;
+                }
+
+                System.out.println("menu clicked");
+
+            }
+        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,10 +122,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void addItemsOnSpinner() {
-        List<String> list = new ArrayList<String>();
-        list.add("NAME");
-        list.add("NEW");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.sort_array, android.R.layout.simple_spinner_item);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         System.out.println("added items to spinner");

@@ -23,7 +23,6 @@ import static android.content.Context.MODE_APPEND;
 
 public class MenuFragment extends Fragment {
 
-    private Button close;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
