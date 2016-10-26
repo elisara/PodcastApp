@@ -8,10 +8,4 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/search"
-        android:orderInCategory="100"
-        android:title="search"
-        android:src="@drawable/ic_favorite_black_24dp"
-        app:showAsAction="always" />
 </menu>
