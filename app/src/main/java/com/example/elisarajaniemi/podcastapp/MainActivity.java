@@ -28,9 +28,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner spinner;
     private MenuFragment mf;
     private TextView title;
-    private boolean menuOpen, categoryOpen;
+    private boolean categoryOpen, menuOpen;
     private Button categoryBtn;
     private CategoryFragment cf;
+    private SerieFragment sf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +49,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mf = new MenuFragment();
         cf = new CategoryFragment();
+        sf = new SerieFragment();
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.frag_container, sf).commit();
 
         menuBtn = (ImageButton) findViewById(R.id.menuBtn);
         menuBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 if(menuOpen == false) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frag_container, mf).commit();
+                            .replace(R.id.menu_frag_container, mf).commit();
                     menuOpen = true;
                 }
                 else{
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
+
 
         categoryBtn = (Button) findViewById(R.id.categoryBtn);
         categoryBtn.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     getSupportFragmentManager().beginTransaction()
                             .remove(cf).commit();
                     categoryOpen = false;
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.frag_container, sf).commit();
                 }
 
                 System.out.println("menu clicked");
@@ -141,5 +148,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
     }
+
+
 
 }

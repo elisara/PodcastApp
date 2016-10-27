@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@color/colorPrimary"
+    android:orientation="horizontal"
+    android:background="@android:color/transparent"
     android:layout_width="wrap_content"
-    android:padding="16dp"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="Testi Testi Testi Testi Testi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <ListView
+        android:background="@color/colorPrimary"
+        android:id="@+id/menuListView"
+        android:layout_width="200dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+    </ListView>
+
+    <Button
+        android:id="@+id/closeMenu"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </Button>
 
 </LinearLayout>
