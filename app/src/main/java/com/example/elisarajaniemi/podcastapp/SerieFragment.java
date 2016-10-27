@@ -46,7 +46,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         t.start();
 
         final ArrayList<String> list = new ArrayList<>();
-        list.add("item1");
+        list.add("koira");
         list.add("item2");
         list.add("item3");
         list.add("item4");
