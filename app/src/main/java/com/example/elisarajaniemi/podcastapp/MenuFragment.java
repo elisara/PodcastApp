@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class MenuFragment extends Fragment {
 
 
+    //comment
     private ListView listView;
     private SerieArrayAdapter adapter;
     private Button closeMenu;
