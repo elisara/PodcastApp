@@ -12,6 +12,16 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -27,9 +37,13 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private Button categoryBtn;
     private boolean categoryOpen;
     private CategoryFragment cf;
+    private String apiKey;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Thread t = new Thread(r);
+        t.start();
 
         final ArrayList<String> list = new ArrayList<>();
         list.add("item1");
@@ -84,6 +98,61 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
         return view;
     }
+
+    Runnable r = new Runnable() {
+        public void run() {
+            try
+
+            {
+
+                URL url = new URL("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setDoOutput(true);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+
+                String input = "{\"username\":\"podcast\",\"password\":\"podcast16\"}";
+
+                OutputStream os = conn.getOutputStream();
+                os.write(input.getBytes());
+                os.flush();
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        (conn.getInputStream())));
+
+                String output;
+                System.out.println("Output from Server .... \n");
+                while ((output = br.readLine()) != null) {
+                    try {
+                        JSONObject jObject = new JSONObject(output);
+                        apiKey = jObject.getString("api_key");
+                    }catch (JSONException e){
+                        System.out.println(e);
+                    }
+                }
+
+                conn.disconnect();
+
+            } catch (
+                    MalformedURLException e
+                    )
+
+            {
+
+                e.printStackTrace();
+
+            } catch (
+                    IOException e
+                    )
+
+            {
+
+                e.printStackTrace();
+
+            }
+        }
+
+    };
 
     public void addItemsOnSpinner() {
         ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort_array, android.R.layout.simple_spinner_item);
