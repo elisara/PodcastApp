@@ -22,14 +22,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class MainActivity extends AppCompatActivity {
 
     private ImageButton menuBtn;
-    private Spinner spinner;
     private MenuFragment mf;
     private TextView title;
     private boolean categoryOpen, menuOpen;
-    private Button categoryBtn;
     private CategoryFragment cf;
     private SerieFragment sf;
 
@@ -40,9 +38,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         title = (TextView) toolbar.findViewById(R.id.title);
-        spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setOnItemSelectedListener(this);
-        addItemsOnSpinner();
 
         menuOpen = false;
         categoryOpen = false;
@@ -73,28 +68,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-
-        categoryBtn = (Button) findViewById(R.id.categoryBtn);
-        categoryBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                if(categoryOpen == false) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frag_container, cf).commit();
-                    categoryOpen = true;
-                }
-                else{
-                    getSupportFragmentManager().beginTransaction()
-                            .remove(cf).commit();
-                    categoryOpen = false;
-                    getSupportFragmentManager().beginTransaction()
-                            .add(R.id.frag_container, sf).commit();
-                }
-
-                System.out.println("menu clicked");
-
-            }
-        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -127,28 +100,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         return super.onOptionsItemSelected(item);
     }
-
-    public void addItemsOnSpinner() {
-        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.sort_array, android.R.layout.simple_spinner_item);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
-        System.out.println("added items to spinner");
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String value = parent.getItemAtPosition(position).toString();
-        if(value.contains("NAME")){
-            System.out.println("SORT: NAME");
-        }
-        else if(value.contains("NEW")){
-            System.out.println("SORT: NEW");
-        }
-    }
-    public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
-    }
-
 
 
 }
