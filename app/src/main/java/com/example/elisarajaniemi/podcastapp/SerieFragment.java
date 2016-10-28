@@ -1,6 +1,8 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,9 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+
+
+
         Thread t = new Thread(r);
         t.start();
 
@@ -64,18 +69,21 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         categoryBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                if(categoryOpen == false) {
+                /**if(categoryOpen == false) {
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frag_container, cf).commit();
+                            .replace(R.id.frag_container, cf).commit();*/
+                    Intent i = new Intent(getContext(), MyPreferencesActivity.class);
+                    startActivity(i);
                     categoryOpen = true;
-                }
+                /** }
                 else{
-                    getActivity().getSupportFragmentManager().beginTransaction()
+                   getActivity().getSupportFragmentManager().beginTransaction()
                             .remove(cf).commit();
+
                     categoryOpen = false;
                    // getActivity().getSupportFragmentManager().beginTransaction()
                     //        .add(R.id.frag_container, sf).commit();
-                }
+                } */
 
                 System.out.println("menu clicked");
 
