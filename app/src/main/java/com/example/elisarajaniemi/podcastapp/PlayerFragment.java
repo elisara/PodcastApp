@@ -61,10 +61,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         mediaPlayer.setOnBufferingUpdateListener(this);
         mediaPlayer.setOnCompletionListener(this);
 
-
-
-
-
         return view;
 
     }
@@ -76,7 +72,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
                 break;
             case R.id.replayBtn:
-
+                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition()-10000);
                 break;
             case R.id.playBtn:
                 try {
@@ -99,6 +95,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 primarySeekBarProgressUpdater();
                 break;
             case R.id.forwardBtn:
+
+                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition()+10000);
+
 
                 break;
             case R.id.speedBtn:
