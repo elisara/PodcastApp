@@ -39,6 +39,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private Button categoryBtn;
     private boolean categoryOpen;
     private CategoryFragment cf;
+    private PlayerFragment pf;
     private String apiKey;
 
     @Override
@@ -61,6 +62,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         addItemsOnSpinner();
 
         cf = new CategoryFragment();
+        pf = new PlayerFragment();
 
         categoryBtn = (Button) view.findViewById(R.id.categoryBtn);
         categoryBtn.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +82,8 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 String value = list.get(position);
                 System.out.println(value);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frag_container, pf).commit();
             }
 
         });
