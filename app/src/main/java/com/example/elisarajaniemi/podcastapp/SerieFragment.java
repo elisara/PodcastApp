@@ -1,8 +1,10 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,12 +44,26 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private CategoryFragment cf;
     private PlayerFragment pf;
     private String apiKey;
+    public boolean history;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Thread t = new Thread(r);
         t.start();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        history = prefs.getBoolean("history", true);
+        System.out.println("History in series onCreateView: " + history);
+
+        if(history == false){
+            Toast.makeText(getActivity(), "False",
+                    Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(getActivity(), "True",
+                    Toast.LENGTH_LONG).show();
+        }
 
         final ArrayList<String> list = new ArrayList<>();
         list.add("kissat");
@@ -137,6 +154,8 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
     };
 
+
+
     public void addItemsOnSpinner() {
         ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort_array, android.R.layout.simple_spinner_item);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -157,6 +176,8 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
     }
+
+
 
 
 }
