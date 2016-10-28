@@ -45,9 +45,6 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
-
-
         Thread t = new Thread(r);
         t.start();
 
