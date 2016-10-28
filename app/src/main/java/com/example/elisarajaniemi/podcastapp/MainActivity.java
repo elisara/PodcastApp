@@ -3,6 +3,7 @@ package com.example.elisarajaniemi.podcastapp;
 import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -105,4 +106,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
 }
+
