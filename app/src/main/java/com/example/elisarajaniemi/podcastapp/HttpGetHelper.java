@@ -3,10 +3,15 @@ package com.example.elisarajaniemi.podcastapp;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,22 +20,23 @@ import java.net.URL;
  * Created by jari on 28/10/2016.
  */
 
-public class HttpGetHelper extends AsyncTask<String , Void ,String> {
+public class HttpGetHelper extends AsyncTask<String, Void, String> {
     String server_response;
+    boolean postDone = false;
+    String apiKey;
 
     @Override
     protected String doInBackground(String... strings) {
 
         URL url;
         HttpURLConnection urlConnection = null;
-
         try {
             url = new URL(strings[0]);
             urlConnection = (HttpURLConnection) url.openConnection();
 
             int responseCode = urlConnection.getResponseCode();
 
-            if(responseCode == HttpURLConnection.HTTP_OK){
+            if (responseCode == HttpURLConnection.HTTP_OK) {
                 server_response = readStream(urlConnection.getInputStream());
                 Log.v("CatalogClient", server_response);
             }
@@ -41,7 +47,9 @@ public class HttpGetHelper extends AsyncTask<String , Void ,String> {
             e.printStackTrace();
         }
 
+
         return null;
+
     }
 
     @Override
@@ -53,7 +61,7 @@ public class HttpGetHelper extends AsyncTask<String , Void ,String> {
 
     }
 
-// Converting InputStream to String
+    // Converting InputStream to String
     private String readStream(InputStream in) {
         BufferedReader reader = null;
         StringBuffer response = new StringBuffer();

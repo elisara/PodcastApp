@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * Created by Elisa Rajaniemi on 27.10.2016.
  */
 
-public class SerieFragment extends Fragment implements AdapterView.OnItemSelectedListener{
+public class SerieFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private ListView listView;
     private SerieArrayAdapter adapter;
@@ -75,7 +75,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         });
 
         listView = (ListView) view.findViewById(R.id.serieList);
-        adapter = new SerieArrayAdapter(getContext(),list);
+        adapter = new SerieArrayAdapter(getContext(), list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -87,16 +87,12 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             }
 
         });
-
-        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&format=mp3&link=true&category=%20");
-
         return view;
     }
 
     Runnable r = new Runnable() {
         public void run() {
-            try
-            {
+            try {
                 URL url = new URL("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
@@ -118,16 +114,16 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
                     try {
                         JSONObject jObject = new JSONObject(output);
                         apiKey = jObject.getString("api_key");
-                        System.out.println("ApiKey: "+apiKey);
-                    }catch (JSONException e){
+                        System.out.println(apiKey);
+                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20");
+                    } catch (JSONException e) {
                         System.out.println(e);
                     }
                 }
                 conn.disconnect();
             } catch (
                     MalformedURLException e
-                    )
-            {
+                    ) {
                 e.printStackTrace();
 
             } catch (
@@ -151,13 +147,13 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String value = parent.getItemAtPosition(position).toString();
-        if(value.contains("NAME")){
+        if (value.contains("NAME")) {
             System.out.println("SORT: NAME");
-        }
-        else if(value.contains("NEW")){
+        } else if (value.contains("NEW")) {
             System.out.println("SORT: NEW");
         }
     }
+
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
     }
