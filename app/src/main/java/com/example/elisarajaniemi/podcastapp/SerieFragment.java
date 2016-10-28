@@ -102,6 +102,8 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
         });
 
+        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&format=mp3&link=true&category=%20");
+
         return view;
     }
 
