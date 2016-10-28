@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.menu_frag_container, mf).commit();
                     menuOpen = true;
+                    System.out.println("DICKS OUT FOR HARAMBE!!!");
                 }
                 else{
                     getSupportFragmentManager().beginTransaction()
