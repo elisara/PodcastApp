@@ -19,12 +19,10 @@
         android:orientation="vertical">
 
         <SeekBar
-            android:id="@+id/seek1"
+            android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:progress="20"
-            android:secondaryProgress="20"
             android:layout_weight="1"
             />
 
