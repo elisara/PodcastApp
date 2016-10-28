@@ -54,7 +54,6 @@ public class HttpGetHelper extends AsyncTask<String , Void ,String> {
     }
 
 // Converting InputStream to String
-
     private String readStream(InputStream in) {
         BufferedReader reader = null;
         StringBuffer response = new StringBuffer();

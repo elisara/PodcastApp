@@ -67,34 +67,16 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         categoryBtn = (Button) view.findViewById(R.id.categoryBtn);
         categoryBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                /**if(categoryOpen == false) {
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frag_container, cf).commit();*/
-                    Intent i = new Intent(getContext(), MyPreferencesActivity.class);
-                    startActivity(i);
-                    categoryOpen = true;
-                /** }
-                else{
-                   getActivity().getSupportFragmentManager().beginTransaction()
-                            .remove(cf).commit();
-
-                    categoryOpen = false;
-                   // getActivity().getSupportFragmentManager().beginTransaction()
-                    //        .add(R.id.frag_container, sf).commit();
-                } */
-
-                System.out.println("menu clicked");
+                Intent i = new Intent(getContext(), MyPreferencesActivity.class);
+                startActivity(i);
+                categoryOpen = true;
 
             }
         });
 
-
-
         listView = (ListView) view.findViewById(R.id.serieList);
         adapter = new SerieArrayAdapter(getContext(),list);
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
@@ -114,9 +96,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     Runnable r = new Runnable() {
         public void run() {
             try
-
             {
-
                 URL url = new URL("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
@@ -138,19 +118,16 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
                     try {
                         JSONObject jObject = new JSONObject(output);
                         apiKey = jObject.getString("api_key");
+                        System.out.println("ApiKey: "+apiKey);
                     }catch (JSONException e){
                         System.out.println(e);
                     }
                 }
-
                 conn.disconnect();
-
             } catch (
                     MalformedURLException e
                     )
-
             {
-
                 e.printStackTrace();
 
             } catch (
@@ -158,9 +135,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
                     )
 
             {
-
                 e.printStackTrace();
-
             }
         }
 
