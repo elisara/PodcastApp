@@ -1,28 +1,43 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.support.v7.app.AppCompatActivity;
+import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.Button;
 
 /**
  * Created by Elisa Rajaniemi on 28.10.2016.
  */
 
-public class MyPreferencesActivity extends AppCompatActivity {
+public class MyPreferencesActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new MyPreferenceFragment()).commit();
-    }
+        setContentView(R.layout.preference_layout);
 
-    public static class MyPreferenceFragment extends PreferenceFragment {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.displayPrefs, new MyPreferenceFragment()).commit();
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        Button button = (Button) findViewById(R.id.close);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+    }
+    public static class MyPreferenceFragment extends PreferenceFragment  {
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+
         }
+
     }
 
 }
