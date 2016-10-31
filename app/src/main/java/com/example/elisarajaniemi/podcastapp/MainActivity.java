@@ -31,9 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton menuBtn;
     private MenuFragment mf;
     private TextView title;
-    private boolean categoryOpen, menuOpen;
+    public boolean categoryOpen, menuOpen;
     private CategoryFragment cf;
     private SerieFragment sf;
+    private TextView playlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
