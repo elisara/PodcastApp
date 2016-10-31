@@ -1,24 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:background="@android:color/transparent"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:background="@color/colorPrimary"
-        android:id="@+id/menuListView"
-        android:layout_width="200dp"
+    <LinearLayout
         android:layout_weight="1"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:paddingTop="30dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent">
-    </ListView>
 
-    <Button
-        android:id="@+id/closeMenu"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
+    <LinearLayout
+        android:id="@+id/loggedIn"
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/profileIcon"
+                android:src="@drawable/ic_favorite_black_24dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/username"
+                android:text="Username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/playlists"
+            android:text="Playlists"
+            android:clickable="true"
+            android:paddingTop="16dp"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/favorites"
+            android:text="Favorites"
+            android:clickable="true"
+            android:paddingTop="16dp"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/queue"
+            android:text="Queue"
+            android:clickable="true"
+            android:paddingTop="16dp"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/history"
+            android:text="History"
+            android:clickable="true"
+            android:paddingTop="16dp"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/continuePlaying"
+            android:text="Continue playing"
+            android:clickable="true"
+            android:paddingTop="16dp"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/settings"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/autoplay"
+            android:text="Autoplay"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/signIn"
+            android:text="Login/Register"
+            android:clickable="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/outside"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent">
-    </Button>
+    </FrameLayout>
 
 </LinearLayout>
