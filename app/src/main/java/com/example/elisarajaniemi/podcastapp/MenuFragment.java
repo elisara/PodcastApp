@@ -38,7 +38,7 @@ public class MenuFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(MenuFragment.this).commit();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                       .replace(R.id.frag_container, plf).commit();
+                       .replace(R.id.frag_container, plf).addToBackStack( "tag" ).commit();
 
 
             }

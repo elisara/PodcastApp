@@ -31,10 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton menuBtn;
     private MenuFragment mf;
     private TextView title;
-    public boolean categoryOpen, menuOpen;
+    private boolean categoryOpen, menuOpen;
     private CategoryFragment cf;
     private SerieFragment sf;
-    private TextView playlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.menu_frag_container, mf).commit();
                     menuOpen = true;
-                    System.out.println("DICKS OUT FOR HARAMBE!!!");
                 }
                 else{
                     getSupportFragmentManager().beginTransaction()
@@ -76,14 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
     }
 
     @Override

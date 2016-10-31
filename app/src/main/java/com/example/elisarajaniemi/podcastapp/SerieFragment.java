@@ -45,6 +45,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private PlayerFragment pf;
     private String apiKey;
     public boolean history;
+    private SingleSerieFragment ssf;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,8 +100,9 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 String value = list.get(position);
                 System.out.println(value);
+                ssf = new SingleSerieFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, pf).commit();
+                        .replace(R.id.frag_container, ssf).addToBackStack( "tag" ).commit();
             }
 
         });
