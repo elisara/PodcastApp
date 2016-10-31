@@ -23,8 +23,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.apiKey;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,10 +46,15 @@ public class MainActivity extends AppCompatActivity {
     private boolean categoryOpen, menuOpen;
     private CategoryFragment cf;
     private SerieFragment sf;
+    private String apiKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Thread t = new Thread(r);
+        t.start();
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -56,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         menuBtn = (ImageButton) findViewById(R.id.menuBtn);
         menuBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(menuOpen == false) {
+                if (menuOpen == false) {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.menu_frag_container, mf).commit();
                     menuOpen = true;
@@ -105,11 +122,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
         sf.history = prefs.getBoolean("history", true);
-        if(sf.history == false){
+        if (sf.history == false) {
             Toast.makeText(this, "False",
                     Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             Toast.makeText(this, "True",
                     Toast.LENGTH_LONG).show();
         }
@@ -121,6 +137,52 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    Runnable r = new Runnable() {
+        public void run() {
+            try {
+                URL url = new URL("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setDoOutput(true);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+
+                String input = "{\"username\":\"podcast\",\"password\":\"podcast16\"}";
+
+                OutputStream os = conn.getOutputStream();
+                os.write(input.getBytes());
+                os.flush();
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        (conn.getInputStream())));
+
+                String output;
+                System.out.println("Output from Server .... \n");
+                while ((output = br.readLine()) != null) {
+                    try {
+                        JSONObject jObject = new JSONObject(output);
+                        apiKey = jObject.getString("api_key");
+                        System.out.println(apiKey);
+                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true");
+                    } catch (JSONException e) {
+                        System.out.println(e);
+                    }
+                }
+                conn.disconnect();
+            } catch (
+                    MalformedURLException e
+                    ) {
+                e.printStackTrace();
+
+            } catch (
+                    IOException e
+                    )
+
+            {
+                e.printStackTrace();
+            }
+        }
+
+    };
 
 
 }
