@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Category things
         sf.history = prefs.getBoolean("history", true);
         if(sf.history == false){
             Toast.makeText(this, "False",
