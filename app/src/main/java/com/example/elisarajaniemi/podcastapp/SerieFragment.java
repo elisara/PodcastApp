@@ -45,11 +45,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         //Thread t = new Thread(r);
         //t.start();
 
-        itemsAdded = false;
-
-        httpGetHelper = new HttpGetHelper();
-
-        //new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
+        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         history = prefs.getBoolean("history", true);

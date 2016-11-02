@@ -1,8 +1,13 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,11 +28,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private MediaPlayer mediaPlayer;
     private int mediaFileLengthInMilliseconds;
     private final Handler handler = new Handler();
+    private boolean serviceStarted = false;
+
+    MainActivity mActivity;
+
     static final String AUDIO_PATH =
             "http://dev.mw.metropolia.fi//aanimaisema//filestore//4//4_06d78bfc816994c//44_9074990dfa84c42.mp3?v=2016-10-27+13%3A29%3A30";
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.mActivity = (MainActivity) getActivity();
         View view = inflater.inflate(R.layout.play_screen, container, false);
 
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
@@ -65,42 +76,47 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     }
 
+
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
             case R.id.sleepBtn:
 
                 break;
             case R.id.replayBtn:
-                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition()-10000);
+                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() - 10000);
                 break;
             case R.id.playBtn:
-                try {
-                    mediaPlayer.setDataSource(AUDIO_PATH); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
-                    mediaPlayer.prepare(); // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-                mediaFileLengthInMilliseconds = mediaPlayer.getDuration(); // gets the song length in milliseconds from URL
-
-                if(!mediaPlayer.isPlaying()){
-                    mediaPlayer.start();
+                if(!serviceStarted) {
+                    Intent podcast = new Intent(getActivity(), PlayService.class);
+                    getActivity().startService(podcast);
+                    serviceStarted = true;
                     playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
-                }else {
-                    mediaPlayer.pause();
-                    playBtn.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
+                }else{
+                    if(mActivity.pServ.isPlaying()){
+                        mActivity.pServ.pauseMusic();
+                        playBtn.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
+
+                    }else {
+                        mActivity.pServ.resumeMusic();
+                        playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
+                    }
                 }
+
+                mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration(); // gets the song length in milliseconds from URL
 
                 primarySeekBarProgressUpdater();
                 break;
             case R.id.forwardBtn:
 
-                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition()+10000);
+                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() + 10000);
 
 
                 break;
             case R.id.speedBtn:
+
+
 
                 break;
             case R.id.previousBtn:
@@ -125,14 +141,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     private void primarySeekBarProgressUpdater() {
-        seekbar.setProgress((int)(((float)mediaPlayer.getCurrentPosition()/mediaFileLengthInMilliseconds)*100)); // This math construction give a percentage of "was playing"/"song length"
-        if (mediaPlayer.isPlaying()) {
+        seekbar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mediaFileLengthInMilliseconds) * 100)); // This math construction give a percentage of "was playing"/"song length"
+        if (mActivity.mIsBound) {
             Runnable notification = new Runnable() {
                 public void run() {
                     primarySeekBarProgressUpdater();
                 }
             };
-            handler.postDelayed(notification,1000);
+            handler.postDelayed(notification, 1000);
         }
     }
 
@@ -141,10 +157,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public boolean onTouch(View v, MotionEvent event) {
 
 
-        if(v.getId() == R.id.seekBar){
+        if (v.getId() == R.id.seekBar) {
             /** Seekbar onTouch event handler. Method which seeks MediaPlayer to seekBar primary progress position*/
-            if(mediaPlayer.isPlaying()){
-                SeekBar sb = (SeekBar)v;
+            if (mediaPlayer.isPlaying()) {
+                SeekBar sb = (SeekBar) v;
                 int playPositionInMillisecconds = (mediaFileLengthInMilliseconds / 100) * sb.getProgress();
                 mediaPlayer.seekTo(playPositionInMillisecconds);
             }
@@ -152,25 +168,30 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         return false;
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         killMediaPlayer();
     }
+
     private void killMediaPlayer() {
-        if(mediaPlayer!=null) {
+        if (mediaPlayer != null) {
             try {
                 mediaPlayer.release();
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
+
+
+
     public void onCompletion(MediaPlayer mp) {
         /** MediaPlayer onCompletion event handler. Method which calls then song playing is complete*/
         playBtn.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
     }
+
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
         /** Method which updates the SeekBar secondary progress by current song loading from URL position*/
         seekbar.setSecondaryProgress(percent);
