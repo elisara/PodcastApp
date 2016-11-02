@@ -49,14 +49,6 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         history = prefs.getBoolean("history", true);
         System.out.println("History in series onCreateView: " + history);
 
-        if (history == false) {
-            Toast.makeText(getActivity(), "False",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getActivity(), "True",
-                    Toast.LENGTH_LONG).show();
-        }
-
         final ArrayList<String> list = new ArrayList<>();
         list.add("kissat");
         list.add("koira");

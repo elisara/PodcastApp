@@ -1,16 +1,21 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -24,6 +29,7 @@ public class PlaylistsFragment extends Fragment {
     private ListView listView;
     private SerieArrayAdapter adapter;
     private MenuFragment mf;
+    private String playlistName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,8 +62,40 @@ public class PlaylistsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+
+                // set title
+                alertDialogBuilder.setTitle("Create new playlist");
+
+                // set dialog message
+                alertDialogBuilder.setMessage("Name of the playlist:");
+
+                //editText in dialog
+                final EditText input = new EditText(getActivity());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+                alertDialogBuilder.setView(input);
+
+                //alertDialogBuilder.setCancelable(false)
+                alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                playlistName = input.getText().toString();
+                                Toast.makeText(getContext(), "Playlist "+ playlistName +" created", Toast.LENGTH_SHORT).show();
+                                list.add(playlistName);
+
+                            }
+                        })
+                        .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
 

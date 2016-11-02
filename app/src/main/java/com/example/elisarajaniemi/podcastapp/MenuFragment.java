@@ -1,14 +1,20 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Elisa Rajaniemi on 26.10.2016.
@@ -22,11 +28,15 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private PlaylistsFragment plf;
     private SinglePlaylistFragment splf;
     private MenuFragment mf;
+    private String password_, password2_, username_, email_;
+    private boolean registered;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.menu_layout, container, false);
+
+        registered = false;
 
         playList = (TextView) view.findViewById(R.id.playlists);
         favorite = (TextView) view.findViewById(R.id.favorites);
@@ -94,10 +104,111 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.signIn:
-                System.out.println("SIGNIN");
-                Dialog dialog = new Dialog(getActivity());
-                dialog.setTitle("Custom Dialog");
-                dialog.show();
+
+                //LOGIN
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                alertDialogBuilder.setTitle("Login");
+
+                //editTexts in dialog
+                LinearLayout lp = new LinearLayout(getContext());
+                lp.setOrientation(LinearLayout.VERTICAL);
+                lp.setPadding(16,16,16,16);
+
+                final EditText username = new EditText(getActivity());
+                username.setHint("Username");
+                lp.addView(username);
+
+                final EditText password = new EditText(getActivity());
+                password.setHint("Password");
+                lp.addView(password);
+
+                final EditText email = new EditText(getActivity());
+                email.setHint("Email");
+                lp.addView(email);
+
+                final Button register = new Button(getActivity());
+                register.setText("Register");
+                lp.addView(register);
+
+                alertDialogBuilder.setView(lp);
+
+
+                //REGISTER
+                register.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                        alertDialogBuilder.setTitle("Register");
+
+                        //editText in dialog
+                        LinearLayout lp = new LinearLayout(getContext());
+                        lp.setOrientation(LinearLayout.VERTICAL);
+                        lp.setPadding(16,16,16,16);
+
+                        final EditText username = new EditText(getActivity());
+                        username.setHint("Username");
+                        lp.addView(username);
+
+                        final EditText password = new EditText(getActivity());
+                        password.setHint("Password");
+                        lp.addView(password);
+
+                        final EditText password2 = new EditText(getActivity());
+                        password2.setHint("Confirm password");
+                        lp.addView(password2);
+
+                        final EditText email = new EditText(getActivity());
+                        email.setHint("Email");
+                        lp.addView(email);
+                        alertDialogBuilder.setView(lp);
+
+                        alertDialogBuilder.setPositiveButton("Register",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                username_ = username.getText().toString();
+                                password_ = password.getText().toString();
+                                password2_ = password2.getText().toString();
+                                email_ = email.getText().toString();
+                                Toast.makeText(getContext(), "User "+ username_ +" created", Toast.LENGTH_SHORT).show();
+                                registered = true;
+
+                            }
+                        })
+                                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        // create alert dialog
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+
+                    }
+                });
+
+
+                //alertDialogBuilder.setCancelable(false)
+                alertDialogBuilder.setPositiveButton("Login",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        username_ = username.getText().toString();
+                        password_ = password.getText().toString();
+                        email_ = email.getText().toString();
+                        Toast.makeText(getContext(), "User "+ username_ +" logged in", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                        .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+                if(registered == true){
+                    alertDialog.cancel();
+                }
 
                 break;
 

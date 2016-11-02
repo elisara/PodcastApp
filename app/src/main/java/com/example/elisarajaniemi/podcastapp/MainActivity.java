@@ -89,9 +89,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
     }
 
     @Override
@@ -122,13 +119,13 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
         sf.history = prefs.getBoolean("history", true);
+        /**
         if (sf.history == false) {
-            Toast.makeText(this, "False",
-                    Toast.LENGTH_LONG).show();
+
         } else {
-            Toast.makeText(this, "True",
-                    Toast.LENGTH_LONG).show();
+
         }
+         */
     }
 
     @Override
