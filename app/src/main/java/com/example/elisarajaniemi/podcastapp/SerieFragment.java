@@ -17,16 +17,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -45,22 +35,24 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private PlayerFragment pf;
     private String apiKey;
     public boolean history;
+    private SingleSerieFragment ssf;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Thread t = new Thread(r);
-        t.start();
+        //Thread t = new Thread(r);
+        //t.start();
+
+        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         history = prefs.getBoolean("history", true);
         System.out.println("History in series onCreateView: " + history);
 
-        if(history == false){
+        if (history == false) {
             Toast.makeText(getActivity(), "False",
                     Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             Toast.makeText(getActivity(), "True",
                     Toast.LENGTH_LONG).show();
         }
@@ -99,62 +91,14 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 String value = list.get(position);
                 System.out.println(value);
+                ssf = new SingleSerieFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, pf).commit();
+                        .replace(R.id.frag_container, ssf).addToBackStack( "tag" ).commit();
             }
 
         });
         return view;
     }
-
-    Runnable r = new Runnable() {
-        public void run() {
-            try {
-                URL url = new URL("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-
-                String input = "{\"username\":\"podcast\",\"password\":\"podcast16\"}";
-
-                OutputStream os = conn.getOutputStream();
-                os.write(input.getBytes());
-                os.flush();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
-
-                String output;
-                System.out.println("Output from Server .... \n");
-                while ((output = br.readLine()) != null) {
-                    try {
-                        JSONObject jObject = new JSONObject(output);
-                        apiKey = jObject.getString("api_key");
-                        System.out.println(apiKey);
-                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20");
-                    } catch (JSONException e) {
-                        System.out.println(e);
-                    }
-                }
-                conn.disconnect();
-            } catch (
-                    MalformedURLException e
-                    ) {
-                e.printStackTrace();
-
-            } catch (
-                    IOException e
-                    )
-
-            {
-                e.printStackTrace();
-            }
-        }
-
-    };
-
-
 
     public void addItemsOnSpinner() {
         ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort_array, android.R.layout.simple_spinner_item);
@@ -176,8 +120,4 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
     }
-
-
-
-
 }
