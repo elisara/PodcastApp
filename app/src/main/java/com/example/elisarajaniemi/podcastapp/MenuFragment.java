@@ -30,6 +30,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private MenuFragment mf;
     private String password_, password2_, username_, email_;
     private boolean registered;
+    AlertDialog alertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -106,7 +107,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
             case R.id.signIn:
 
                 //LOGIN
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                 alertDialogBuilder.setTitle("Login");
 
                 //editTexts in dialog
@@ -132,11 +133,30 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
                 alertDialogBuilder.setView(lp);
 
+                alertDialogBuilder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        username_ = username.getText().toString();
+                        password_ = password.getText().toString();
+                        email_ = email.getText().toString();
+                        Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+
+                // create alert dialog
+                alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
 
                 //REGISTER
                 register.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                         alertDialogBuilder.setTitle("Register");
 
                         //editText in dialog
@@ -169,6 +189,8 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                                 email_ = email.getText().toString();
                                 Toast.makeText(getContext(), "User "+ username_ +" created", Toast.LENGTH_SHORT).show();
                                 registered = true;
+                                alertDialog.cancel();
+                                //alertDialogBuilder.
 
                             }
                         })
@@ -179,36 +201,11 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                                 });
 
                         // create alert dialog
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        alertDialog.show();
+                        AlertDialog alertDialog2 = alertDialogBuilder.create();
+                        alertDialog2.show();
 
                     }
                 });
-
-
-                //alertDialogBuilder.setCancelable(false)
-                alertDialogBuilder.setPositiveButton("Login",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                        username_ = username.getText().toString();
-                        password_ = password.getText().toString();
-                        email_ = email.getText().toString();
-                        Toast.makeText(getContext(), "User "+ username_ +" logged in", Toast.LENGTH_SHORT).show();
-
-                    }
-                })
-                        .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-
-                if(registered == true){
-                    alertDialog.cancel();
-                }
 
                 break;
 
