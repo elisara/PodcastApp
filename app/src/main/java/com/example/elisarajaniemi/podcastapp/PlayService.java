@@ -101,7 +101,9 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         mPlayer.release();
         mPlayer = null;
     }
-
+    public void setPosition(int position){
+        this.length = position;
+    }
 
 
     @Override

@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Kade on 28.10.2016.
  */
 
-public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, OnBufferingUpdateListener, OnCompletionListener {
+public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, OnBufferingUpdateListener, OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     private ImageView sleepBtn, replayBtn, playBtn, forwardBtn, speedBtn, previousBtn, nextBtn, queueBtn, playlistBtn, favoriteBtn, shareBtn;
     private SeekBar seekbar;
     private TextView currentTime, fullTime;
@@ -33,6 +33,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private int mediaFileLengthInMilliseconds;
     private final Handler handler = new Handler();
     private boolean serviceStarted = false;
+    private Utilities utils;
 
     MainActivity mActivity;
 
@@ -43,6 +44,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.mActivity = (MainActivity) getActivity();
+        utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
 
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
@@ -75,10 +77,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         currentTime = (TextView) view.findViewById(R.id.currentTime) ;
         fullTime = (TextView) view.findViewById(R.id.fullTime) ;
+        currentTime.setText("00:00");
+        fullTime.setText("00:00");
 
         mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
         mActivity.pServ.mPlayer.setOnCompletionListener(this);
+        seekbar.setOnSeekBarChangeListener(this);
 
+        utils = new Utilities();
         return view;
 
     }
@@ -91,7 +97,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
                 break;
             case R.id.replayBtn:
-                mActivity.pServ.mPlayer.seekTo(mediaPlayer.getCurrentPosition() - 10000);
+                mActivity.pServ.setPosition( mActivity.pServ.mPlayer.getCurrentPosition() - 10000);
+                mActivity.pServ.mPlayer.seekTo( mActivity.pServ.mPlayer.getCurrentPosition() - 10000);
                 break;
             case R.id.playBtn:
 
@@ -112,11 +119,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 }
 
                 mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration(); // gets the song length in milliseconds from URL
-                primarySeekBarProgressUpdater();
+                updateProgressBar();
                 break;
             case R.id.forwardBtn:
-                mActivity.pServ.mPlayer.seekTo(mediaPlayer.getCurrentPosition() + 10000);
-                break;
+                mActivity.pServ.setPosition( mActivity.pServ.mPlayer.getCurrentPosition() + 10000);
+                mActivity.pServ.mPlayer.seekTo( mActivity.pServ.mPlayer.getCurrentPosition() + 10000);
+               break;
             case R.id.speedBtn:
 
                 break;
@@ -141,27 +149,67 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         }
     }
 
-    private void primarySeekBarProgressUpdater() {
-        seekbar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mediaFileLengthInMilliseconds) * 100)); // This math construction give a percentage of "was playing"/"song length"
-        int millis = mActivity.pServ.mPlayer.getCurrentPosition();
-        int millisLeft = mActivity.pServ.mPlayer.getDuration()-mActivity.pServ.mPlayer.getCurrentPosition();
 
-        currentTime.setText(String.format("%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(millis),
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))));
-        fullTime.setText(String.format("%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(millisLeft),
-                TimeUnit.MILLISECONDS.toSeconds(millisLeft) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisLeft))));
-        if (mActivity.mIsBound) {
-            Runnable notification = new Runnable() {
-                public void run() {
-                    primarySeekBarProgressUpdater();
-                }
-            };
-            handler.postDelayed(notification, 1000);
+    /**
+     * Update timer on seekbar
+     * */
+    public void updateProgressBar() {
+        handler.postDelayed(mUpdateTimeTask, 100);
+    }
+
+    /**
+     * Background Runnable thread
+     * */
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            int millis = mActivity.pServ.mPlayer.getCurrentPosition();
+            int millisLeft = mActivity.pServ.mPlayer.getDuration()-mActivity.pServ.mPlayer.getCurrentPosition();
+
+            // Displaying Total Duration time
+            fullTime.setText(""+utils.milliSecondsToTimer(millisLeft));
+            // Displaying time completed playing
+            currentTime.setText(""+utils.milliSecondsToTimer(millis));
+
+            // Updating progress bar
+            seekbar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mediaFileLengthInMilliseconds) * 100)); // This math construction give a percentage of "was playing"/"song length"
+
+
+            // Running this thread after 100 milliseconds
+           handler.postDelayed(this, 100);
         }
+    };
+    /**
+     *
+     * */
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
+
+    }
+
+    /**
+     * When user starts moving the progress handler
+     * */
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        // remove message Handler from updating progress bar
+        handler.removeCallbacks(mUpdateTimeTask);
+    }
+
+    /**
+     * When user stops moving the progress hanlder
+     * */
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        handler.removeCallbacks(mUpdateTimeTask);
+        int totalDuration = mActivity.pServ.mPlayer.getDuration();
+        int currentPosition = utils.progressToTimer(seekBar.getProgress(), totalDuration);
+
+        // forward or backward to certain seconds
+
+        mActivity.pServ.mPlayer.seekTo(currentPosition);
+
+        // update timer progress again
+        updateProgressBar();
     }
 
     @Override
@@ -173,12 +221,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             if (mActivity.mIsBound) {
                 SeekBar sb = (SeekBar) v;
                 int playPositionInMillisecconds = (mediaFileLengthInMilliseconds / 100) * sb.getProgress();
+                mActivity.pServ.setPosition( playPositionInMillisecconds);
                 mActivity.pServ.mPlayer.seekTo(playPositionInMillisecconds);
             }
         }
 
         return false;
     }
+
+
 
     @Override
     public void onDestroy() {
@@ -207,5 +258,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         /** Method which updates the SeekBar secondary progress by current song loading from URL position*/
         seekbar.setSecondaryProgress(percent);
     }
+
+
 }
 
