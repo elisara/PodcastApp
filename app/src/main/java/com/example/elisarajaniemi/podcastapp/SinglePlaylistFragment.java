@@ -33,21 +33,21 @@ public class SinglePlaylistFragment extends Fragment {
         list.add("podcast4");
          */
 
-        /**listView = (ListView) view.findViewById(R.id.single_playlist_list);
-        adapter = new SerieArrayAdapter(getContext(), httpGetHelper.getResults());
+        listView = (ListView) view.findViewById(R.id.single_playlist_list);
+        adapter = new SerieArrayAdapter(getContext(), PodcastItems.getInstance().getItems());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                String value = list.get(position).toString();
-                System.out.println(value);
+                //String value = list.get(position).toString();
+                //System.out.println(value);
                 PlayerFragment pf = new PlayerFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                        .replace(R.id.frag_container, pf).addToBackStack( "tag" ).commit();
             }
 
         });
-*/
+
         return view;
     }
 }

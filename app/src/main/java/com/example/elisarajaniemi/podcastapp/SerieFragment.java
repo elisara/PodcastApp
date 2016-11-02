@@ -3,7 +3,6 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,9 +14,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 /**
  * Created by Elisa Rajaniemi on 27.10.2016.
@@ -35,7 +31,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private PlayerFragment pf;
     private String apiKey;
     public boolean history;
-    private SingleSerieFragment ssf;
+    private EpisodesFragment ef;
     private HttpGetHelper httpGetHelper;
     private boolean itemsAdded;
 
@@ -92,11 +88,15 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                //String value = httpGetHelper.getResults().get(position).title;
+                PodcastItem pi = PodcastItems.getInstance().getItems().get(position);
                 //System.out.println(value);
-                ssf = new SingleSerieFragment();
+                //ELISA JATKAA TÄSTÄ
+                //TEE LISTA TÄMÄN COLLECTION ID:N EPISODEISTA JA SIIRRÄ NE EPISODES FRAGMENTTIIN
+                //pi.collectionID
+
+                ef = new EpisodesFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, ssf).addToBackStack("tag").commit();
+                        .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
             }
 
         });

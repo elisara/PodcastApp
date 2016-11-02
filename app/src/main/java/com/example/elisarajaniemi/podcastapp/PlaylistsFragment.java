@@ -45,13 +45,13 @@ public class PlaylistsFragment extends Fragment {
          */
 
         listView = (ListView) view.findViewById(R.id.playlist_list);
-        adapter = new SerieArrayAdapter(getContext(), list);
+        adapter = new SerieArrayAdapter(getContext(), PodcastItems.getInstance().getItems());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                String value = list.get(position).toString();
-                System.out.println(value);
+                //String value = list.get(position).toString();
+                //System.out.println(value);
                 SinglePlaylistFragment splf = new SinglePlaylistFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
