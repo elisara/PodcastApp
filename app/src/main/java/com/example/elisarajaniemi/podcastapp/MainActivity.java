@@ -2,8 +2,13 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.app.ActionBar;
 import android.app.FragmentManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -46,6 +51,21 @@ public class MainActivity extends AppCompatActivity {
     private boolean categoryOpen, menuOpen;
     private CategoryFragment cf;
     private SerieFragment sf;
+    boolean mIsBound = false;
+    PlayService pServ;
+    public ServiceConnection Scon =new ServiceConnection(){
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            pServ = ((PlayService.ServiceBinder) service).getService();
+        }
+
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            pServ = null;
+        }
+
+    };
     private String apiKey;
 
     @Override
@@ -66,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
         mf = new MenuFragment();
         cf = new CategoryFragment();
         sf = new SerieFragment();
+        pServ = new PlayService();
+
+        doBindService();
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.frag_container, sf).commit();
@@ -83,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                             .remove(mf).commit();
                     menuOpen = false;
                 }
-
                 System.out.println("menu clicked");
 
             }
@@ -125,6 +147,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
         }
+            super.onResume();
+
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        doUnbindService();
+        pServ.onDestroy();
          */
     }
 
@@ -182,5 +212,19 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
+    void doBindService(){
+        bindService(new Intent(this,PlayService.class),
+                Scon,Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindService()
+    {
+        if(mIsBound)
+        {
+            unbindService(Scon);
+            mIsBound = false;
+        }
+    }
 }
 
