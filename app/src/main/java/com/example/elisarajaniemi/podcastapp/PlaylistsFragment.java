@@ -37,20 +37,21 @@ public class PlaylistsFragment extends Fragment {
 
         mf = new MenuFragment();
 
-        final ArrayList<String> list = new ArrayList<>();
-        list.add("playlist1");
+        final ArrayList<PodcastItem> list = new ArrayList<>();
+        /**list.add("playlist1");
         list.add("playlist2");
         list.add("playlist3");
         list.add("playlist4");
+         */
 
         listView = (ListView) view.findViewById(R.id.playlist_list);
-        adapter = new SerieArrayAdapter(getContext(), list);
+        adapter = new SerieArrayAdapter(getContext(), PodcastItems.getInstance().getItems());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                String value = list.get(position);
-                System.out.println(value);
+                //String value = list.get(position).toString();
+                //System.out.println(value);
                 SinglePlaylistFragment splf = new SinglePlaylistFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
@@ -83,7 +84,7 @@ public class PlaylistsFragment extends Fragment {
                             public void onClick(DialogInterface dialog,int id) {
                                 playlistName = input.getText().toString();
                                 Toast.makeText(getContext(), "Playlist "+ playlistName +" created", Toast.LENGTH_SHORT).show();
-                                list.add(playlistName);
+                                //list.add(playlistName);
 
                             }
                         })

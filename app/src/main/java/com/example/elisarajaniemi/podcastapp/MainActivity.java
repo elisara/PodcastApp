@@ -73,8 +73,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        HttpGetHelper httpGetHelper = new HttpGetHelper();
+
         Thread t = new Thread(r);
         t.start();
+
+
+        //System.out.println("Main activity arraylist: " + httpGetHelper.getResults());
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

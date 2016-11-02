@@ -16,6 +16,10 @@ public class PodcastItem {
     public int collectionID;
     public String imageURL;
 
+    public PodcastItem(){
+
+    }
+
     public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL){
 
         this.title = title;

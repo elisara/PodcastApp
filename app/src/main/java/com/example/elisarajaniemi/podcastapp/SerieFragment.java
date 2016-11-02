@@ -3,7 +3,6 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,9 +14,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 /**
  * Created by Elisa Rajaniemi on 27.10.2016.
@@ -35,7 +31,9 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private PlayerFragment pf;
     private String apiKey;
     public boolean history;
-    private SingleSerieFragment ssf;
+    private EpisodesFragment ef;
+    private HttpGetHelper httpGetHelper;
+    private boolean itemsAdded;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,20 +41,29 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         //Thread t = new Thread(r);
         //t.start();
 
-        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
+        //new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
+
+        httpGetHelper = new HttpGetHelper();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         history = prefs.getBoolean("history", true);
         System.out.println("History in series onCreateView: " + history);
 
-        final ArrayList<String> list = new ArrayList<>();
+
+        /**final ArrayList<String> list = new ArrayList<>();
+
         list.add("kissat");
         list.add("koira");
         list.add("item2");
         list.add("item3");
         list.add("item4");
         list.add("item5");
-
+        System.out.println("Array size SerieFragment: " + httpGetHelper.getResults().size());
+        for (int i = 0; i < httpGetHelper.getResults().size(); i++) {
+            list.add(httpGetHelper.getResults().get(i).title);
+            System.out.println(httpGetHelper.executed);
+        }*/
+        //itemsAdded = true;
         View view = inflater.inflate(R.layout.serie_layout, container, false);
         spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
@@ -76,19 +83,25 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         });
 
         listView = (ListView) view.findViewById(R.id.serieList);
-        adapter = new SerieArrayAdapter(getContext(), list);
+        adapter = new SerieArrayAdapter(getContext(), PodcastItems.getInstance().getItems());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                String value = list.get(position);
-                System.out.println(value);
-                ssf = new SingleSerieFragment();
+                PodcastItem pi = PodcastItems.getInstance().getItems().get(position);
+                //System.out.println(value);
+                //ELISA JATKAA TÄSTÄ
+                //TEE LISTA TÄMÄN COLLECTION ID:N EPISODEISTA JA SIIRRÄ NE EPISODES FRAGMENTTIIN
+                //pi.collectionID
+
+                ef = new EpisodesFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, ssf).addToBackStack( "tag" ).commit();
+                        .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
             }
 
         });
+
+        System.out.println("PodcastItems: " + httpGetHelper.podcastItems);
         return view;
     }
 
