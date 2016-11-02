@@ -18,24 +18,28 @@ public class SinglePlaylistFragment extends Fragment {
 
     private ListView listView;
     private SerieArrayAdapter adapter;
+    private  HttpGetHelper httpGetHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
 
-        final ArrayList<String> list = new ArrayList<>();
-        list.add("podcast1");
+        httpGetHelper = new HttpGetHelper();
+
+        final ArrayList<PodcastItem> list = new ArrayList<>();
+        /**list.add("podcast1");
         list.add("podcast2");
         list.add("podcast3");
         list.add("podcast4");
+         */
 
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
-        adapter = new SerieArrayAdapter(getContext(), list);
+        adapter = new SerieArrayAdapter(getContext(), httpGetHelper.getResults());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                String value = list.get(position);
+                String value = list.get(position).toString();
                 System.out.println(value);
                 PlayerFragment pf = new PlayerFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()

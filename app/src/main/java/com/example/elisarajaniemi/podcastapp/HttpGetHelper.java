@@ -24,9 +24,13 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
 
     String result = "";
     public ArrayList<PodcastItem> podcastItems = new ArrayList<>();
+    public boolean executed;
+    private SerieFragment serieFragment;
 
     protected void onPreExecute() {
         super.onPreExecute();
+        serieFragment = new SerieFragment();
+        executed = false;
     }
 
     @Override
@@ -55,11 +59,12 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
             }
             result = buffer.toString();
 
-            try {
+            /**try {
                 JSONArray jArray = new JSONArray(result);
                 for (int i = 0; i < jArray.length(); i++) {
 
                     JSONArray finalArray = jArray.getJSONArray(i);
+                    //System.out.println("Final Array info: " + finalArray.toString());
                     for (int j = 0; j < finalArray.length(); j++) {
 
                         JSONObject jObject = finalArray.getJSONObject(j);
@@ -69,13 +74,15 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
                                 jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
 
                         podcastItems.add(podcastItem);
+                        System.out.println("Podcast info: " + podcastItem.title);
                     }
 
                 } // End Loop
-                System.out.println("PodcastItems array: " + podcastItems.get(2).title.toString());
+                executed = true;
+                System.out.println("Array size: " + podcastItems.size());
             } catch (JSONException e) {
                 Log.e("JSONException", "Error: " + e.toString());
-            } // catch (JSONException e)
+            } // catch (JSONException e)*/
 
 
         } catch (MalformedURLException e) {
@@ -95,15 +102,43 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
             }
         }
 
-        return null;
+        return result;
     }
 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        System.out.println("onPostExecute: " + result);
+        try {
+            JSONArray jArray = new JSONArray(result);
+            for (int i = 0; i < jArray.length(); i++) {
+
+                JSONArray finalArray = jArray.getJSONArray(i);
+                //System.out.println("Final Array info: " + finalArray.toString());
+                for (int j = 0; j < finalArray.length(); j++) {
+
+                    JSONObject jObject = finalArray.getJSONObject(j);
+
+                    PodcastItem podcastItem = new PodcastItem(jObject.getString("Title"), jObject.getString("Download link"), jObject.getString("Description"),
+                            jObject.getInt("Length (sec)"), jObject.getString("Tags"), jObject.getString("Tags"), jObject.getString("Collection name"),
+                            jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
+
+                    podcastItems.add(podcastItem);
+                    System.out.println("Podcast info: " + podcastItem.title);
+                }
+
+            } // End Loop
+            executed = true;
+            System.out.println("onPostExecute Array size: " + podcastItems.size());
+            System.out.println("onPostExecute getResults: " + getResults().get(0).title);
+        } catch (JSONException e) {
+            Log.e("JSONException", "Error: " + e.toString());
+        }
+
     }
 
     public ArrayList<PodcastItem> getResults(){
+        System.out.println("GetResults: " + result);
         return this.podcastItems;
     }
 

@@ -15,9 +15,11 @@ import java.util.Date;
  * Created by Elisa Rajaniemi on 27.10.2016.
  */
 
-public class SerieArrayAdapter extends ArrayAdapter<String> {
+public class SerieArrayAdapter extends ArrayAdapter<PodcastItem> {
 
-    public SerieArrayAdapter(Context context, ArrayList<String> list) {
+    PodcastItem value;
+
+    public SerieArrayAdapter(Context context, ArrayList<PodcastItem> list) {
         super(context, 0, list);
     }
 
@@ -25,12 +27,12 @@ public class SerieArrayAdapter extends ArrayAdapter<String> {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
 
-                String value = getItem(position);
+                 value = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.serie_list_item, parent, false);
         }
         TextView tv = (TextView) convertView.findViewById(R.id.serieName);
-        tv.setText(value);
+        tv.setText(value.title);
         return convertView;
     }
 

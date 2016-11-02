@@ -36,6 +36,8 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private String apiKey;
     public boolean history;
     private SingleSerieFragment ssf;
+    private HttpGetHelper httpGetHelper;
+    private boolean itemsAdded;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,28 +45,31 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         //Thread t = new Thread(r);
         //t.start();
 
-        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
+        itemsAdded = false;
+
+        httpGetHelper = new HttpGetHelper();
+
+        //new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         history = prefs.getBoolean("history", true);
         System.out.println("History in series onCreateView: " + history);
 
-        if (history == false) {
-            Toast.makeText(getActivity(), "False",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getActivity(), "True",
-                    Toast.LENGTH_LONG).show();
-        }
 
-        final ArrayList<String> list = new ArrayList<>();
+        /**final ArrayList<String> list = new ArrayList<>();
+
         list.add("kissat");
         list.add("koira");
         list.add("item2");
         list.add("item3");
         list.add("item4");
         list.add("item5");
-
+        System.out.println("Array size SerieFragment: " + httpGetHelper.getResults().size());
+        for (int i = 0; i < httpGetHelper.getResults().size(); i++) {
+            list.add(httpGetHelper.getResults().get(i).title);
+            System.out.println(httpGetHelper.executed);
+        }*/
+        //itemsAdded = true;
         View view = inflater.inflate(R.layout.serie_layout, container, false);
         spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
@@ -84,19 +89,21 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         });
 
         listView = (ListView) view.findViewById(R.id.serieList);
-        adapter = new SerieArrayAdapter(getContext(), list);
+        adapter = new SerieArrayAdapter(getContext(), httpGetHelper.getResults());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                String value = list.get(position);
+                String value = httpGetHelper.getResults().get(position).title;
                 System.out.println(value);
                 ssf = new SingleSerieFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, ssf).addToBackStack( "tag" ).commit();
+                        .replace(R.id.frag_container, ssf).addToBackStack("tag").commit();
             }
 
         });
+
+        System.out.println("PodcastItems: " + httpGetHelper.podcastItems);
         return view;
     }
 
