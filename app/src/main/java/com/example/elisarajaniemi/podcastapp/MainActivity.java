@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         t.start();
 
 
-        System.out.println("Main activity arraylist: " + httpGetHelper.getResults());
+        //System.out.println("Main activity arraylist: " + httpGetHelper.getResults());
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

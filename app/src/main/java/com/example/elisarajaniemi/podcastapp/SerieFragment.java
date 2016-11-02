@@ -45,7 +45,9 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         //Thread t = new Thread(r);
         //t.start();
 
-        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
+        //new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
+
+        httpGetHelper = new HttpGetHelper();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         history = prefs.getBoolean("history", true);
@@ -85,13 +87,13 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         });
 
         listView = (ListView) view.findViewById(R.id.serieList);
-        adapter = new SerieArrayAdapter(getContext(), httpGetHelper.getResults());
+        adapter = new SerieArrayAdapter(getContext(), PodcastItems.getInstance().getItems());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                String value = httpGetHelper.getResults().get(position).title;
-                System.out.println(value);
+                //String value = httpGetHelper.getResults().get(position).title;
+                //System.out.println(value);
                 ssf = new SingleSerieFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frag_container, ssf).addToBackStack("tag").commit();

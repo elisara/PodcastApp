@@ -84,7 +84,7 @@ public class PlaylistsFragment extends Fragment {
                             public void onClick(DialogInterface dialog,int id) {
                                 playlistName = input.getText().toString();
                                 Toast.makeText(getContext(), "Playlist "+ playlistName +" created", Toast.LENGTH_SHORT).show();
-                                list.add(playlistName);
+                                //list.add(playlistName);
 
                             }
                         })

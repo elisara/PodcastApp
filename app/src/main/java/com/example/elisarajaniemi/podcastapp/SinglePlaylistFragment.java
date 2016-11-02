@@ -33,7 +33,7 @@ public class SinglePlaylistFragment extends Fragment {
         list.add("podcast4");
          */
 
-        listView = (ListView) view.findViewById(R.id.single_playlist_list);
+        /**listView = (ListView) view.findViewById(R.id.single_playlist_list);
         adapter = new SerieArrayAdapter(getContext(), httpGetHelper.getResults());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -47,7 +47,7 @@ public class SinglePlaylistFragment extends Fragment {
             }
 
         });
-
+*/
         return view;
     }
 }
