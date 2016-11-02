@@ -10,6 +10,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name="PlayService"
+            android:enabled="true" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
