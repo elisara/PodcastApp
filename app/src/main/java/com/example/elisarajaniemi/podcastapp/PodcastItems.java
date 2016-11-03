@@ -23,6 +23,7 @@ public class PodcastItems {
         if(!items.contains(item)){
             items.add(item);
         }
+
     }
 
     public ArrayList<PodcastItem> getItems(){

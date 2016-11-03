@@ -19,16 +19,36 @@ public class EpisodesFragment extends Fragment {
     private ListView listView;
     private EpisodeListArrayAdapter adapter;
     private HttpGetHelper httpGetHelper;
+    private String message;
+    private ArrayList<PodcastItem> allList, list;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        message = getArguments().getString("message");
+        System.out.println("IN EPISODES!");
+        System.out.println("Collection ID from SerieFragment: " + message);
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
-
         httpGetHelper = new HttpGetHelper();
 
+        list = new ArrayList<>();
+        allList = new ArrayList<>();
+        list.clear();
+        allList.clear();
+        allList = PodcastItems.getInstance().getItems();
+        System.out.println("AllList: " + allList.get(0).title);
+
+        for(int i = 0; i < allList.size(); i++){
+            if(allList.get(i).collectionName.equals(message)){
+                this.list.add(allList.get(i));
+                //System.out.println("Listassa: " + allList.get(i));
+            }
+
+        }
+
+        //System.out.println("listan eka: " + list.get(0).title);
 
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
-        adapter = new EpisodeListArrayAdapter(getContext(), PodcastItems.getInstance().getItems() );
+        adapter = new EpisodeListArrayAdapter(getContext(), list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -36,6 +56,7 @@ public class EpisodesFragment extends Fragment {
                 //String value = httpGetHelper.getResults().get(position).title;
                 //System.out.println(value);
                 PlayerFragment pf = new PlayerFragment();
+
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frag_container, pf).addToBackStack( "tag" ).commit();
             }
