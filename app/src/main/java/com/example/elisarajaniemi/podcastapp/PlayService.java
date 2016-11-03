@@ -1,11 +1,16 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
 
 /**
@@ -18,6 +23,9 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     MediaPlayer mPlayer;
     private int length = 0;
     private String audioPath;
+
+
+
 
     public PlayService() {
     }
@@ -36,7 +44,6 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     @Override
     public void onCreate() {
         super.onCreate();
-
 
 
         mPlayer = new MediaPlayer();
@@ -63,7 +70,26 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //mPlayer.start();
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_favorite_black_24dp)
+                        .setContentTitle("My notification")
+                        .setContentText("Hello World!");
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.putExtra("fragment_name","PlayerFragment");
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        int mNotificationId = 001;
+        mNotificationManager.notify(mNotificationId, mBuilder.build());
+
+
         return START_STICKY;
     }
     public boolean isPlaying(){
@@ -79,6 +105,8 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         }
 
     }
+
+
 
 
     public void playMusic() {

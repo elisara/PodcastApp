@@ -84,8 +84,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
 
         seekbar.setOnSeekBarChangeListener(this);
-
         utils = new Utilities();
+
+
 
 
         return view;
