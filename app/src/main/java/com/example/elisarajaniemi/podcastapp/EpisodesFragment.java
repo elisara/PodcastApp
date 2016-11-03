@@ -21,56 +21,40 @@ public class EpisodesFragment extends Fragment {
     private EpisodeListArrayAdapter adapter;
     private HttpGetHelper httpGetHelper;
     private String message;
-    private ArrayList<PodcastItem> allList, list;
+    public ArrayList<PodcastItem> list;
+    private PodcastItem pi;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        message = getArguments().getString("message");
-        System.out.println("IN EPISODES!");
-        System.out.println("Collection ID from SerieFragment: " + message);
+        pi = (PodcastItem) getArguments().getSerializable("message");
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
         httpGetHelper = new HttpGetHelper();
 
-        list = new ArrayList<>();
-        allList = new ArrayList<>();
-        list.clear();
-        allList.clear();
-        allList = PodcastItems.getInstance().getItems();
-        System.out.println("AllList: " + allList.get(0).title);
+        PodcastItems.getInstance().getEpisodes().clear();
 
-        for(int i = 0; i < allList.size(); i++){
-            if(allList.get(i).collectionName.equals(message)){
-                this.list.add(allList.get(i));
-                //System.out.println("Listassa: " + allList.get(i));
+        System.out.println("List size in ef: " + PodcastItems.getInstance().getEpisodes().size());
+
+            for(int i = 0; i < PodcastItems.getInstance().getItems().size(); i++) {
+                if (PodcastItems.getInstance().getItems().get(i).collectionName.equals(pi.collectionName)) {
+                    PodcastItems.getInstance().addEpisodes(PodcastItems.getInstance().getItems().get(i));
+                }
             }
 
-        }
 
-        //System.out.println("listan eka: " + list.get(0).title);
 
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
-        adapter = new EpisodeListArrayAdapter(getContext(), list);
+        adapter = new EpisodeListArrayAdapter(getContext(), PodcastItems.getInstance().getEpisodes());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                //String value = httpGetHelper.getResults().get(position).title;
-                //System.out.println(value);
-                PlayerFragment pf = new PlayerFragment();
-                String episodeUrl = list.get(position).url;
+
+                PodcastItem pi = PodcastItems.getInstance().getItems().get(position);
 
                 Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                intent.putExtra("episodeUrl", episodeUrl);
+                intent.putExtra("episode", pi);
                 getActivity().startActivity(intent);
 
-                /**
-                Intent intent2 = new Intent(getContext(), PlayService.class) ;
-                intent2.putExtra("episodeName", episodeName);
-                getActivity().startService(intent2);
-
-
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, pf).addToBackStack( "tag" ).commit();*/
             }
 
         });
