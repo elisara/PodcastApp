@@ -33,18 +33,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private final Handler handler = new Handler();
     private boolean serviceStarted = false;
     private Utilities utils;
-    String episodeName;
+    String episodeUrl;
 
     MainActivity mActivity;
 
-    static final String AUDIO_PATH =
-            "http://dev.mw.metropolia.fi//aanimaisema//filestore//4//4_06d78bfc816994c//44_9074990dfa84c42.mp3?v=2016-10-27+13%3A29%3A30";
+    private String audioPath;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("PLAYER FRAGMENT");
         this.mActivity = (MainActivity) getActivity();
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
+        episodeUrl = getArguments().getString("episodeUrl");
+        System.out.println("episodeUrl in playerFragment: " + episodeUrl);
 
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
@@ -84,8 +87,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         utils = new Utilities();
 
-        episodeName = getArguments().getString("episodeUrl");
-        System.out.println("episodeUrl in playerFragment: " + episodeName);
 
         return view;
 
@@ -108,7 +109,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                     Intent podcast = new Intent(getActivity(), PlayService.class);
                     getActivity().startService(podcast);
                     serviceStarted = true;
-                    mActivity.pServ.setAudioPath(AUDIO_PATH);
+                    mActivity.pServ.setAudioPath(episodeUrl);
                     mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
                     mActivity.pServ.mPlayer.setOnCompletionListener(this);
                     mActivity.pServ.playMusic();
