@@ -17,9 +17,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     private final IBinder mBinder = new ServiceBinder();
     MediaPlayer mPlayer;
     private int length = 0;
-    static final String AUDIO_PATH =
-            "http://dev.mw.metropolia.fi//aanimaisema//filestore//4//4_06d78bfc816994c//44_9074990dfa84c42.mp3?v=2016-10-27+13%3A29%3A30";
-
+    private String audioPath;
 
     public PlayService() {
     }
@@ -44,12 +42,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         mPlayer = new MediaPlayer();
         mPlayer.setOnErrorListener(this);
 
-        try {
-            mPlayer.setDataSource(AUDIO_PATH); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
-            mPlayer.prepare(); // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         if (mPlayer != null) {
             mPlayer.setLooping(true);
@@ -70,18 +63,28 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mPlayer.start();
+        //mPlayer.start();
         return START_STICKY;
     }
     public boolean isPlaying(){
         return mPlayer.isPlaying();
     }
 
+    public void setAudioPath(String audioPath){
+        try {
+            mPlayer.setDataSource(audioPath); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
+            mPlayer.prepare(); // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public void playMusic() {
         if (!mPlayer.isPlaying()) {
             mPlayer.start();
-            length = mPlayer.getCurrentPosition();
+
 
         }
     }public void pauseMusic() {
