@@ -1,6 +1,7 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.app.ActionBar;
+import android.app.ActivityManager;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -105,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (playerFragment != null) {
             if (playerFragment.equals("PlayerFragment")) {
-                fragmentTransaction.add(R.id.frag_container, pf).commit();
+                fragmentTransaction.add(R.id.frag_container, pf).addToBackStack("tag").commit();
             }
 
         }else{
-            fragmentTransaction.add(R.id.frag_container, sf).commit();
+            fragmentTransaction.add(R.id.frag_container, sf).addToBackStack("tag").commit();
         }
 
 
@@ -203,6 +204,16 @@ public class MainActivity extends AppCompatActivity {
         doUnbindService();
         pServ.onDestroy();
          */
+    }
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())&&pServ.isStarted()) {
+
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
