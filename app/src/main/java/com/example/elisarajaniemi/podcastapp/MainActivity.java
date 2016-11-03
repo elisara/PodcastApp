@@ -131,19 +131,18 @@ public class MainActivity extends AppCompatActivity {
         ef.setArguments(bundle);
 
         Intent intent2 = getIntent();
-        String episodeName = intent2.getStringExtra("episodeName");
-        System.out.println("EpisodeName in MAIN:" + episodeName);
+        String episodeUrl = intent2.getStringExtra("episodeUrl");
+        System.out.println("episodeUrl in MAIN:" + episodeUrl);
         Bundle bundle2 = new Bundle();
-        bundle2.putString("episodeName", episodeName);
+        bundle2.putString("episodeUrl", episodeUrl);
         pf.setArguments(bundle2);
-
 
         if(message != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
         }
 
-        if(episodeName != null){
+        if(episodeUrl != null){
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, pf).addToBackStack("tag").commit();
         }

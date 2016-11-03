@@ -57,13 +57,18 @@ public class EpisodesFragment extends Fragment {
                 //String value = httpGetHelper.getResults().get(position).title;
                 //System.out.println(value);
                 PlayerFragment pf = new PlayerFragment();
-                String episodeName = list.get(position).title;
+                String episodeUrl = list.get(position).url;
 
                 Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                intent.putExtra("episodeName", episodeName);
+                intent.putExtra("episodeUrl", episodeUrl);
                 getActivity().startActivity(intent);
 
                 /**
+                Intent intent2 = new Intent(getContext(), PlayService.class) ;
+                intent2.putExtra("episodeName", episodeName);
+                getActivity().startService(intent2);
+
+
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frag_container, pf).addToBackStack( "tag" ).commit();*/
             }
