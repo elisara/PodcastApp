@@ -29,7 +29,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private ImageView sleepBtn, replayBtn, playBtn, forwardBtn, speedBtn, previousBtn, nextBtn, queueBtn, playlistBtn, favoriteBtn, shareBtn;
     private SeekBar seekbar;
     private TextView currentTime, fullTime;
-    private MediaPlayer mediaPlayer;
+
     private int mediaFileLengthInMilliseconds;
     private final Handler handler = new Handler();
     private boolean serviceStarted = false;
@@ -42,11 +42,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             "http://dev.mw.metropolia.fi//aanimaisema//filestore//4//4_06d78bfc816994c//44_9074990dfa84c42.mp3?v=2016-10-27+13%3A29%3A30";
 
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         System.out.println("PLAYER FRAGMENT");
-        episodeName = getArguments().getString("episodeName");
         this.mActivity = (MainActivity) getActivity();
+        episodeName = getArguments().getString("episodeName");
+
         System.out.println("Episodename in playerFragment: " + episodeName);
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
@@ -84,8 +87,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         currentTime.setText("00:00");
         fullTime.setText("00:00");
 
-        mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
-        mActivity.pServ.mPlayer.setOnCompletionListener(this);
+        //mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
+        //mActivity.pServ.mPlayer.setOnCompletionListener(this);
         seekbar.setOnSeekBarChangeListener(this);
 
         utils = new Utilities();
@@ -110,6 +113,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                     Intent podcast = new Intent(getActivity(), PlayService.class);
                     getActivity().startService(podcast);
                     serviceStarted = true;
+                    mActivity.pServ.setAudioPath(AUDIO_PATH);
+                    mActivity.pServ.playMusic();
                     playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
                 }else{
                     if(mActivity.pServ.isPlaying()){
@@ -242,9 +247,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     private void killMediaPlayer() {
-        if (mediaPlayer != null) {
+        if (mActivity.pServ.mPlayer != null) {
             try {
-                mediaPlayer.release();
+                mActivity.pServ.mPlayer.release();
             } catch (Exception e) {
                 e.printStackTrace();
             }
