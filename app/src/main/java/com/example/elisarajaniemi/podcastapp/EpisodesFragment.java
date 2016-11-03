@@ -1,5 +1,6 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ public class EpisodesFragment extends Fragment {
     private HttpGetHelper httpGetHelper;
     private String message;
     private ArrayList<PodcastItem> allList, list;
+    String episodeName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,9 +58,15 @@ public class EpisodesFragment extends Fragment {
                 //String value = httpGetHelper.getResults().get(position).title;
                 //System.out.println(value);
                 PlayerFragment pf = new PlayerFragment();
+                episodeName = list.get(position).title;
 
+                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                intent.putExtra("episodeName", episodeName);
+                getActivity().startActivity(intent);
+
+                /**
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, pf).addToBackStack( "tag" ).commit();
+                        .replace(R.id.frag_container, pf).addToBackStack( "tag" ).commit();*/
             }
 
         });
