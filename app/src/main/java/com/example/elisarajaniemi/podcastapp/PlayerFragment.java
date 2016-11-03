@@ -34,6 +34,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private final Handler handler = new Handler();
     private boolean serviceStarted = false;
     private Utilities utils;
+    String episodeName;
 
     MainActivity mActivity;
 
@@ -43,7 +44,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("PLAYER FRAGMENT");
+        episodeName = getArguments().getString("episodeName");
         this.mActivity = (MainActivity) getActivity();
+        System.out.println("Episodename in playerFragment: " + episodeName);
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
 

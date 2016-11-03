@@ -125,20 +125,27 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String message = intent.getStringExtra("message");
-        //String episodeName = intent.getStringExtra("episodeName");
         System.out.println("Message in MAIN:" + message);
-        //System.out.println("EpisodeName in MAIN:" + episodeName);
-
         Bundle bundle = new Bundle();
         bundle.putString("message", message);
-        //bundle.putString("episodeName", episodeName);
         ef.setArguments(bundle);
-        //pf.setArguments(bundle);
+
+        Intent intent2 = getIntent();
+        String episodeName = intent2.getStringExtra("episodeName");
+        System.out.println("EpisodeName in MAIN:" + episodeName);
+        Bundle bundle2 = new Bundle();
+        bundle2.putString("episodeName", episodeName);
+        pf.setArguments(bundle2);
 
 
         if(message != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
+        }
+
+        if(episodeName != null){
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frag_container, pf).addToBackStack("tag").commit();
         }
 
     }

@@ -22,7 +22,6 @@ public class EpisodesFragment extends Fragment {
     private HttpGetHelper httpGetHelper;
     private String message;
     private ArrayList<PodcastItem> allList, list;
-    String episodeName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +57,7 @@ public class EpisodesFragment extends Fragment {
                 //String value = httpGetHelper.getResults().get(position).title;
                 //System.out.println(value);
                 PlayerFragment pf = new PlayerFragment();
-                episodeName = list.get(position).title;
+                String episodeName = list.get(position).title;
 
                 Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
                 intent.putExtra("episodeName", episodeName);
