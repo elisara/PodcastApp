@@ -51,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean categoryOpen, menuOpen;
     private CategoryFragment cf;
     private SerieFragment sf;
+    private EpisodesFragment ef;
     boolean mIsBound = false;
     PlayService pServ;
+    //String message;
     public ServiceConnection Scon =new ServiceConnection(){
 
         @Override
@@ -93,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         cf = new CategoryFragment();
         sf = new SerieFragment();
         pServ = new PlayService();
+        ef = new EpisodesFragment();
+
 
         doBindService();
 
@@ -116,6 +120,23 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        Intent intent = getIntent();
+        String message = intent.getStringExtra("message");
+        System.out.println("Message in MAIN:" + message);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("message", message);
+        ef.setArguments(bundle);
+
+
+        if(message != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
+        }
+
+
+
 
     }
 
@@ -232,5 +253,7 @@ public class MainActivity extends AppCompatActivity {
             mIsBound = false;
         }
     }
+
+
 }
 
