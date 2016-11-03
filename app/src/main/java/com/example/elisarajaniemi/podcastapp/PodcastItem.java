@@ -1,10 +1,12 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import java.io.Serializable;
+
 /**
  * Created by jari on 31/10/2016.
  */
 
-public class PodcastItem {
+public class PodcastItem implements Serializable {
 
     public String title;
     public String url;

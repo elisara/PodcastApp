@@ -54,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
     private EpisodesFragment ef;
     boolean mIsBound = false;
     private PlayerFragment pf;
+    private PodcastItem pi, pi2;
     PlayService pServ;
+    private String message, episodeUrl;
     //String message;
     public ServiceConnection Scon =new ServiceConnection(){
 
@@ -124,26 +126,24 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        String message = intent.getStringExtra("message");
-        System.out.println("Message in MAIN:" + message);
+        pi = (PodcastItem)intent.getSerializableExtra("message");
         Bundle bundle = new Bundle();
-        bundle.putString("message", message);
+        bundle.putSerializable("message", pi);
         ef.setArguments(bundle);
 
         Intent intent2 = getIntent();
-        String episodeUrl = intent2.getStringExtra("episodeUrl");
-        System.out.println("episodeUrl in MAIN:" + episodeUrl);
+        pi2 = (PodcastItem)intent.getSerializableExtra("episode");
         Bundle bundle2 = new Bundle();
-        bundle2.putString("episodeUrl", episodeUrl);
+        bundle2.putSerializable("episode", pi2);
         pf.setArguments(bundle2);
 
 
-        if(message != null) {
+        if(pi != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
         }
 
-        if(episodeUrl != null){
+        if(pi2 != null){
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, pf).addToBackStack("tag").commit();
         }

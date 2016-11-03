@@ -15,13 +15,14 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Elisa Rajaniemi on 27.10.2016.
  */
 
-public class SerieFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class SerieFragment extends Fragment implements AdapterView.OnItemSelectedListener, Serializable {
 
     private ListView listView;
     private SerieArrayAdapter adapter;
@@ -39,16 +40,17 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private MainActivity ma;
     private ArrayList<PodcastItem> list;
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         httpGetHelper = new HttpGetHelper();
 
+        //Sorting stuff
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         history = prefs.getBoolean("history", true);
         System.out.println("History in series onCreateView: " + history);
 
-        //itemsAdded = true;
         View view = inflater.inflate(R.layout.serie_layout, container, false);
         spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
@@ -76,15 +78,9 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PodcastItem pi = SerieItems.getInstance().getSerieItems().get(position);
-                String collectionName = pi.collectionName;
-
                 Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                intent.putExtra("message", collectionName);
+                intent.putExtra("message", pi);
                 getActivity().startActivity(intent);
-
-                /**
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, ef).addToBackStack("tag").commit();*/
 
             }
 
