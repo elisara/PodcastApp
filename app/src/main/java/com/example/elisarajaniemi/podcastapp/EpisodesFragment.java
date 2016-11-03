@@ -3,13 +3,20 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Elisa Rajaniemi on 31.10.2016.
@@ -24,6 +31,7 @@ public class EpisodesFragment extends Fragment {
     private ArrayList<PodcastItem> list, listAll;
     private PodcastItem pi;
     private MainActivity ma;
+    AlertDialog alertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +77,31 @@ public class EpisodesFragment extends Fragment {
 
             }
 
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> av, View v, int position, long rowId) {
+
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                alertDialogBuilder.setTitle("Description");
+
+                LinearLayout lp = new LinearLayout(getContext());
+                lp.setOrientation(LinearLayout.VERTICAL);
+                lp.setPadding(30,30,30,30);
+
+                final TextView description = new TextView(getActivity());
+                description.setText(list.get(position).description);
+                description.setMovementMethod(new ScrollingMovementMethod());
+                lp.addView(description);
+
+                alertDialogBuilder.setView(lp);
+
+                alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+                return true;
+            }
         });
 
         PodcastItems.getInstance().clearItems();
