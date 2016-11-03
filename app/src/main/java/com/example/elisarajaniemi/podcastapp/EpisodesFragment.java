@@ -21,45 +21,77 @@ public class EpisodesFragment extends Fragment {
     private EpisodeListArrayAdapter adapter;
     private HttpGetHelper httpGetHelper;
     private String message;
-    public ArrayList<PodcastItem> list;
+    private ArrayList<PodcastItem> list, listAll;
     private PodcastItem pi;
+    private MainActivity ma;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         pi = (PodcastItem) getArguments().getSerializable("message");
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
         httpGetHelper = new HttpGetHelper();
+        ma = new MainActivity();
 
-        PodcastItems.getInstance().getEpisodes().clear();
+        list = new ArrayList<>();
+        listAll = new ArrayList<>();
 
-        System.out.println("List size in ef: " + PodcastItems.getInstance().getEpisodes().size());
+        if(list != null || listAll != null){
+            list.clear();
+            listAll.clear();
+        }
+        System.out.println("List size before FOR: " + list.size());
+        listAll = PodcastItems.getInstance().getItems();
+        System.out.println("List size before FOR: " + PodcastItems.getInstance().getItems().size());
 
-            for(int i = 0; i < PodcastItems.getInstance().getItems().size(); i++) {
-                if (PodcastItems.getInstance().getItems().get(i).collectionName.equals(pi.collectionName)) {
-                    PodcastItems.getInstance().addEpisodes(PodcastItems.getInstance().getItems().get(i));
+        //list.clear();
+
+        if(list.size() == 0) {
+            for (int i = 0; i < listAll.size(); i++) {
+                if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
+                    list.add(listAll.get(i));
                 }
             }
+        }
 
-
+        System.out.println("List size AFTER: " + list.size());
 
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
-        adapter = new EpisodeListArrayAdapter(getContext(), PodcastItems.getInstance().getEpisodes());
+        adapter = new EpisodeListArrayAdapter(getContext(), this.list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-
                 PodcastItem pi = PodcastItems.getInstance().getItems().get(position);
-
                 Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
                 intent.putExtra("episode", pi);
                 getActivity().startActivity(intent);
+                PodcastItems.getInstance().clearItems();
 
             }
 
         });
 
+        PodcastItems.getInstance().clearItems();
+        //list.clear();
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+
+    public void populateList(){
+
+
     }
 
 }

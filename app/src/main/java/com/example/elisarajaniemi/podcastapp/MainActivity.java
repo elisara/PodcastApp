@@ -94,14 +94,13 @@ public class MainActivity extends AppCompatActivity {
         mf = new MenuFragment();
         sf = new SerieFragment();
         pServ = new PlayService();
-        ef = new EpisodesFragment();
+        //ef = new EpisodesFragment();
         pf = new PlayerFragment();
-
-
-        doBindService();
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.frag_container, sf).commit();
+
+        doBindService();
 
         menuBtn = (ImageButton) findViewById(R.id.menuBtn);
         menuBtn.setOnClickListener(new View.OnClickListener() {
@@ -123,12 +122,14 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         pi = (PodcastItem)intent.getSerializableExtra("message");
+        ef = new EpisodesFragment();
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("message", pi);
         ef.setArguments(bundle);
 
         Intent intent2 = getIntent();
-        pi2 = (PodcastItem)intent.getSerializableExtra("episode");
+        pi2 = (PodcastItem)intent2.getSerializableExtra("episode");
         Bundle bundle2 = new Bundle();
         bundle2.putSerializable("episode", pi2);
         pf.setArguments(bundle2);
@@ -173,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
         sf.history = prefs.getBoolean("history", true);
+
         /**
         if (sf.history == false) {
 
