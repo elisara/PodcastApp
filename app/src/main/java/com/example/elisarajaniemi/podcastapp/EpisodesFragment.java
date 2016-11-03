@@ -21,7 +21,7 @@ public class EpisodesFragment extends Fragment {
     private EpisodeListArrayAdapter adapter;
     private HttpGetHelper httpGetHelper;
     private String message;
-    private ArrayList<PodcastItem> allList, list;
+    public ArrayList<PodcastItem> list;
     private PodcastItem pi;
 
     @Override
@@ -30,22 +30,20 @@ public class EpisodesFragment extends Fragment {
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
         httpGetHelper = new HttpGetHelper();
 
-        list = new ArrayList<>();
-        allList = new ArrayList<>();
-        list.clear();
-        allList.clear();
-        allList = PodcastItems.getInstance().getItems();
-        System.out.println("AllList: " + allList.get(0).title);
+        PodcastItems.getInstance().getEpisodes().clear();
 
-        for(int i = 0; i < allList.size(); i++){
-            if(allList.get(i).collectionName.equals(pi.collectionName)){
-                this.list.add(allList.get(i));
+        System.out.println("List size in ef: " + PodcastItems.getInstance().getEpisodes().size());
+
+            for(int i = 0; i < PodcastItems.getInstance().getItems().size(); i++) {
+                if (PodcastItems.getInstance().getItems().get(i).collectionName.equals(pi.collectionName)) {
+                    PodcastItems.getInstance().addEpisodes(PodcastItems.getInstance().getItems().get(i));
+                }
             }
 
-        }
+
 
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
-        adapter = new EpisodeListArrayAdapter(getContext(), list);
+        adapter = new EpisodeListArrayAdapter(getContext(), PodcastItems.getInstance().getEpisodes());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

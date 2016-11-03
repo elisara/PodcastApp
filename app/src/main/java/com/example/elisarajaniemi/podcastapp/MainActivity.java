@@ -49,15 +49,12 @@ public class MainActivity extends AppCompatActivity {
     private MenuFragment mf;
     private TextView title;
     private boolean categoryOpen, menuOpen;
-    private CategoryFragment cf;
     private SerieFragment sf;
     private EpisodesFragment ef;
     boolean mIsBound = false;
     private PlayerFragment pf;
     private PodcastItem pi, pi2;
     PlayService pServ;
-    private String message, episodeUrl;
-    //String message;
     public ServiceConnection Scon =new ServiceConnection(){
 
         @Override
@@ -95,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         categoryOpen = false;
 
         mf = new MenuFragment();
-        cf = new CategoryFragment();
         sf = new SerieFragment();
         pServ = new PlayService();
         ef = new EpisodesFragment();
@@ -136,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle2 = new Bundle();
         bundle2.putSerializable("episode", pi2);
         pf.setArguments(bundle2);
-
 
         if(pi != null) {
             getSupportFragmentManager().beginTransaction()

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class PodcastItems {
 
-    private ArrayList<PodcastItem> items;
+    private ArrayList<PodcastItem> items, episodes;
 
     private static PodcastItems ourInstance = new PodcastItems();
 
@@ -17,6 +17,7 @@ public class PodcastItems {
 
     private PodcastItems() {
         this.items = new ArrayList<>();
+        this.episodes = new ArrayList<>();
     }
 
     public void addPodcastItem(PodcastItem item){
@@ -26,7 +27,22 @@ public class PodcastItems {
 
     }
 
+    public void addEpisodes(PodcastItem item){
+        if(!episodes.contains(item)){
+            episodes.add(item);
+        }
+
+    }
+
+    public void clearEpisodes(){
+        episodes = null;
+    }
+
     public ArrayList<PodcastItem> getItems(){
         return items;
+    }
+
+    public ArrayList<PodcastItem> getEpisodes(){
+        return episodes;
     }
 }

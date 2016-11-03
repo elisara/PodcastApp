@@ -30,7 +30,6 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private Spinner spinner;
     private Button categoryBtn;
     private boolean categoryOpen;
-    private CategoryFragment cf;
     private PlayerFragment pf;
     private String apiKey;
     public boolean history;
@@ -56,7 +55,6 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         spinner.setOnItemSelectedListener(this);
         addItemsOnSpinner();
 
-        cf = new CategoryFragment();
         pf = new PlayerFragment();
 
         categoryBtn = (Button) view.findViewById(R.id.categoryBtn);
