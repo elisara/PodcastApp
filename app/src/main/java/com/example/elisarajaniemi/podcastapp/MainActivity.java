@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
         bundle2.putString("episodeUrl", episodeUrl);
         pf.setArguments(bundle2);
 
+
         if(message != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, ef).addToBackStack("tag").commit();

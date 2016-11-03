@@ -82,6 +82,10 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
                 intent.putExtra("message", collectionName);
                 getActivity().startActivity(intent);
 
+                /**
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frag_container, ef).addToBackStack("tag").commit();*/
+
             }
 
         });
