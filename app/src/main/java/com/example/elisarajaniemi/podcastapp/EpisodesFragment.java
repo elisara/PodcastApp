@@ -43,11 +43,8 @@ public class EpisodesFragment extends Fragment {
             list.clear();
             listAll.clear();
         }
-        System.out.println("List size before FOR: " + list.size());
-        listAll = PodcastItems.getInstance().getItems();
-        System.out.println("List size before FOR: " + PodcastItems.getInstance().getItems().size());
 
-        //list.clear();
+        listAll = PodcastItems.getInstance().getItems();
 
         if(list.size() == 0) {
             for (int i = 0; i < listAll.size(); i++) {
@@ -56,8 +53,6 @@ public class EpisodesFragment extends Fragment {
                 }
             }
         }
-
-        System.out.println("List size AFTER: " + list.size());
 
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
         adapter = new EpisodeListArrayAdapter(getContext(), this.list);
@@ -76,7 +71,6 @@ public class EpisodesFragment extends Fragment {
         });
 
         PodcastItems.getInstance().clearItems();
-        //list.clear();
         return view;
     }
 
