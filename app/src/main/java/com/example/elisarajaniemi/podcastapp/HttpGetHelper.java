@@ -24,6 +24,7 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
 
     String result = "";
     public PodcastItems podcastItems = PodcastItems.getInstance();
+    public SerieItems serieItems = SerieItems.getInstance();
     public boolean executed;
     private SerieFragment serieFragment;
 
@@ -60,29 +61,29 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
             result = buffer.toString();
 
             /**try {
-                JSONArray jArray = new JSONArray(result);
-                for (int i = 0; i < jArray.length(); i++) {
+             JSONArray jArray = new JSONArray(result);
+             for (int i = 0; i < jArray.length(); i++) {
 
-                    JSONArray finalArray = jArray.getJSONArray(i);
-                    //System.out.println("Final Array info: " + finalArray.toString());
-                    for (int j = 0; j < finalArray.length(); j++) {
+             JSONArray finalArray = jArray.getJSONArray(i);
+             //System.out.println("Final Array info: " + finalArray.toString());
+             for (int j = 0; j < finalArray.length(); j++) {
 
-                        JSONObject jObject = finalArray.getJSONObject(j);
+             JSONObject jObject = finalArray.getJSONObject(j);
 
-                        PodcastItem podcastItem = new PodcastItem(jObject.getString("Title"), jObject.getString("Download link"), jObject.getString("Description"),
-                                jObject.getInt("Length (sec)"), jObject.getString("Tags"), jObject.getString("Tags"), jObject.getString("Collection name"),
-                                jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
+             PodcastItem podcastItem = new PodcastItem(jObject.getString("Title"), jObject.getString("Download link"), jObject.getString("Description"),
+             jObject.getInt("Length (sec)"), jObject.getString("Tags"), jObject.getString("Tags"), jObject.getString("Collection name"),
+             jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
 
-                        podcastItems.add(podcastItem);
-                        System.out.println("Podcast info: " + podcastItem.title);
-                    }
+             podcastItems.add(podcastItem);
+             System.out.println("Podcast info: " + podcastItem.title);
+             }
 
-                } // End Loop
-                executed = true;
-                System.out.println("Array size: " + podcastItems.size());
-            } catch (JSONException e) {
-                Log.e("JSONException", "Error: " + e.toString());
-            } // catch (JSONException e)*/
+             } // End Loop
+             executed = true;
+             System.out.println("Array size: " + podcastItems.size());
+             } catch (JSONException e) {
+             Log.e("JSONException", "Error: " + e.toString());
+             } // catch (JSONException e)*/
 
 
         } catch (MalformedURLException e) {
@@ -123,10 +124,26 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
                             jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
 
                     podcastItems.addPodcastItem(podcastItem);
-                    System.out.println("Podcast info: " + podcastItem.title);
+                    if (serieItems.getSerieItems().size() == 0) serieItems.addSerieItem(podcastItem);
+                    else {
+                        boolean idFound = false;
+                        for (int k = 0; k < serieItems.getSerieItems().size(); k++) {
+                            if (serieItems.getSerieItems().get(k).collectionID == podcastItem.collectionID) idFound = true;
+                        }
+                        if (idFound == false) serieItems.addSerieItem(podcastItem);
+
+                    }
                 }
 
-            } // End Loop
+            }// End Loop
+            System.out.println("SeriID array size: " + serieItems.getSerieItems().size());
+
+            /**for(int i = 0; i <podcastItems.getItems().size(); i++){
+             if (!serieItems.getSerieItems().contains(podcastItems.getItems().get(i).collectionID)){
+             serieItems.addSerieItem(podcastItems.getItems().get(i));
+             }
+             System.out.println("SerieItems array: " + serieItems.getSerieItems().size());
+             }*/
         } catch (JSONException e) {
             Log.e("JSONException", "Error: " + e.toString());
         }

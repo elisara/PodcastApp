@@ -27,14 +27,13 @@ public class SerieArrayAdapter extends ArrayAdapter<PodcastItem> {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
 
-                 value = getItem(position);
+        value = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.serie_list_item, parent, false);
         }
         TextView tv = (TextView) convertView.findViewById(R.id.serieName);
         tv.setText(value.collectionName);
+        //convertView.setVisibility((value.collectionID == value.collectionID) ? View.GONE : View.VISIBLE);
         return convertView;
     }
-
-
 }
