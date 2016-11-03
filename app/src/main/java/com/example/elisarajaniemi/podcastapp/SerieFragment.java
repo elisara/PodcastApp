@@ -75,7 +75,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                PodcastItem pi = PodcastItems.getInstance().getItems().get(position);
+                PodcastItem pi = SerieItems.getInstance().getSerieItems().get(position);
                 String collectionName = pi.collectionName;
 
                 Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
