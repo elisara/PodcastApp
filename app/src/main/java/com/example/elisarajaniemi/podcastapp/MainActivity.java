@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         HttpGetHelper httpGetHelper = new HttpGetHelper();
 
         Thread t = new Thread(r);
@@ -96,11 +98,22 @@ public class MainActivity extends AppCompatActivity {
         pServ = new PlayService();
         //ef = new EpisodesFragment();
         pf = new PlayerFragment();
-
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.frag_container, sf).commit();
-
         doBindService();
+
+        String playerFragment = getIntent().getStringExtra("fragment_name");
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        if (playerFragment != null) {
+            if (playerFragment.equals("PlayerFragment")) {
+                fragmentTransaction.add(R.id.frag_container, pf).commit();
+            }
+
+        }else{
+            fragmentTransaction.add(R.id.frag_container, sf).commit();
+        }
+
+
+
 
         menuBtn = (ImageButton) findViewById(R.id.menuBtn);
         menuBtn.setOnClickListener(new View.OnClickListener() {
