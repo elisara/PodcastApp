@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private SerieFragment sf;
     private EpisodesFragment ef;
     boolean mIsBound = false;
+    private PlayerFragment pf;
     PlayService pServ;
     //String message;
     public ServiceConnection Scon =new ServiceConnection(){
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         sf = new SerieFragment();
         pServ = new PlayService();
         ef = new EpisodesFragment();
+        pf = new PlayerFragment();
 
 
         doBindService();
@@ -123,20 +125,21 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String message = intent.getStringExtra("message");
+        //String episodeName = intent.getStringExtra("episodeName");
         System.out.println("Message in MAIN:" + message);
+        //System.out.println("EpisodeName in MAIN:" + episodeName);
 
         Bundle bundle = new Bundle();
         bundle.putString("message", message);
+        //bundle.putString("episodeName", episodeName);
         ef.setArguments(bundle);
+        //pf.setArguments(bundle);
 
 
         if(message != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
         }
-
-
-
 
     }
 
