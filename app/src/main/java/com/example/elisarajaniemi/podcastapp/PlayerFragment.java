@@ -42,7 +42,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("PLAYER FRAGMENT");
         this.mActivity = (MainActivity) getActivity();
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
@@ -80,8 +79,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         currentTime.setText("00:00");
         fullTime.setText("00:00");
 
-        //mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
-        //mActivity.pServ.mPlayer.setOnCompletionListener(this);
+
         seekbar.setOnSeekBarChangeListener(this);
 
         utils = new Utilities();
@@ -111,6 +109,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                     getActivity().startService(podcast);
                     serviceStarted = true;
                     mActivity.pServ.setAudioPath(AUDIO_PATH);
+                    mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
+                    mActivity.pServ.mPlayer.setOnCompletionListener(this);
                     mActivity.pServ.playMusic();
                     playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
                 }else{
