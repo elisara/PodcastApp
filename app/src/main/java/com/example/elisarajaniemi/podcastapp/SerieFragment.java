@@ -83,7 +83,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         });
 
         listView = (ListView) view.findViewById(R.id.serieList);
-        adapter = new SerieArrayAdapter(getContext(), PodcastItems.getInstance().getItems());
+        adapter = new SerieArrayAdapter(getContext(), SerieItems.getInstance().getSerieItems());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -100,8 +100,6 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             }
 
         });
-
-        System.out.println("PodcastItems: " + httpGetHelper.podcastItems);
         return view;
     }
 
