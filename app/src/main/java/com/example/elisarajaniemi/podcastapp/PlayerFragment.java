@@ -82,8 +82,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         currentTime.setText("00:00");
         fullTime.setText("00:00");
 
-        //mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
-        //mActivity.pServ.mPlayer.setOnCompletionListener(this);
+
         seekbar.setOnSeekBarChangeListener(this);
 
         utils = new Utilities();
@@ -111,6 +110,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                     getActivity().startService(podcast);
                     serviceStarted = true;
                     mActivity.pServ.setAudioPath(episodeUrl);
+                    mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
+                    mActivity.pServ.mPlayer.setOnCompletionListener(this);
                     mActivity.pServ.playMusic();
                     playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
                 }else{
