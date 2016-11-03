@@ -31,7 +31,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private TextView currentTime, fullTime;
     private int mediaFileLengthInMilliseconds;
     private final Handler handler = new Handler();
-    private boolean serviceStarted = false;
+    private boolean playServiceStarted;
     private Utilities utils;
     private PodcastItem pi;
     String episodeUrl;
@@ -43,8 +43,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("PLAYER FRAGMENT");
+
         this.mActivity = (MainActivity) getActivity();
+        playServiceStarted = mActivity.isMyServiceRunning(PlayService.class);
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
         pi = (PodcastItem) getArguments().getSerializable("episode");
@@ -107,10 +108,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 break;
             case R.id.playBtn:
 
-                if(!serviceStarted) {
+                if(!playServiceStarted) {
                     Intent podcast = new Intent(getActivity(), PlayService.class);
                     getActivity().startService(podcast);
-                    serviceStarted = true;
+                    playServiceStarted = true;
                     mActivity.pServ.setAudioPath(pi.url);
                     mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
                     mActivity.pServ.mPlayer.setOnCompletionListener(this);
@@ -171,6 +172,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
      * */
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
+
             int millis = mActivity.pServ.mPlayer.getCurrentPosition();
             int millisLeft = mActivity.pServ.mPlayer.getDuration()-mActivity.pServ.mPlayer.getCurrentPosition();
 
@@ -243,7 +245,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        killMediaPlayer();
+        //killMediaPlayer();
     }
 
     private void killMediaPlayer() {

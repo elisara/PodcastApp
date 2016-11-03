@@ -32,13 +32,16 @@ public class EpisodesFragment extends Fragment {
     private PodcastItem pi;
     private MainActivity ma;
     AlertDialog alertDialog;
+    private TextView collectionName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         pi = (PodcastItem) getArguments().getSerializable("message");
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
         httpGetHelper = new HttpGetHelper();
-        ma = new MainActivity();
+
+        collectionName = (TextView) view.findViewById(R.id.collectionTitle);
+        collectionName.setText(pi.collectionName);
 
         list = new ArrayList<>();
         listAll = new ArrayList<>();
@@ -118,12 +121,6 @@ public class EpisodesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-    }
-
-
-    public void populateList(){
-
 
     }
 

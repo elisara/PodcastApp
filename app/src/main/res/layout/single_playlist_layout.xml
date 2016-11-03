@@ -5,6 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorAccent"
+        android:layout_height="200dp">
+
+        <TextView
+            android:id="@+id/collectionTitle"
+            android:text="Episodes lol"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textSize="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/single_playlist_list"
         android:layout_width="match_parent"

@@ -23,6 +23,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     MediaPlayer mPlayer;
     private int length = 0;
     private String audioPath;
+    private boolean started = false;
 
 
 
@@ -70,6 +71,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        started = true;
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_favorite_black_24dp)
@@ -95,6 +97,8 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     public boolean isPlaying(){
         return mPlayer.isPlaying();
     }
+
+    public boolean isStarted() {return this.started;}
 
     public void setAudioPath(String audioPath){
         try {
