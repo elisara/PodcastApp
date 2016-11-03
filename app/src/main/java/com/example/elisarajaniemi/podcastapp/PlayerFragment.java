@@ -40,9 +40,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     static final String AUDIO_PATH =
             "http://dev.mw.metropolia.fi//aanimaisema//filestore//4//4_06d78bfc816994c//44_9074990dfa84c42.mp3?v=2016-10-27+13%3A29%3A30";
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         System.out.println("PLAYER FRAGMENT");
