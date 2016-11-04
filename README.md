@@ -1,7 +1,7 @@
 # PodcastApp
 
 ```
-With this application...
+An application to listen to podcasts.
 ```
 
 ## Installation
