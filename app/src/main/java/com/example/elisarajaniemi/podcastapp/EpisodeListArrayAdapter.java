@@ -23,7 +23,6 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-
         value = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.episode_list_item, parent, false);

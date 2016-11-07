@@ -1,6 +1,11 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +42,7 @@ public class EpisodesFragment extends Fragment {
     private MainActivity ma;
     AlertDialog alertDialog;
     private TextView collectionName;
+    private LinearLayout headerBox;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,13 +71,23 @@ public class EpisodesFragment extends Fragment {
             }
         }
 
+
+        /**
+        String imageUrl = "http://bit.ly/18X6WXa";
+        headerBox = (LinearLayout) view.findViewById(R.id.headerBox);
+        headerBox.setBackground(getDrawableFromURL(imageUrl));
+
+
+*/
+
+        System.out.println("LISTAN KOKO: " + list.size());
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
         adapter = new EpisodeListArrayAdapter(getContext(), this.list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                PodcastItem pi = PodcastItems.getInstance().getItems().get(position);
+                PodcastItem pi = list.get(position);
                 Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
                 intent.putExtra("episode", pi);
                 getActivity().startActivity(intent);
@@ -117,5 +137,28 @@ public class EpisodesFragment extends Fragment {
         super.onResume();
 
     }
+
+    public URL createUrl(String urli) throws IOException {
+        URL url = new URL(urli);
+       return url;
+    }
+
+    /**
+    public Drawable getDrawableFromURL(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Drawable d = Drawable.createFromStream(input, "src name");
+            //Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return d;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }*/
+
 
 }

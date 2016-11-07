@@ -36,11 +36,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import static android.R.attr.apiKey;
 
@@ -76,10 +85,40 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /**
+        RegisterAndLogin rali = new RegisterAndLogin();
+
+        try {
+            rali.encryptString();
+        }
+        catch (NoSuchAlgorithmException a){
+            System.out.println("EIIIIIIII");
+        }
+        catch (NoSuchPaddingException b){
+            System.out.println("EIIIIIIII");
+        }
+        catch (InvalidKeyException c){
+            System.out.println("EIIIIIIII");
+        }
+        catch (InvalidAlgorithmParameterException d){
+            System.out.println("EIIIIIIII");
+        }
+        catch (IllegalBlockSizeException e){
+            System.out.println("EIIIIIIII");
+        }
+        catch (BadPaddingException f){
+            System.out.println("EIIIIIIII");
+        }
+        catch (InvalidKeySpecException g ){
+            System.out.println("EIIIIIIII");
+        }
+        catch (UnsupportedEncodingException h){
+            System.out.println("EIIIIIIII");
+        }
+         */
 
 
         HttpGetHelper httpGetHelper = new HttpGetHelper();
-
         Thread t = new Thread(r);
         t.start();
 
@@ -101,9 +140,9 @@ public class MainActivity extends AppCompatActivity {
         pf = new PlayerFragment();
         doBindService();
 
+        //Notification bar directs user to playerfragment
         String playerFragment = getIntent().getStringExtra("fragment_name");
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
         if (playerFragment != null) {
             if (playerFragment.equals("PlayerFragment")) {
                 fragmentTransaction.add(R.id.frag_container, pf).addToBackStack("tag").commit();
@@ -120,13 +159,11 @@ public class MainActivity extends AppCompatActivity {
         menuBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (menuOpen == false) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.menu_frag_container, mf).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.menu_frag_container, mf).commit();
                     menuOpen = true;
                 }
                 else{
-                    getSupportFragmentManager().beginTransaction()
-                            .remove(mf).commit();
+                    getSupportFragmentManager().beginTransaction().remove(mf).commit();
                     menuOpen = false;
                 }
                 System.out.println("menu clicked");
@@ -134,24 +171,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        //PodcastItem from SerieFragment and directed to EpisodeFragment
         Intent intent = getIntent();
         pi = (PodcastItem)intent.getSerializableExtra("message");
         ef = new EpisodesFragment();
-
         Bundle bundle = new Bundle();
         bundle.putSerializable("message", pi);
         ef.setArguments(bundle);
-
-        Intent intent2 = getIntent();
-        pi2 = (PodcastItem)intent2.getSerializableExtra("episode");
-        Bundle bundle2 = new Bundle();
-        bundle2.putSerializable("episode", pi2);
-        pf.setArguments(bundle2);
 
         if(pi != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
         }
+
+        //PodcastItem from EpisodeFragment and directed to PlayerFragment
+        Intent intent2 = getIntent();
+        pi2 = (PodcastItem)intent2.getSerializableExtra("episode");
+        Bundle bundle2 = new Bundle();
+        bundle2.putSerializable("episode", pi2);
+        pf.setArguments(bundle2);
 
         if(pi2 != null){
             getSupportFragmentManager().beginTransaction()
@@ -284,6 +323,23 @@ public class MainActivity extends AppCompatActivity {
             mIsBound = false;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+           // getSupportFragmentManager().beginTransaction()
+                    //.replace(R.id.frag_container, sf).addToBackStack("tag").commit();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+
+    }
+
+
 
 
 }

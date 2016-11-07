@@ -35,6 +35,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private Utilities utils;
     private PodcastItem pi;
     String episodeUrl;
+    PlaylistsFragment pf;
 
     MainActivity mActivity;
 
@@ -49,6 +50,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
         pi = (PodcastItem) getArguments().getSerializable("episode");
+        System.out.println("URL in PlayerFragment: " + pi.url);
         //System.out.println("episodeUrl in playerFragment: " + episodeUrl);
 
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
@@ -269,6 +271,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         /** Method which updates the SeekBar secondary progress by current song loading from URL position*/
         seekbar.setSecondaryProgress(percent);
     }
+
+    /**
+    @Override
+    public void onBackPressed() {
+        pf = new PlaylistsFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.menu_frag_container, pf).commit();
+    }
+    */
 
 
 }
