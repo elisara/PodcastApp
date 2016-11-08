@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/headerBox"
         android:layout_width="match_parent"
         android:background="@color/colorAccent"
         android:layout_height="200dp">
