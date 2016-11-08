@@ -43,6 +43,7 @@ public class EpisodesFragment extends Fragment {
     AlertDialog alertDialog;
     private TextView collectionName;
     private LinearLayout headerBox;
+    private PlayerFragment pf;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class EpisodesFragment extends Fragment {
 
         list = new ArrayList<>();
         listAll = new ArrayList<>();
+
 
         if(list != null || listAll != null){
             list.clear();
@@ -72,13 +74,6 @@ public class EpisodesFragment extends Fragment {
         }
 
 
-        /**
-        String imageUrl = "http://bit.ly/18X6WXa";
-        headerBox = (LinearLayout) view.findViewById(R.id.headerBox);
-        headerBox.setBackground(getDrawableFromURL(imageUrl));
-
-
-*/
 
         System.out.println("LISTAN KOKO: " + list.size());
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
@@ -88,9 +83,17 @@ public class EpisodesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PodcastItem pi = list.get(position);
-                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                intent.putExtra("episode", pi);
-                getActivity().startActivity(intent);
+                //Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                //intent.putExtra("episode", pi);
+                //getActivity().startActivity(intent);
+                pf = new PlayerFragment();
+                Bundle bundle2 = new Bundle();
+                bundle2.putSerializable("episode", pi);
+                pf.setArguments(bundle2);
+
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("ef")
+                        .replace(R.id.frag_container, pf).commit();
+
                 PodcastItems.getInstance().clearItems();
 
             }
@@ -135,6 +138,7 @@ public class EpisodesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        System.out.println("----------------------RESUMEEE------------");
 
     }
 
@@ -159,6 +163,8 @@ public class EpisodesFragment extends Fragment {
             return null;
         }
     }*/
+
+
 
 
 }

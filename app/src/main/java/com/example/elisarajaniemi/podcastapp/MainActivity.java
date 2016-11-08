@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         /**
-        RegisterAndLogin rali = new RegisterAndLogin();
+        MyCrypt rali = new MyCrypt();
 
         try {
             rali.encryptString();
@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        /**
         //PodcastItem from SerieFragment and directed to EpisodeFragment
         Intent intent = getIntent();
         pi = (PodcastItem)intent.getSerializableExtra("message");
@@ -196,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, pf).commit();
         }
+         */
 
     }
 
@@ -324,21 +326,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
+
     @Override
     public void onBackPressed() {
 
-        int count = getFragmentManager().getBackStackEntryCount();
+        int count = getSupportFragmentManager().getBackStackEntryCount();
 
         if (count == 0) {
             super.onBackPressed();
-           // getSupportFragmentManager().beginTransaction()
-                    //.replace(R.id.frag_container, sf).addToBackStack("tag").commit();
+
         } else {
-            getFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStackImmediate();
         }
 
-    }*/
+    }
 
 
 
