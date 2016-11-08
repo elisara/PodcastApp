@@ -103,7 +103,9 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     public void setAudioPath(String audioPath){
         try {
             mPlayer.setDataSource(audioPath); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
-            mPlayer.prepare(); // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
+            mPlayer.prepare();
+
+            // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
         } catch (Exception e) {
             e.printStackTrace();
         }
