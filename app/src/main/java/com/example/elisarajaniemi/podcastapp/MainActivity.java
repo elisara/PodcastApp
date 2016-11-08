@@ -145,11 +145,11 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (playerFragment != null) {
             if (playerFragment.equals("PlayerFragment")) {
-                fragmentTransaction.add(R.id.frag_container, pf).addToBackStack("tag").commit();
+                fragmentTransaction.add(R.id.frag_container, pf).commit();
             }
 
         }else{
-            fragmentTransaction.add(R.id.frag_container, sf).addToBackStack("tag").commit();
+            fragmentTransaction.add(R.id.frag_container, sf).commit();
         }
 
 
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(pi != null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
+                    .replace(R.id.frag_container, ef).commit();
         }
 
         //PodcastItem from EpisodeFragment and directed to PlayerFragment
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(pi2 != null){
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frag_container, pf).addToBackStack("tag").commit();
+                    .replace(R.id.frag_container, pf).commit();
         }
 
     }
@@ -324,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
     @Override
     public void onBackPressed() {
 
@@ -337,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
             getFragmentManager().popBackStack();
         }
 
-    }
+    }*/
 
 
 
