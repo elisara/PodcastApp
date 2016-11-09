@@ -20,7 +20,9 @@ import java.util.ArrayList;
 
 public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
 
-    PodcastItem value;
+    PodcastItem value, podcastItem;
+    PlaylistsFragment playlistsFragment;
+    boolean addToPlaylist = false;
 
     public EpisodeListArrayAdapter(Context context, ArrayList<PodcastItem> list) {
         super(context, 0, list);
@@ -28,6 +30,7 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
 
         value = getItem(position);
         if (convertView == null) {
@@ -74,6 +77,37 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
                     public void onClick(View v) {
                         System.out.println("Clicked to playlist");
                         alertDialog.cancel();
+                        addToPlaylist = true;
+                        podcastItem = value;
+
+                        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                        alertDialogBuilder.setTitle("Add to");
+
+                        LinearLayout lp = new LinearLayout(getContext());
+                        lp.setOrientation(LinearLayout.VERTICAL);
+                        lp.setPadding(30,30,30,30);
+
+
+                        final TextView toPlaylist = new TextView(getContext());
+                        PlaylistItem playlistItem = (PlaylistItem)playlistsFragment.getPlaylists().get(0);
+                        toPlaylist.setText(playlistItem.name);
+                        toPlaylist.setTextSize(20);
+                        toPlaylist.setPadding(30, 20, 20, 20);
+                        lp.addView(toPlaylist);
+
+                        alertDialogBuilder.setView(lp);
+                        final AlertDialog alertDialog2 = alertDialogBuilder.create();
+
+                        toPlaylist.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                System.out.println("Clicked to playlist");
+                                alertDialog2.cancel();
+
+                            }
+                        });
+
+                        alertDialog.show();
+
                     }
                 });
 

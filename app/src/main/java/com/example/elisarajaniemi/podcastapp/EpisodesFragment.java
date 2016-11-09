@@ -57,24 +57,15 @@ public class EpisodesFragment extends Fragment {
 
         collectionName = (TextView) view.findViewById(R.id.collectionTitle);
         collectionName.setText(pi.collectionName);
-        //podcastItems = PodcastItems.getInstance();
-        //listAll = podcastItems.getItems();
-
 
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
         fillList();
+        sendToPlaylists();
 
-
-
-       // adapter = new EpisodeListArrayAdapter(getContext(), this.list);
-       // listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PodcastItem pi = list.get(position);
-                //Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                //intent.putExtra("episode", pi);
-                //getActivity().startActivity(intent);
                 pf = new PlayerFragment();
                 Bundle bundle2 = new Bundle();
                 bundle2.putSerializable("episode", pi);
@@ -83,7 +74,6 @@ public class EpisodesFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("ef")
                         .add(R.id.menu_frag_container, pf).commit();
 
-                //PodcastItems.getInstance().clearItems();
 
             }
 
@@ -178,6 +168,14 @@ public class EpisodesFragment extends Fragment {
         adapter = new EpisodeListArrayAdapter(getContext(), list);
         listView.setAdapter(adapter);
 
+
+
+    }
+
+    public void sendToPlaylists(){
+        if(adapter.addToPlaylist == true){
+            System.out.println("Saatu adapterista: "+adapter.podcastItem.title);
+        }
     }
 
 }
