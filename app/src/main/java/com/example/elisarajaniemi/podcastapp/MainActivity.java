@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private PlayerFragment pf;
     private PodcastItem pi, pi2;
     PlayService pServ;
-    public ServiceConnection Scon =new ServiceConnection(){
+    public ServiceConnection Scon = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.add(R.id.menu_frag_container, pf).commit();
             }
 
-        }else{
+        } else {
             fragmentTransaction.add(R.id.frag_container, sf).commit();
         }
 
@@ -153,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         search = searchField.getText().toString();
-                        System.out.println("Search value: " + search);
                         new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
                         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
 
@@ -171,15 +170,14 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.show();
 
                 /**searchBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        search = searchField.getText().toString();
-                        System.out.println("Search value: " + search);
-                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
-                        //alertDialog.cancel();
-                        //searchFragment.refreshLists();
-                    }
+                @Override public void onClick(View view) {
+                search = searchField.getText().toString();
+                System.out.println("Search value: " + search);
+                new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
+                getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
+                //alertDialog.cancel();
+                //searchFragment.refreshLists();
+                }
                 });*/
             }
         });
@@ -190,8 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 if (menuOpen == false) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.menu_frag_container, mf).commit();
                     menuOpen = true;
-                }
-                else{
+                } else {
                     getSupportFragmentManager().beginTransaction().remove(mf).commit();
                     menuOpen = false;
                 }
@@ -234,25 +231,25 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("----------------------RESUMEEE IN MAIN------------");
 
         /**
-        if (sf.history == false) {
+         if (sf.history == false) {
 
-        } else {
+         } else {
 
-        }
-            super.onResume();
+         }
+         super.onResume();
 
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        doUnbindService();
-        pServ.onDestroy();
+         }
+         @Override public void onDestroy() {
+         super.onDestroy();
+         doUnbindService();
+         pServ.onDestroy();
          */
     }
+
     public boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())&&pServ.isStarted()) {
+            if (serviceClass.getName().equals(service.service.getClassName()) && pServ.isStarted()) {
 
                 return true;
             }
@@ -290,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject jObject = new JSONObject(output);
                         apiKey = jObject.getString("api_key");
-                        System.out.println(apiKey);
                         new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true");
                     } catch (JSONException e) {
                         System.out.println(e);
@@ -315,16 +311,14 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    void doBindService(){
-        bindService(new Intent(this,PlayService.class),
-                Scon,Context.BIND_AUTO_CREATE);
+    void doBindService() {
+        bindService(new Intent(this, PlayService.class),
+                Scon, Context.BIND_AUTO_CREATE);
         mIsBound = true;
     }
 
-    void doUnbindService()
-    {
-        if(mIsBound)
-        {
+    void doUnbindService() {
+        if (mIsBound) {
             unbindService(Scon);
             mIsBound = false;
         }
@@ -339,14 +333,11 @@ public class MainActivity extends AppCompatActivity {
         if (count == 0) {
             super.onBackPressed();
 
-        }
-        else {
+        } else {
             getSupportFragmentManager().popBackStackImmediate();
         }
 
     }
-
-
 
 
 }

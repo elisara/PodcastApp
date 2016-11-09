@@ -58,7 +58,6 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
 
             while ((line = reader.readLine()) != null) {
                 buffer.append(line + "\n");
-                Log.d("Response: ", "> " + line);
             }
             result = buffer.toString();
             try {
@@ -148,7 +147,6 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        System.out.println("onPostExecute: " + result);
         /**try {
             JSONArray jArray = new JSONArray(result);
             for (int i = 0; i < jArray.length(); i++) {
