@@ -16,15 +16,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +59,9 @@ import static android.R.attr.apiKey;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageButton menuBtn;
+    private String search;
+    private ImageButton menuBtn, searchBtn;
+    AlertDialog alertDialog;
     private MenuFragment mf;
     private TextView title;
     private boolean categoryOpen, menuOpen;
@@ -84,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Context context = this;
 
         /**
         RegisterAndLogin rali = new RegisterAndLogin();
@@ -122,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
         Thread t = new Thread(r);
         t.start();
 
+        System.out.println(SerieItems.getInstance().getSerieItems().size());
+
 
         //System.out.println("Main activity arraylist: " + httpGetHelper.getResults());
 
@@ -153,7 +163,39 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        searchBtn = (ImageButton) findViewById(R.id.searchBtn);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                alertDialogBuilder.setTitle("Search");
 
+                LinearLayout lp = new LinearLayout(context);
+                lp.setOrientation(LinearLayout.VERTICAL);
+                lp.setPadding(30, 30, 30, 60);
+
+                final EditText searchField = new EditText(context);
+                final Button searchBtn = new Button(context);
+                searchBtn.setText("search");
+                lp.addView(searchField);
+                lp.addView(searchBtn);
+
+                searchBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        search = searchField.getText().toString();
+                        System.out.println("Search value: " + search);
+                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
+                        sf.refreshLists();
+                    }
+                });
+
+                alertDialogBuilder.setView(lp);
+
+                alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+            }
+        });
 
         menuBtn = (ImageButton) findViewById(R.id.menuBtn);
         menuBtn.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(pi != null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frag_container, ef).addToBackStack("tag").commit();
+                    .replace(R.id.frag_container, ef).commit();
         }
 
         //PodcastItem from EpisodeFragment and directed to PlayerFragment
@@ -194,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(pi2 != null){
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frag_container, pf).addToBackStack("tag").commit();
+                    .replace(R.id.frag_container, pf).commit();
         }
 
     }

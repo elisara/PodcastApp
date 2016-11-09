@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -51,6 +52,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         System.out.println("History in series onCreateView: " + history);
 
         View view = inflater.inflate(R.layout.serie_layout, container, false);
+        View searchView = inflater.inflate(R.layout.activity_main, container, false);
         spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         addItemsOnSpinner();
@@ -105,5 +107,10 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
+    }
+
+    public void refreshLists(){
+        adapter.notifyDataSetChanged();
+        System.out.println("Searchin jälkeen: " + SerieItems.getInstance().getSerieItems());
     }
 }
