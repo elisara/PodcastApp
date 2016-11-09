@@ -16,6 +16,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         t.start();
 
 
-        //System.out.println("Main activity arraylist: " + httpGetHelper.getResults());
+
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -120,17 +121,7 @@ public class MainActivity extends AppCompatActivity {
         pf = new PlayerFragment();
         doBindService();
 
-        //Notification bar directs user to playerfragment
-        String playerFragment = getIntent().getStringExtra("fragment_name");
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (playerFragment != null) {
-            if (playerFragment.equals("PlayerFragment")) {
-                fragmentTransaction.add(R.id.player_frag_container, pf).commit();
-            }
-
-        }else{
-            fragmentTransaction.add(R.id.frag_container, sf).commit();
-        }
+        onNewIntent(getIntent());
 
 
         searchBtn = (ImageButton) findViewById(R.id.searchBtn);
@@ -231,24 +222,20 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
         sf.history = prefs.getBoolean("history", true);
-        System.out.println("----------------------RESUMEEE IN MAIN------------");
 
-        /**
-        if (sf.history == false) {
 
-        } else {
 
-        }
-            super.onResume();
 
     }
+    /**
     @Override
     public void onDestroy() {
         super.onDestroy();
         doUnbindService();
         pServ.onDestroy();
-         */
+
     }
+    */
     public boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -258,6 +245,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+
+    @Override
+    public void onNewIntent(Intent playerIntent){
+        Bundle extras = playerIntent.getExtras();
+        boolean reloadFragmentFromNotification = playerIntent.getBooleanExtra("isPlayerFragment",false);
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        if (reloadFragmentFromNotification){
+            Fragment fragment = new PlayerFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frag_container,fragment)
+                    .commit();
+        } else {
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frag_container, sf).commit();
+
+        }
     }
 
     @Override
@@ -285,18 +291,17 @@ public class MainActivity extends AppCompatActivity {
                         (conn.getInputStream())));
 
                 String output;
-                System.out.println("Output from Server .... \n");
+
                 while ((output = br.readLine()) != null) {
                     try {
                         JSONObject jObject = new JSONObject(output);
                         apiKey = jObject.getString("api_key");
-                        System.out.println(apiKey);
                         new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true");
                     } catch (JSONException e) {
                         System.out.println(e);
                     }
                 }
-                System.out.println("-------RUN DONE--------");
+
                 conn.disconnect();
             } catch (
                     MalformedURLException e
@@ -336,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
 
         int count = getSupportFragmentManager().getBackStackEntryCount();
 
-        if (count == 0) {
+        if (count == 0 ) {
             super.onBackPressed();
 
         }

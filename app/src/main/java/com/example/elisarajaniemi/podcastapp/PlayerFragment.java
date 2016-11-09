@@ -33,13 +33,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private final Handler handler = new Handler();
     private boolean playServiceStarted;
     private Utilities utils;
-    private PodcastItem pi, pi2, podcastItem;
-    String episodeUrl;
-    PlaylistsFragment pf;
+    private PodcastItem piFromService, piFromClick, pi2;
+
 
     MainActivity mActivity;
 
-    private String audioPath;
+
 
 
     @Override
@@ -49,17 +48,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         playServiceStarted = mActivity.isMyServiceRunning(PlayService.class);
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
-        pi = (PodcastItem) getArguments().getSerializable("episode");
-        pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
-        if(pi != null) {
-            podcastItem = pi;
-            System.out.println("Podcast URL IF: " + podcastItem.url);
-        }else if(pi2 != null) {
-            podcastItem = pi2;
-            System.out.println("Podcast URL ELSE IF: " + podcastItem.url);
+        piFromService = mActivity.pServ.getPodcastObject();
+        if( getArguments() == null) piFromClick = piFromService;
+        else{
+            piFromClick = (PodcastItem) getArguments().getSerializable("episode");
+            pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
+             if(pi2 != null) {
+                 piFromClick = pi2;
+                System.out.println("Podcast URL ELSE IF: " + piFromClick.url);
+            }
         }
-        //System.out.println("URL in PlayerFragment: " + pi.url);
-        //System.out.println("episodeUrl in playerFragment: " + episodeUrl);
+
+
 
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
@@ -97,10 +97,35 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         seekbar.setOnSeekBarChangeListener(this);
         utils = new Utilities();
+        if(!playServiceStarted) {
 
 
+            Intent podcast = new Intent(getActivity(), PlayService.class);
+            getActivity().startService(podcast);
 
+            playServiceStarted = true;
+            mActivity.pServ.setPodcastObject(piFromClick);
+            mActivity.pServ.setAudioPath();
+            mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
+            mActivity.pServ.mPlayer.setOnCompletionListener(this);
+        }
+        if(mActivity.pServ.isPlaying()){
 
+            mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration(); // gets the song length in milliseconds from URL
+            updateProgressBar();
+            playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
+            if(!piFromClick.url.equals(piFromService.url)){
+
+                mediaFileLengthInMilliseconds = 0;
+                mActivity.pServ.stopMusic();
+                mActivity.pServ.initPlayer();
+                mActivity.pServ.setPodcastObject(piFromClick);
+                mActivity.pServ.setAudioPath();
+                playBtn.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
+                mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
+                mActivity.pServ.mPlayer.setOnCompletionListener(this);
+            }
+        }
         return view;
 
     }
@@ -119,12 +144,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             case R.id.playBtn:
 
                 if(!playServiceStarted) {
-                    Intent podcast = new Intent(getActivity(), PlayService.class);
-                    getActivity().startService(podcast);
-                    playServiceStarted = true;
-                    mActivity.pServ.setAudioPath(podcastItem.url);
-                    mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
-                    mActivity.pServ.mPlayer.setOnCompletionListener(this);
+
                     mActivity.pServ.playMusic();
                     playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
                 }else{
