@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -28,6 +29,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
     private ListView listView;
     private SerieArrayAdapter adapter;
+    private EpisodeListArrayAdapter episodeAdapter;
     private ImageButton menuBtn;
     private Spinner spinner;
     private Button categoryBtn;
@@ -132,5 +134,28 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
+    }
+
+    public void refreshLists(){
+        episodeAdapter = new EpisodeListArrayAdapter(getContext() ,PodcastItems.getInstance().getItems());
+        listView.setAdapter(episodeAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
+                PodcastItem pi = PodcastItems.getInstance().getItems().get(position);
+                //Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                //intent.putExtra("message", pi);
+                //getActivity().startActivity(intent);
+                pf = new PlayerFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("message", pi);
+                pf.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("sf")
+                        .replace(R.id.frag_container, pf).commit();
+
+            }
+
+        });
+        System.out.println("Searchin jälkeen: " + SerieItems.getInstance().getSerieItems());
     }
 }

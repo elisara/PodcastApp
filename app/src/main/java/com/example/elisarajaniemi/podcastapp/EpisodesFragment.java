@@ -9,12 +9,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -55,14 +58,11 @@ public class EpisodesFragment extends Fragment {
 
         collectionName = (TextView) view.findViewById(R.id.collectionTitle);
         collectionName.setText(pi.collectionName);
-        //podcastItems = PodcastItems.getInstance();
-        //listAll = podcastItems.getItems();
-
 
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
         fillList();
-       // adapter = new EpisodeListArrayAdapter(getContext(), this.list);
-       // listView.setAdapter(adapter);
+        sendToPlaylists();
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
@@ -83,19 +83,35 @@ public class EpisodesFragment extends Fragment {
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> av, View v, int position, long rowId) {
+            public boolean onItemLongClick(AdapterView<?> av, View v, final int position, long rowId) {
 
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                 alertDialogBuilder.setTitle("Description");
 
                 LinearLayout lp = new LinearLayout(getContext());
                 lp.setOrientation(LinearLayout.VERTICAL);
-                lp.setPadding(30,30,30,30);
+                lp.setPadding(30, 30, 30, 60);
 
                 final TextView description = new TextView(getActivity());
-                description.setText(list.get(position).description);
+                final Button shareBtn = new Button(getActivity());
+                shareBtn.setText("share");
+                shareBtn.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent sendIntent = new Intent();
+                        Object obj = list.get(position);
+                        PodcastItem podcastItem = (PodcastItem) obj;
+                        sendIntent.setAction(Intent.ACTION_SEND);
+
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, podcastItem.title + " " + podcastItem.url);
+                        sendIntent.setType("text/plain");
+                        startActivity(sendIntent);
+                    }
+                });
+                String[] splits = list.get(position).description.split("<a>");
+                description.setText(splits[0].replaceAll("<br>", "\n\n"));
                 description.setMovementMethod(new ScrollingMovementMethod());
                 lp.addView(description);
+                lp.addView(shareBtn);
 
                 alertDialogBuilder.setView(lp);
 
@@ -127,25 +143,25 @@ public class EpisodesFragment extends Fragment {
 
     public URL createUrl(String urli) throws IOException {
         URL url = new URL(urli);
-       return url;
+        return url;
     }
 
     /**
-    public Drawable getDrawableFromURL(String imageUrl) {
-        try {
-            URL url = new URL(imageUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Drawable d = Drawable.createFromStream(input, "src name");
-            //Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return d;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }*/
+     public Drawable getDrawableFromURL(String imageUrl) {
+     try {
+     URL url = new URL(imageUrl);
+     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+     connection.setDoInput(true);
+     connection.connect();
+     InputStream input = connection.getInputStream();
+     Drawable d = Drawable.createFromStream(input, "src name");
+     //Bitmap myBitmap = BitmapFactory.decodeStream(input);
+     return d;
+     } catch (IOException e) {
+     e.printStackTrace();
+     return null;
+     }
+     }*/
 
 
 
@@ -170,6 +186,14 @@ public class EpisodesFragment extends Fragment {
         adapter = new EpisodeListArrayAdapter(getContext(), list);
         listView.setAdapter(adapter);
 
+
+
+    }
+
+    public void sendToPlaylists(){
+        if(adapter.addToPlaylist == true){
+            System.out.println("Saatu adapterista: "+adapter.podcastItem.title);
+        }
     }
 
 }

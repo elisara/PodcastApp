@@ -35,6 +35,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private Utilities utils;
     private PodcastItem piFromService;
     private PodcastItem piFromClick;
+
     MainActivity mActivity;
 
 
@@ -45,12 +46,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         this.mActivity = (MainActivity) getActivity();
         playServiceStarted = mActivity.isMyServiceRunning(PlayService.class);
-        System.out.println("------------"+playServiceStarted+"------------");
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
         piFromService = mActivity.pServ.getPodcastObject();
         if( getArguments() == null) piFromClick = piFromService;
-        else piFromClick = (PodcastItem) getArguments().getSerializable("episode");
+        else{
+            piFromClick = (PodcastItem) getArguments().getSerializable("episode");
+            pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
+            if(piFromClick != null) {
+                podcastItem = pi;
+                System.out.println("Podcast URL IF: " + podcastItem.url);
+            }else if(pi2 != null) {
+                podcastItem = pi2;
+                System.out.println("Podcast URL ELSE IF: " + podcastItem.url);
+            }
+        }
 
 
 

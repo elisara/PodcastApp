@@ -2,9 +2,11 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.app.ActionBar;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -17,15 +19,19 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,8 +62,11 @@ import static android.R.attr.apiKey;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageButton menuBtn;
+    private String search;
+    private ImageButton menuBtn, searchBtn;
+    AlertDialog alertDialog;
     private MenuFragment mf;
+    private SearchFragment searchFragment;
     private TextView title;
     private boolean categoryOpen, menuOpen;
     private SerieFragment sf;
@@ -86,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        System.out.println("----------------------ONCREATE IN MAIN------------");
+        final Context context = this;
 
 
         HttpGetHelper httpGetHelper = new HttpGetHelper();
@@ -106,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         mf = new MenuFragment();
         sf = new SerieFragment();
+        searchFragment = new SearchFragment();
         pServ = new PlayService();
         ef = new EpisodesFragment();
         pf = new PlayerFragment();
@@ -114,7 +124,56 @@ public class MainActivity extends AppCompatActivity {
         onNewIntent(getIntent());
 
 
+        searchBtn = (ImageButton) findViewById(R.id.searchBtn);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                alertDialogBuilder.setTitle("Search");
 
+                LinearLayout lp = new LinearLayout(context);
+                lp.setOrientation(LinearLayout.VERTICAL);
+                lp.setPadding(30, 30, 30, 60);
+
+                final EditText searchField = new EditText(context);
+
+                lp.addView(searchField);
+                alertDialogBuilder.setView(lp);
+
+                alertDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        search = searchField.getText().toString();
+                        System.out.println("Search value: " + search);
+                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
+
+                    }
+                });
+
+                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+                /**searchBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        search = searchField.getText().toString();
+                        System.out.println("Search value: " + search);
+                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
+                        //alertDialog.cancel();
+                        //searchFragment.refreshLists();
+                    }
+                });*/
+            }
+        });
 
         menuBtn = (ImageButton) findViewById(R.id.menuBtn);
         menuBtn.setOnClickListener(new View.OnClickListener() {

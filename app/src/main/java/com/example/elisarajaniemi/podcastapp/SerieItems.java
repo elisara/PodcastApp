@@ -22,7 +22,7 @@ public class SerieItems {
 
     public void addSerieItem(PodcastItem item){
         if(!series.contains(item)){
-            series.add(0,item);
+            series.add(0, item);
         }
     }
 
