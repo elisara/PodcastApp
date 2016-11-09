@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (playerFragment != null) {
             if (playerFragment.equals("PlayerFragment")) {
-                fragmentTransaction.add(R.id.menu_frag_container, pf).commit();
+                fragmentTransaction.add(R.id.player_frag_container, pf).commit();
             }
 
         }else{

@@ -73,7 +73,7 @@ public class EpisodesFragment extends Fragment {
                 pf.setArguments(bundle2);
 
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("ef")
-                        .add(R.id.menu_frag_container, pf).commit();
+                        .add(R.id.player_frag_container, pf).commit();
 
 
             }
