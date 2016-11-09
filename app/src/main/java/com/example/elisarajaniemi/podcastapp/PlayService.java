@@ -46,7 +46,6 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     public void onCreate() {
         super.onCreate();
 
-
         mPlayer = new MediaPlayer();
         mPlayer.setOnErrorListener(this);
 

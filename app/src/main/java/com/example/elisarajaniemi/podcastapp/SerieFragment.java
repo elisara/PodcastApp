@@ -45,7 +45,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        httpGetHelper = new HttpGetHelper();
+        //httpGetHelper = new HttpGetHelper();
 
         //Sorting stuff
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -57,7 +57,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         spinner.setOnItemSelectedListener(this);
         addItemsOnSpinner();
 
-        pf = new PlayerFragment();
+        //pf = new PlayerFragment();
 
         categoryBtn = (Button) view.findViewById(R.id.categoryBtn);
         categoryBtn.setOnClickListener(new View.OnClickListener() {

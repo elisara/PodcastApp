@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        System.out.println("----------------------ONCREATE IN MAIN------------");
+
         /**
         MyCrypt rali = new MyCrypt();
 
@@ -136,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         mf = new MenuFragment();
         sf = new SerieFragment();
         pServ = new PlayService();
-        //ef = new EpisodesFragment();
+        ef = new EpisodesFragment();
         pf = new PlayerFragment();
         doBindService();
 
@@ -145,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (playerFragment != null) {
             if (playerFragment.equals("PlayerFragment")) {
-                fragmentTransaction.add(R.id.frag_container, pf).commit();
+                fragmentTransaction.add(R.id.menu_frag_container, pf).commit();
             }
 
         }else{
@@ -229,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
         sf.history = prefs.getBoolean("history", true);
+        System.out.println("----------------------RESUMEEE IN MAIN------------");
 
         /**
         if (sf.history == false) {
@@ -293,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(e);
                     }
                 }
+                System.out.println("-------RUN DONE--------");
                 conn.disconnect();
             } catch (
                     MalformedURLException e
@@ -335,7 +339,8 @@ public class MainActivity extends AppCompatActivity {
         if (count == 0) {
             super.onBackPressed();
 
-        } else {
+        }
+        else {
             getSupportFragmentManager().popBackStackImmediate();
         }
 
