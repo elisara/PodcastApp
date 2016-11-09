@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         final Context context = this;
 
         /**
-        RegisterAndLogin rali = new RegisterAndLogin();
+        MyCrypt rali = new MyCrypt();
 
         try {
             rali.encryptString();
@@ -130,8 +130,6 @@ public class MainActivity extends AppCompatActivity {
         Thread t = new Thread(r);
         t.start();
 
-        System.out.println(SerieItems.getInstance().getSerieItems().size());
-
 
         //System.out.println("Main activity arraylist: " + httpGetHelper.getResults());
 
@@ -146,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         mf = new MenuFragment();
         sf = new SerieFragment();
         pServ = new PlayService();
-        //ef = new EpisodesFragment();
+        ef = new EpisodesFragment();
         pf = new PlayerFragment();
         doBindService();
 
@@ -155,11 +153,11 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (playerFragment != null) {
             if (playerFragment.equals("PlayerFragment")) {
-                fragmentTransaction.add(R.id.frag_container, pf).addToBackStack("tag").commit();
+                fragmentTransaction.add(R.id.menu_frag_container, pf).commit();
             }
 
         }else{
-            fragmentTransaction.add(R.id.frag_container, sf).addToBackStack("tag").commit();
+            fragmentTransaction.add(R.id.frag_container, sf).commit();
         }
 
 
@@ -214,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        /**
         //PodcastItem from SerieFragment and directed to EpisodeFragment
         Intent intent = getIntent();
         pi = (PodcastItem)intent.getSerializableExtra("message");
@@ -238,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frag_container, pf).commit();
         }
+         */
 
     }
 
@@ -269,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
         sf.history = prefs.getBoolean("history", true);
+        System.out.println("----------------------RESUMEEE IN MAIN------------");
 
         /**
         if (sf.history == false) {
@@ -333,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(e);
                     }
                 }
+                System.out.println("-------RUN DONE--------");
                 conn.disconnect();
             } catch (
                     MalformedURLException e
@@ -366,17 +368,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public void onBackPressed() {
 
-        int count = getFragmentManager().getBackStackEntryCount();
+        int count = getSupportFragmentManager().getBackStackEntryCount();
 
         if (count == 0) {
             super.onBackPressed();
-           // getSupportFragmentManager().beginTransaction()
-                    //.replace(R.id.frag_container, sf).addToBackStack("tag").commit();
-        } else {
-            getFragmentManager().popBackStack();
+
+        }
+        else {
+            getSupportFragmentManager().popBackStackImmediate();
         }
 
     }

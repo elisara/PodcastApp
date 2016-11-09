@@ -188,6 +188,15 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                                 password2_ = password2.getText().toString();
                                 email_ = email.getText().toString();
                                 Toast.makeText(getContext(), "User "+ username_ +" created", Toast.LENGTH_SHORT).show();
+
+                                /**
+                                MyCrypt mc = new MyCrypt();
+                                String dummyStr = "asfaesdf237263923902;/.’;./>23y283g2k3nre”D;ASdsn;fnddffk";
+                                byte[] bytes = dummyStr.getBytes("UTF-8");
+                                String encryptedStr = mc.byteArrayToHexString(dummyStr);
+                                System.out.println("ENCRYPTED: " + encryptedStr);
+*/
+
                                 registered = true;
                                 alertDialog.cancel();
                                 //alertDialogBuilder.

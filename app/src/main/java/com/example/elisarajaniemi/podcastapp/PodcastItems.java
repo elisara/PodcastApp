@@ -25,10 +25,6 @@ public class PodcastItems {
         }
     }
 
-    public void clearItems(){
-        items.clear();
-    }
-
     public ArrayList<PodcastItem> getItems(){
         return items;
     }

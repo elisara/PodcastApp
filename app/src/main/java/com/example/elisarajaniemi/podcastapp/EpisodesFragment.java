@@ -40,62 +40,48 @@ public class EpisodesFragment extends Fragment {
     private EpisodeListArrayAdapter adapter;
     private HttpGetHelper httpGetHelper;
     private String message;
-    private ArrayList<PodcastItem> list, listAll;
+    private ArrayList<PodcastItem> list;
     private PodcastItem pi;
     private MainActivity ma;
     AlertDialog alertDialog;
     private TextView collectionName;
     private LinearLayout headerBox;
+    private PlayerFragment pf;
+    public PodcastItems podcastItems = PodcastItems.getInstance();
+    private ArrayList<PodcastItem> listAll = podcastItems.getItems();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         pi = (PodcastItem) getArguments().getSerializable("message");
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
-        httpGetHelper = new HttpGetHelper();
+        //httpGetHelper = new HttpGetHelper();
 
         collectionName = (TextView) view.findViewById(R.id.collectionTitle);
         collectionName.setText(pi.collectionName);
-
-        list = new ArrayList<>();
-        listAll = new ArrayList<>();
-
-        if (list != null || listAll != null) {
-            list.clear();
-            listAll.clear();
-        }
-
-        listAll = PodcastItems.getInstance().getItems();
-
-        if (list.size() == 0) {
-            for (int i = 0; i < listAll.size(); i++) {
-                if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
-                    list.add(listAll.get(i));
-                }
-            }
-        }
+        //podcastItems = PodcastItems.getInstance();
+        //listAll = podcastItems.getItems();
 
 
-        /**
-         String imageUrl = "http://bit.ly/18X6WXa";
-         headerBox = (LinearLayout) view.findViewById(R.id.headerBox);
-         headerBox.setBackground(getDrawableFromURL(imageUrl));
-
-
-         */
-
-        System.out.println("LISTAN KOKO: " + list.size());
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
-        adapter = new EpisodeListArrayAdapter(getContext(), this.list);
-        listView.setAdapter(adapter);
+        fillList();
+       // adapter = new EpisodeListArrayAdapter(getContext(), this.list);
+       // listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PodcastItem pi = list.get(position);
-                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                intent.putExtra("episode", pi);
-                getActivity().startActivity(intent);
-                System.out.println("Download URL" + PodcastItems.getInstance().getItems().get(position).url);
-                PodcastItems.getInstance().clearItems();
+                //Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                //intent.putExtra("episode", pi);
+                //getActivity().startActivity(intent);
+                pf = new PlayerFragment();
+                Bundle bundle2 = new Bundle();
+                bundle2.putSerializable("episode", pi);
+                pf.setArguments(bundle2);
+
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("ef")
+                        .add(R.id.menu_frag_container, pf).commit();
+
+                //PodcastItems.getInstance().clearItems();
 
             }
 
@@ -142,9 +128,9 @@ public class EpisodesFragment extends Fragment {
             }
         });
 
-        PodcastItems.getInstance().clearItems();
         return view;
     }
+
 
     @Override
     public void onPause() {
@@ -155,6 +141,9 @@ public class EpisodesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        fillList();
+        System.out.println("----------------------RESUMEEE------------");
+
 
     }
 
@@ -180,5 +169,29 @@ public class EpisodesFragment extends Fragment {
      }
      }*/
 
+
+
+    public void fillList(){
+        //PodcastItems podcastItems = PodcastItems.getInstance();
+
+        list = new ArrayList<>();
+        //listAll = new ArrayList<>();
+
+       //listAll = podcastItems.getItems();
+
+        if(list.size() == 0) {
+            for (int i = 0; i < listAll.size(); i++) {
+                if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
+                    list.add(listAll.get(i));
+                }
+            }
+        }
+
+        System.out.println("LISTALL koko: " + listAll.size());
+        System.out.println("LISTAN KOKO: " + list.size());
+        adapter = new EpisodeListArrayAdapter(getContext(), list);
+        listView.setAdapter(adapter);
+
+    }
 
 }

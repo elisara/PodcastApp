@@ -18,6 +18,8 @@ import android.widget.Spinner;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Elisa Rajaniemi on 27.10.2016.
@@ -38,13 +40,13 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private HttpGetHelper httpGetHelper;
     private boolean itemsAdded;
     private MainActivity ma;
-    private ArrayList<PodcastItem> list;
+    private ArrayList<PodcastItem> list, list2;
 
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        httpGetHelper = new HttpGetHelper();
+        //httpGetHelper = new HttpGetHelper();
 
         //Sorting stuff
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -57,7 +59,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         spinner.setOnItemSelectedListener(this);
         addItemsOnSpinner();
 
-        pf = new PlayerFragment();
+        //pf = new PlayerFragment();
 
         categoryBtn = (Button) view.findViewById(R.id.categoryBtn);
         categoryBtn.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +71,9 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             }
         });
 
-        list = PodcastItems.getInstance().getItems();
+        list = new ArrayList<PodcastItem>();
+        list2 = new ArrayList<PodcastItem>();
+
 
         listView = (ListView) view.findViewById(R.id.serieList);
         adapter = new SerieArrayAdapter(getContext(), SerieItems.getInstance().getSerieItems());
@@ -78,9 +82,15 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PodcastItem pi = SerieItems.getInstance().getSerieItems().get(position);
-                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                intent.putExtra("message", pi);
-                getActivity().startActivity(intent);
+                //Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                //intent.putExtra("message", pi);
+                //getActivity().startActivity(intent);
+                ef = new EpisodesFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("message", pi);
+                ef.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("sf")
+                        .replace(R.id.frag_container, ef).commit();
 
             }
 
@@ -92,15 +102,32 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort_array, android.R.layout.simple_spinner_item);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
-        System.out.println("added items to spinner");
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String value = parent.getItemAtPosition(position).toString();
+        //list.clear();
         if (value.contains("NAME")) {
+            list = SerieItems.getInstance().getSerieItems();
+            Collections.sort(list, new Comparator<PodcastItem>(){
+                public int compare(PodcastItem pod1, PodcastItem pod2) {
+                    return pod1.collectionName.compareToIgnoreCase(pod2.collectionName); // To compare string values
+                }
+            });
+            adapter = new SerieArrayAdapter(getContext(), list);
+            listView.setAdapter(adapter);
             System.out.println("SORT: NAME");
+
         } else if (value.contains("NEW")) {
+            list2 = SerieItems.getInstance().getSerieItems();
+            Collections.sort(list2, new Comparator<PodcastItem>(){
+                public int compare(PodcastItem pod1, PodcastItem pod2) {
+                    return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
+                }
+            });
+            adapter = new SerieArrayAdapter(getContext(), list2);
+            listView.setAdapter(adapter);
             System.out.println("SORT: NEW");
         }
     }
