@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         t.start();
 
 
-        //System.out.println("Main activity arraylist: " + httpGetHelper.getResults());
+
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -222,24 +222,20 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
         sf.history = prefs.getBoolean("history", true);
-        System.out.println("----------------------RESUMEEE IN MAIN------------");
 
-        /**
-        if (sf.history == false) {
 
-        } else {
 
-        }
-            super.onResume();
 
     }
+    /**
     @Override
     public void onDestroy() {
         super.onDestroy();
         doUnbindService();
         pServ.onDestroy();
-         */
+
     }
+    */
     public boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -259,7 +255,6 @@ public class MainActivity extends AppCompatActivity {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         if (reloadFragmentFromNotification){
             Fragment fragment = new PlayerFragment();
-            System.out.println("-------------> player fragment");
             fragmentManager.beginTransaction()
                     .replace(R.id.frag_container,fragment)
                     .commit();
@@ -296,18 +291,17 @@ public class MainActivity extends AppCompatActivity {
                         (conn.getInputStream())));
 
                 String output;
-                System.out.println("Output from Server .... \n");
+
                 while ((output = br.readLine()) != null) {
                     try {
                         JSONObject jObject = new JSONObject(output);
                         apiKey = jObject.getString("api_key");
-                        System.out.println(apiKey);
                         new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true");
                     } catch (JSONException e) {
                         System.out.println(e);
                     }
                 }
-                System.out.println("-------RUN DONE--------");
+
                 conn.disconnect();
             } catch (
                     MalformedURLException e

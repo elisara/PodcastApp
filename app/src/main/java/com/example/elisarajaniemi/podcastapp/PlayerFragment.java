@@ -33,8 +33,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private final Handler handler = new Handler();
     private boolean playServiceStarted;
     private Utilities utils;
-    private PodcastItem piFromService;
-    private PodcastItem piFromClick;
+    private PodcastItem piFromService, piFromClick, pi2;
+
 
     MainActivity mActivity;
 
@@ -53,12 +53,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         else{
             piFromClick = (PodcastItem) getArguments().getSerializable("episode");
             pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
-            if(piFromClick != null) {
-                podcastItem = pi;
-                System.out.println("Podcast URL IF: " + podcastItem.url);
-            }else if(pi2 != null) {
-                podcastItem = pi2;
-                System.out.println("Podcast URL ELSE IF: " + podcastItem.url);
+             if(pi2 != null) {
+                 piFromClick = pi2;
+                System.out.println("Podcast URL ELSE IF: " + piFromClick.url);
             }
         }
 
@@ -102,7 +99,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         utils = new Utilities();
         if(!playServiceStarted) {
 
-            System.out.println("------------------kohta 1");
+
             Intent podcast = new Intent(getActivity(), PlayService.class);
             getActivity().startService(podcast);
 
@@ -113,12 +110,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             mActivity.pServ.mPlayer.setOnCompletionListener(this);
         }
         if(mActivity.pServ.isPlaying()){
-            System.out.println("------------------kohta 2");
+
             mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration(); // gets the song length in milliseconds from URL
             updateProgressBar();
             playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
             if(!piFromClick.url.equals(piFromService.url)){
-                System.out.println("------------------kohta 3");
+
                 mediaFileLengthInMilliseconds = 0;
                 mActivity.pServ.stopMusic();
                 mActivity.pServ.initPlayer();

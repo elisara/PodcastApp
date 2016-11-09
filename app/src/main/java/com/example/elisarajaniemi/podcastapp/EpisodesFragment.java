@@ -136,7 +136,7 @@ public class EpisodesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fillList();
-        System.out.println("----------------------RESUMEEE------------");
+
 
 
     }
@@ -181,8 +181,7 @@ public class EpisodesFragment extends Fragment {
             }
         }
 
-        System.out.println("LISTALL koko: " + listAll.size());
-        System.out.println("LISTAN KOKO: " + list.size());
+
         adapter = new EpisodeListArrayAdapter(getContext(), list);
         listView.setAdapter(adapter);
 
@@ -192,7 +191,7 @@ public class EpisodesFragment extends Fragment {
 
     public void sendToPlaylists(){
         if(adapter.addToPlaylist == true){
-            System.out.println("Saatu adapterista: "+adapter.podcastItem.title);
+
         }
     }
 
