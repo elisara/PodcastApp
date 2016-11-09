@@ -32,6 +32,8 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
         super.onPreExecute();
         serieFragment = new SerieFragment();
         executed = false;
+        podcastItems.getItems().clear();
+        serieItems.getSerieItems().clear();
     }
 
     @Override

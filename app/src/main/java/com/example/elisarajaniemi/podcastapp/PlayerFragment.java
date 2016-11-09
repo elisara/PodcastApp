@@ -33,7 +33,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private final Handler handler = new Handler();
     private boolean playServiceStarted;
     private Utilities utils;
-    private PodcastItem pi;
+    private PodcastItem pi, pi2, podcastItem;
     String episodeUrl;
     PlaylistsFragment pf;
 
@@ -50,7 +50,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
         pi = (PodcastItem) getArguments().getSerializable("episode");
-        System.out.println("URL in PlayerFragment: " + pi.url);
+        pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
+        if(pi != null) {
+            podcastItem = pi;
+            System.out.println("Podcast URL IF: " + podcastItem.url);
+        }else if(pi2 != null) {
+            podcastItem = pi2;
+            System.out.println("Podcast URL ELSE IF: " + podcastItem.url);
+        }
+        //System.out.println("URL in PlayerFragment: " + pi.url);
         //System.out.println("episodeUrl in playerFragment: " + episodeUrl);
 
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
@@ -114,7 +122,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                     Intent podcast = new Intent(getActivity(), PlayService.class);
                     getActivity().startService(podcast);
                     playServiceStarted = true;
-                    mActivity.pServ.setAudioPath(pi.url);
+                    mActivity.pServ.setAudioPath(podcastItem.url);
                     mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
                     mActivity.pServ.mPlayer.setOnCompletionListener(this);
                     mActivity.pServ.playMusic();

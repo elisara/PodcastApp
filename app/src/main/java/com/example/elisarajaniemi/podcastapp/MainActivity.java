@@ -2,9 +2,11 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.app.ActionBar;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton menuBtn, searchBtn;
     AlertDialog alertDialog;
     private MenuFragment mf;
+    private SearchFragment searchFragment;
     private TextView title;
     private boolean categoryOpen, menuOpen;
     private SerieFragment sf;
@@ -143,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
         mf = new MenuFragment();
         sf = new SerieFragment();
+        searchFragment = new SearchFragment();
         pServ = new PlayService();
         ef = new EpisodesFragment();
         pf = new PlayerFragment();
@@ -172,26 +176,43 @@ public class MainActivity extends AppCompatActivity {
                 lp.setPadding(30, 30, 30, 60);
 
                 final EditText searchField = new EditText(context);
-                final Button searchBtn = new Button(context);
-                searchBtn.setText("search");
-                lp.addView(searchField);
-                lp.addView(searchBtn);
 
-                searchBtn.setOnClickListener(new View.OnClickListener() {
+                lp.addView(searchField);
+                alertDialogBuilder.setView(lp);
+
+                alertDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        search = searchField.getText().toString();
+                        System.out.println("Search value: " + search);
+                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
+
+                    }
+                });
+
+                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+                /**searchBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         search = searchField.getText().toString();
                         System.out.println("Search value: " + search);
                         new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
-                        sf.refreshLists();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
+                        //alertDialog.cancel();
+                        //searchFragment.refreshLists();
                     }
-                });
-
-                alertDialogBuilder.setView(lp);
-
-                alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-
+                });*/
             }
         });
 

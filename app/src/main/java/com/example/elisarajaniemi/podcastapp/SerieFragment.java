@@ -29,6 +29,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
     private ListView listView;
     private SerieArrayAdapter adapter;
+    private EpisodeListArrayAdapter episodeAdapter;
     private ImageButton menuBtn;
     private Spinner spinner;
     private Button categoryBtn;
@@ -54,7 +55,6 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         System.out.println("History in series onCreateView: " + history);
 
         View view = inflater.inflate(R.layout.serie_layout, container, false);
-        View searchView = inflater.inflate(R.layout.activity_main, container, false);
         spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         addItemsOnSpinner();
@@ -137,7 +137,25 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     }
 
     public void refreshLists(){
-        adapter.notifyDataSetChanged();
+        episodeAdapter = new EpisodeListArrayAdapter(getContext() ,PodcastItems.getInstance().getItems());
+        listView.setAdapter(episodeAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
+                PodcastItem pi = PodcastItems.getInstance().getItems().get(position);
+                //Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                //intent.putExtra("message", pi);
+                //getActivity().startActivity(intent);
+                pf = new PlayerFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("message", pi);
+                pf.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("sf")
+                        .replace(R.id.frag_container, pf).commit();
+
+            }
+
+        });
         System.out.println("Searchin jälkeen: " + SerieItems.getInstance().getSerieItems());
     }
 }
