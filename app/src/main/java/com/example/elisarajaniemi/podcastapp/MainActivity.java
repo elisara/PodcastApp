@@ -96,38 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
         final Context context = this;
 
-        /**
-        MyCrypt rali = new MyCrypt();
-
-        try {
-            rali.encryptString();
-        }
-        catch (NoSuchAlgorithmException a){
-            System.out.println("EIIIIIIII");
-        }
-        catch (NoSuchPaddingException b){
-            System.out.println("EIIIIIIII");
-        }
-        catch (InvalidKeyException c){
-            System.out.println("EIIIIIIII");
-        }
-        catch (InvalidAlgorithmParameterException d){
-            System.out.println("EIIIIIIII");
-        }
-        catch (IllegalBlockSizeException e){
-            System.out.println("EIIIIIIII");
-        }
-        catch (BadPaddingException f){
-            System.out.println("EIIIIIIII");
-        }
-        catch (InvalidKeySpecException g ){
-            System.out.println("EIIIIIIII");
-        }
-        catch (UnsupportedEncodingException h){
-            System.out.println("EIIIIIIII");
-        }
-         */
-
 
         HttpGetHelper httpGetHelper = new HttpGetHelper();
         Thread t = new Thread(r);
@@ -232,33 +200,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        /**
-        //PodcastItem from SerieFragment and directed to EpisodeFragment
-        Intent intent = getIntent();
-        pi = (PodcastItem)intent.getSerializableExtra("message");
-        ef = new EpisodesFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("message", pi);
-        ef.setArguments(bundle);
-
-        if(pi != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frag_container, ef).commit();
-        }
-
-        //PodcastItem from EpisodeFragment and directed to PlayerFragment
-        Intent intent2 = getIntent();
-        pi2 = (PodcastItem)intent2.getSerializableExtra("episode");
-        Bundle bundle2 = new Bundle();
-        bundle2.putSerializable("episode", pi2);
-        pf.setArguments(bundle2);
-
-        if(pi2 != null){
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frag_container, pf).commit();
-        }
-         */
 
     }
 

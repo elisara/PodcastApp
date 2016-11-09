@@ -27,34 +27,41 @@ public class PlaylistsFragment extends Fragment {
 
 
     private ListView listView;
-    private SerieArrayAdapter adapter;
+    private PlaylistsArrayAdapter adapter;
     private MenuFragment mf;
     private String playlistName;
+    private ArrayList<PlaylistItem> list;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.playlist_layout, container, false);
 
         mf = new MenuFragment();
+        list = new ArrayList<>();
 
-        final ArrayList<PodcastItem> list = new ArrayList<>();
-        /**list.add("playlist1");
-        list.add("playlist2");
-        list.add("playlist3");
-        list.add("playlist4");
-         */
+        ArrayList<PodcastItem> kissat = new ArrayList<>();
+        ArrayList<PodcastItem> koirat = new ArrayList<>();
+
+        PlaylistItem playlistItem = new PlaylistItem("kissat", kissat);
+        PlaylistItem playlistItem2 = new PlaylistItem("koirat", koirat);
+
+        list.add(playlistItem);
+        list.add(playlistItem2);
+
 
         listView = (ListView) view.findViewById(R.id.playlist_list);
-        adapter = new SerieArrayAdapter(getContext(), PodcastItems.getInstance().getItems());
+        adapter = new PlaylistsArrayAdapter(getContext(), list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                //String value = list.get(position).toString();
+                PlaylistItem value = list.get(position);
                 //System.out.println(value);
-                SinglePlaylistFragment splf = new SinglePlaylistFragment();
+                System.out.println("Episoden nimi playlistsfragmentissa: " + value.name);
+
+               /** SinglePlaylistFragment splf = new SinglePlaylistFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
+                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();*/
             }
 
         });
@@ -63,43 +70,59 @@ public class PlaylistsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-
-                // set title
-                alertDialogBuilder.setTitle("Create new playlist");
-
-                // set dialog message
-                alertDialogBuilder.setMessage("Name of the playlist:");
-
-                //editText in dialog
-                final EditText input = new EditText(getActivity());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-                input.setLayoutParams(lp);
-                alertDialogBuilder.setView(input);
-
-                //alertDialogBuilder.setCancelable(false)
-                alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                playlistName = input.getText().toString();
-                                Toast.makeText(getContext(), "Playlist "+ playlistName +" created", Toast.LENGTH_SHORT).show();
-                                //list.add(playlistName);
-
-                            }
-                        })
-                        .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                createNewPlaylist();
             }
         });
 
         return view;
+    }
+
+    public void createNewPlaylist(){
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+
+        // set title
+        alertDialogBuilder.setTitle("Create new playlist");
+
+        // set dialog message
+        alertDialogBuilder.setMessage("Name of the playlist:");
+
+        //editText in dialog
+        final EditText input = new EditText(getActivity());
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialogBuilder.setView(input);
+
+        //alertDialogBuilder.setCancelable(false)
+        alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int id) {
+                playlistName = input.getText().toString();
+                Toast.makeText(getContext(), "Playlist "+ playlistName +" created", Toast.LENGTH_SHORT).show();
+                ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
+                PlaylistItem addedPlaylistItem = new PlaylistItem(playlistName, addedList);
+                list.add(addedPlaylistItem);
+
+            }
+        })
+                .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+    public void addToPlaylist(PlaylistItem playlistItem){
+        list.add(playlistItem);
+    }
+
+    public ArrayList getPlaylists(){
+        return this.list;
     }
 }
