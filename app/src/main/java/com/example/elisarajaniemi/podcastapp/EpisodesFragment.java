@@ -67,18 +67,15 @@ public class EpisodesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PodcastItem pi = list.get(position);
-                //Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                //intent.putExtra("episode", pi);
-                //getActivity().startActivity(intent);
                 pf = new PlayerFragment();
                 Bundle bundle2 = new Bundle();
                 bundle2.putSerializable("episode", pi);
                 pf.setArguments(bundle2);
 
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("ef")
-                        .add(R.id.menu_frag_container, pf).commit();
+                        .replace(R.id.frag_container, pf).commit();
 
-                //PodcastItems.getInstance().clearItems();
+
 
             }
 

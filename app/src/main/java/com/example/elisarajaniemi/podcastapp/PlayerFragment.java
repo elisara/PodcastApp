@@ -33,13 +33,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private final Handler handler = new Handler();
     private boolean playServiceStarted;
     private Utilities utils;
-    private PodcastItem pi;
-    String episodeUrl;
-    PlaylistsFragment pf;
-
+    private PodcastItem piFromService;
+    private PodcastItem piFromClick;
     MainActivity mActivity;
 
-    private String audioPath;
+
 
 
     @Override
@@ -50,7 +48,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         System.out.println("------------"+playServiceStarted+"------------");
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
-        pi = (PodcastItem) getArguments().getSerializable("episode");
+        piFromService = mActivity.pServ.getPodcastObject();
+        if( getArguments() == null) piFromClick = piFromService;
+        else piFromClick = (PodcastItem) getArguments().getSerializable("episode");
+
 
 
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
@@ -89,8 +90,35 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         seekbar.setOnSeekBarChangeListener(this);
         utils = new Utilities();
+        if(!playServiceStarted) {
 
+            System.out.println("------------------kohta 1");
+            Intent podcast = new Intent(getActivity(), PlayService.class);
+            getActivity().startService(podcast);
 
+            playServiceStarted = true;
+            mActivity.pServ.setPodcastObject(piFromClick);
+            mActivity.pServ.setAudioPath();
+            mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
+            mActivity.pServ.mPlayer.setOnCompletionListener(this);
+        }
+        if(mActivity.pServ.isPlaying()){
+            System.out.println("------------------kohta 2");
+            mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration(); // gets the song length in milliseconds from URL
+            updateProgressBar();
+            playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
+            if(!piFromClick.url.equals(piFromService.url)){
+                System.out.println("------------------kohta 3");
+                mediaFileLengthInMilliseconds = 0;
+                mActivity.pServ.stopMusic();
+                mActivity.pServ.initPlayer();
+                mActivity.pServ.setPodcastObject(piFromClick);
+                mActivity.pServ.setAudioPath();
+                playBtn.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
+                mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
+                mActivity.pServ.mPlayer.setOnCompletionListener(this);
+            }
+        }
         return view;
 
     }
@@ -109,13 +137,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             case R.id.playBtn:
 
                 if(!playServiceStarted) {
-                    Intent podcast = new Intent(getActivity(), PlayService.class);
-                    getActivity().startService(podcast);
 
-                    playServiceStarted = true;
-                    if (pi != null) mActivity.pServ.setAudioPath(pi.url);
-                    mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
-                    mActivity.pServ.mPlayer.setOnCompletionListener(this);
                     mActivity.pServ.playMusic();
                     playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
                 }else{

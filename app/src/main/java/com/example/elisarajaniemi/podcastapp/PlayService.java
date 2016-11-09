@@ -12,6 +12,8 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import java.io.IOException;
+
 
 /**
  * Created by Kade on 31.10.2016.
@@ -47,29 +49,8 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     @Override
     public void onCreate() {
         super.onCreate();
+        initPlayer();
 
-        mPlayer = new MediaPlayer();
-        mPlayer.setOnErrorListener(this);
-
-
-
-
-        if (mPlayer != null) {
-            mPlayer.setLooping(true);
-            mPlayer.setVolume(100, 100);
-        }
-
-
-
-        mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-
-            public boolean onError(MediaPlayer mp, int what, int
-                    extra) {
-
-                onError(mPlayer, what, extra);
-                return true;
-            }
-        });
     }
 
     @Override
@@ -82,7 +63,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
                         .setContentText("Hello World!");
         Intent resultIntent = new Intent(this, MainActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        resultIntent.putExtra("fragment_name","PlayerFragment");
+        resultIntent.putExtra("isPlayerFragment",true);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         this,
@@ -104,9 +85,9 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
 
     public boolean isStarted() {return this.started;}
 
-    public void setAudioPath(String audioPath){
+    public void setAudioPath(){
         try {
-            mPlayer.setDataSource(audioPath); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
+            mPlayer.setDataSource(this.pi.url); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
             mPlayer.prepare();
 
             // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
@@ -119,7 +100,28 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         this.pi = pi;
         hasPodcast = true;
     }
+    public PodcastItem getPodcastObject(){
+         return this.pi;
+    }
+    public void initPlayer(){
+        mPlayer = new MediaPlayer();
+        mPlayer.setOnErrorListener(this);
 
+        if (mPlayer != null) {
+            mPlayer.setLooping(true);
+            mPlayer.setVolume(100, 100);
+        }
+
+        mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+
+            public boolean onError(MediaPlayer mp, int what, int
+                    extra) {
+                onError(mPlayer, what, extra);
+                return true;
+            }
+        });
+
+    }
     public void playMusic() {
         if (!mPlayer.isPlaying()) {
             mPlayer.start();
@@ -141,6 +143,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
 
     public void stopMusic() {
         mPlayer.stop();
+        mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
     }
