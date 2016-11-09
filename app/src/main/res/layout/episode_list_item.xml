@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:padding="16dp"
+    android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="72dp">
 
     <ImageView
         android:layout_gravity="center"
@@ -16,7 +17,18 @@
         android:id="@+id/episodeName"
         android:layout_gravity="center"
         android:text="test"
-        android:layout_width="match_parent"
+        android:layout_weight="2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/itemMenu"
+        android:focusable="false"
+        android:layout_weight=".1"
+        android:focusableInTouchMode="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_more_vert_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
