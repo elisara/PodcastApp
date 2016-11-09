@@ -47,11 +47,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         this.mActivity = (MainActivity) getActivity();
         playServiceStarted = mActivity.isMyServiceRunning(PlayService.class);
+        System.out.println("------------"+playServiceStarted+"------------");
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
         pi = (PodcastItem) getArguments().getSerializable("episode");
-        System.out.println("URL in PlayerFragment: " + pi.url);
-        //System.out.println("episodeUrl in playerFragment: " + episodeUrl);
+
 
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
@@ -91,8 +91,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         utils = new Utilities();
 
 
-
-
         return view;
 
     }
@@ -113,8 +111,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 if(!playServiceStarted) {
                     Intent podcast = new Intent(getActivity(), PlayService.class);
                     getActivity().startService(podcast);
+
                     playServiceStarted = true;
-                    mActivity.pServ.setAudioPath(pi.url);
+                    if (pi != null) mActivity.pServ.setAudioPath(pi.url);
                     mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
                     mActivity.pServ.mPlayer.setOnCompletionListener(this);
                     mActivity.pServ.playMusic();

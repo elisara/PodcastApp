@@ -24,6 +24,8 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     private int length = 0;
     private String audioPath;
     private boolean started = false;
+    private PodcastItem pi;
+    private boolean hasPodcast;
 
 
 
@@ -51,10 +53,12 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
 
 
 
+
         if (mPlayer != null) {
             mPlayer.setLooping(true);
             mPlayer.setVolume(100, 100);
         }
+
 
 
         mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -77,6 +81,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
                         .setContentTitle("My notification")
                         .setContentText("Hello World!");
         Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         resultIntent.putExtra("fragment_name","PlayerFragment");
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
@@ -110,15 +115,14 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         }
 
     }
-
-
-
+    public void setPodcastObject(PodcastItem pi){
+        this.pi = pi;
+        hasPodcast = true;
+    }
 
     public void playMusic() {
         if (!mPlayer.isPlaying()) {
             mPlayer.start();
-
-
         }
     }public void pauseMusic() {
         if (mPlayer.isPlaying()) {
