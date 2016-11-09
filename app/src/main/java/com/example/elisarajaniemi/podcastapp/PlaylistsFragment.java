@@ -1,5 +1,6 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -47,6 +48,7 @@ public class PlaylistsFragment extends Fragment {
 
         list.add(playlistItem);
         list.add(playlistItem2);
+        getPlaylists();
 
 
         listView = (ListView) view.findViewById(R.id.playlist_list);
@@ -57,7 +59,10 @@ public class PlaylistsFragment extends Fragment {
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PlaylistItem value = list.get(position);
                 //System.out.println(value);
-                System.out.println("Episoden nimi playlistsfragmentissa: " + value.name);
+
+                System.out.println("Playlistin nimi playlistsfragmentissa: " + value.name);
+                System.out.println("Playlistin pituus playlistsfragmentissa: " + value.list.size());
+
 
                /** SinglePlaylistFragment splf = new SinglePlaylistFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
@@ -70,16 +75,15 @@ public class PlaylistsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewPlaylist();
+                createNewPlaylist(getContext());
             }
         });
 
         return view;
     }
 
-    public void createNewPlaylist(){
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+    public void createNewPlaylist(Context context){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
         // set title
         alertDialogBuilder.setTitle("Create new playlist");
@@ -88,7 +92,7 @@ public class PlaylistsFragment extends Fragment {
         alertDialogBuilder.setMessage("Name of the playlist:");
 
         //editText in dialog
-        final EditText input = new EditText(getActivity());
+        final EditText input = new EditText(context);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -118,11 +122,29 @@ public class PlaylistsFragment extends Fragment {
 
     }
 
-    public void addToPlaylist(PlaylistItem playlistItem){
-        list.add(playlistItem);
+    public void addToExcistingPlaylist(ArrayList<PodcastItem> lista, PodcastItem podcastItem){
+        lista.add(0,podcastItem);
+        System.out.println("LISTA: " + lista.get(0).title);
     }
 
-    public ArrayList getPlaylists(){
-        return this.list;
+    public ArrayList<PlaylistItem> getPlaylists(){
+        //System.out.println("listan ekan nimi: " +list.get(0).name);
+        ArrayList<PlaylistItem> lista = new ArrayList<>();
+
+        ArrayList<PodcastItem> kissat = new ArrayList<>();
+        ArrayList<PodcastItem> koirat = new ArrayList<>();
+
+        PlaylistItem playlistItem = new PlaylistItem("kissat", kissat);
+        PlaylistItem playlistItem2 = new PlaylistItem("koirat", koirat);
+
+        lista.add(playlistItem);
+        lista.add(playlistItem2);
+
+        return lista;
+    }
+
+    public String getString(){
+        String koira = "koira";
+        return koira;
     }
 }

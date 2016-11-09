@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
 
     PodcastItem value, podcastItem;
+    PlaylistItem playlistItem;
     PlaylistsFragment playlistsFragment;
     boolean addToPlaylist = false;
 
@@ -31,6 +32,7 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
+        playlistsFragment = new PlaylistsFragment();
 
         value = getItem(position);
         if (convertView == null) {
@@ -87,26 +89,42 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
                         lp.setOrientation(LinearLayout.VERTICAL);
                         lp.setPadding(30,30,30,30);
 
-
                         final TextView toPlaylist = new TextView(getContext());
-                        PlaylistItem playlistItem = (PlaylistItem)playlistsFragment.getPlaylists().get(0);
+                        playlistItem = playlistsFragment.getPlaylists().get(0);
                         toPlaylist.setText(playlistItem.name);
                         toPlaylist.setTextSize(20);
                         toPlaylist.setPadding(30, 20, 20, 20);
                         lp.addView(toPlaylist);
 
+                        final ImageButton addPlaylist = new ImageButton(getContext());
+                        addPlaylist.setImageResource(R.drawable.ic_add_black_24dp);
+                        lp.addView(addPlaylist);
+
                         alertDialogBuilder.setView(lp);
                         final AlertDialog alertDialog2 = alertDialogBuilder.create();
 
+                        //Add podcast to excisting playlist
                         toPlaylist.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 System.out.println("Clicked to playlist");
                                 alertDialog2.cancel();
+                                playlistsFragment.addToExcistingPlaylist(playlistItem.list, value);
+                                System.out.println("Playlistin koko episodearrayadapterissa lisäämisen jälkeen: "+playlistItem.list.size());
 
                             }
                         });
 
-                        alertDialog.show();
+                        addPlaylist.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                System.out.println("Clicked to playlist");
+                                alertDialog2.cancel();
+                                playlistsFragment.createNewPlaylist(getContext());
+
+                            }
+                        });
+
+
+                        alertDialog2.show();
 
                     }
                 });
