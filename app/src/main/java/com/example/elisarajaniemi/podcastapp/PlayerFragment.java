@@ -233,6 +233,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
         // remove message Handler from updating progress bar
+        System.out.println("ON START TRACHING TOUCH");
         handler.removeCallbacks(mUpdateTimeTask);
     }
 
@@ -241,6 +242,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
      * */
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        System.out.println("------------ON STOP TRACKING---------");
         handler.removeCallbacks(mUpdateTimeTask);
         int totalDuration = mActivity.pServ.mPlayer.getDuration();
         int currentPosition = utils.progressToTimer(seekBar.getProgress(), totalDuration);
@@ -250,6 +252,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         mActivity.pServ.mPlayer.seekTo(currentPosition);
 
         // update timer progress again
+
         updateProgressBar();
     }
 
@@ -275,6 +278,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public void onDestroy() {
         super.onDestroy();
+        handler.removeCallbacks(mUpdateTimeTask);
         //killMediaPlayer();
     }
 
