@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
 
         onNewIntent(getIntent());
 
-
         searchBtn = (ImageButton) findViewById(R.id.searchBtn);
         searchBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -253,8 +252,8 @@ public class MainActivity extends AppCompatActivity {
         if (reloadFragmentFromNotification){
             Fragment fragment = new PlayerFragment();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frag_container,fragment)
-                    .commit();
+                    .replace(R.id.frag_container, fragment)
+                    .commitAllowingStateLoss();
         } else {
 
             fragmentManager.beginTransaction()
