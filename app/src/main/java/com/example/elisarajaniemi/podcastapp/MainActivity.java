@@ -62,7 +62,6 @@ import static android.R.attr.apiKey;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String search;
     private ImageButton menuBtn, searchBtn;
     AlertDialog alertDialog;
     private MenuFragment mf;
@@ -98,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
         final Context context = this;
 
 
-        HttpGetHelper httpGetHelper = new HttpGetHelper();
         Thread t = new Thread(r);
         t.start();
+
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -139,13 +138,25 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        search = searchField.getText().toString();
-                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
+                        SearchItems.getInstance().getSearchItems().clear();
 
+                        for (int j = 0; j < PodcastItems.getInstance().getItems().size(); j++) {
+
+                            if (PodcastItems.getInstance().getItems().get(j).title.toLowerCase().contains(searchField.getText().toString().toLowerCase())
+                                    || PodcastItems.getInstance().getItems().get(j).description.toLowerCase().contains(searchField.getText().toString().toLowerCase())
+                                        || PodcastItems.getInstance().getItems().get(j).tags.toLowerCase().contains(searchField.getText().toString().toLowerCase())
+                                            || PodcastItems.getInstance().getItems().get(j).category.toLowerCase().contains(searchField.getText().toString().toLowerCase())
+                                                || PodcastItems.getInstance().getItems().get(j).collectionName.toLowerCase().contains(searchField.getText().toString().toLowerCase())) {
+
+                                //searchList.add(PodcastItems.getInstance().getItems().get(j));
+                                SearchItems.getInstance().addSearchItem(PodcastItems.getInstance().getItems().get(j));
+                                System.out.println("Added to list: " + PodcastItems.getInstance().getItems().get(j).title);
+
+                            }
+                        }
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
                     }
                 });
-
                 alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -155,17 +166,6 @@ public class MainActivity extends AppCompatActivity {
 
                 alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
-
-                /**searchBtn.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                search = searchField.getText().toString();
-                System.out.println("Search value: " + search);
-                new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true&search=" + search);
-                getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
-                //alertDialog.cancel();
-                //searchFragment.refreshLists();
-                }
-                });*/
             }
         });
 
@@ -347,8 +347,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
 
 
 }
