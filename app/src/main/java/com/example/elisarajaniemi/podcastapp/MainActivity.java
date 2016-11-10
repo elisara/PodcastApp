@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
     };
     private String apiKey;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
         doBindService();
 
         onNewIntent(getIntent());
-
 
         searchBtn = (ImageButton) findViewById(R.id.searchBtn);
         searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -211,24 +209,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Category things
-        sf.history = prefs.getBoolean("history", true);
 
 
-    }
 
-    /**
-     * @Override public void onDestroy() {
-     * super.onDestroy();
-     * doUnbindService();
-     * pServ.onDestroy();
-     * <p>
-     * }
-     */
+
     public boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -242,15 +226,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public void onNewIntent(Intent playerIntent) {
+    public void onNewIntent(Intent playerIntent){
         Bundle extras = playerIntent.getExtras();
-        boolean reloadFragmentFromNotification = playerIntent.getBooleanExtra("isPlayerFragment", false);
+        boolean reloadFragmentFromNotification = playerIntent.getBooleanExtra("isPlayerFragment",false);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        if (reloadFragmentFromNotification) {
+        if (reloadFragmentFromNotification){
             Fragment fragment = new PlayerFragment();
             fragmentManager.beginTransaction()
                     .replace(R.id.frag_container, fragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         } else {
 
             fragmentManager.beginTransaction()
@@ -259,11 +243,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
 
-    }
 
     Runnable r = new Runnable() {
         public void run() {
@@ -326,14 +306,41 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        //doUnbindService();
+        //pServ.onDestroy();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Category things
+        sf.history = prefs.getBoolean("history", true);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        pServ.onDestroy();
+        doUnbindService();
+        finish();
+        //doUnbindService();
+        //pServ.onDestroy();
+
+    }
+
 
     @Override
     public void onBackPressed() {
-
         int count = getSupportFragmentManager().getBackStackEntryCount();
-
-        if (count == 0) {
+        if (count == 0 ) {
             super.onBackPressed();
+
 
         } else {
             getSupportFragmentManager().popBackStackImmediate();
