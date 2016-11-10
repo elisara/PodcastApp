@@ -28,6 +28,8 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     private boolean started = false;
     private PodcastItem pi;
     private boolean hasPodcast;
+    private boolean isPaused = false;
+    private NotificationManager mNotificationManager;
 
 
 
@@ -72,15 +74,19 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int mNotificationId = 001;
         mNotificationManager.notify(mNotificationId, mBuilder.build());
 
 
         return START_STICKY;
     }
-    public boolean isPlaying(){
-        return mPlayer.isPlaying();
+
+    public void cancelNotification(){
+        mNotificationManager.cancelAll();
+    }
+    public boolean isPaused(){
+        return isPaused;
     }
 
     public boolean isStarted() {return this.started;}
@@ -125,11 +131,13 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     public void playMusic() {
         if (!mPlayer.isPlaying()) {
             mPlayer.start();
+            isPaused = false;
         }
     }public void pauseMusic() {
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
             length = mPlayer.getCurrentPosition();
+            isPaused = true;
 
         }
     }
@@ -145,6 +153,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         mPlayer.stop();
         mPlayer.reset();
         mPlayer.release();
+        length = 0;
         mPlayer = null;
     }
     public void setPosition(int position){
@@ -155,6 +164,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        cancelNotification();
         if (mPlayer != null) {
             try {
                 mPlayer.stop();

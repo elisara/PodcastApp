@@ -1,13 +1,9 @@
 package com.example.elisarajaniemi.podcastapp;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,8 +14,6 @@ import android.widget.SeekBar;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.widget.TextView;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Kade on 28.10.2016.
@@ -53,8 +47,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         else{
             piFromClick = (PodcastItem) getArguments().getSerializable("episode");
             pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
-             if(pi2 != null) {
-                 piFromClick = pi2;
+            if(pi2 != null) {
+                piFromClick = pi2;
                 System.out.println("Podcast URL ELSE IF: " + piFromClick.url);
             }
         }
@@ -98,8 +92,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         seekbar.setOnSeekBarChangeListener(this);
         utils = new Utilities();
         if(!playServiceStarted) {
-
-
             Intent podcast = new Intent(getActivity(), PlayService.class);
             getActivity().startService(podcast);
 
@@ -109,11 +101,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
             mActivity.pServ.mPlayer.setOnCompletionListener(this);
         }
-        if(mActivity.pServ.isPlaying()){
-
+        //if(mActivity.pServ.isPaused() || mActivity.pServ.mPlayer.isPlaying()){
+        else{
             mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration(); // gets the song length in milliseconds from URL
             updateProgressBar();
             playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
+            System.out.println("PI FROM CLICK " + piFromClick);
+            System.out.println("PI FROM SERVICE " + piFromService);
             if(!piFromClick.url.equals(piFromService.url)){
 
                 mediaFileLengthInMilliseconds = 0;
@@ -148,7 +142,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                     mActivity.pServ.playMusic();
                     playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
                 }else{
-                    if(mActivity.pServ.isPlaying()){
+                    if(mActivity.pServ.mPlayer.isPlaying()){
                         mActivity.pServ.pauseMusic();
                         playBtn.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
 
@@ -164,7 +158,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             case R.id.forwardBtn:
                 mActivity.pServ.setPosition( mActivity.pServ.mPlayer.getCurrentPosition() + 10000);
                 mActivity.pServ.mPlayer.seekTo( mActivity.pServ.mPlayer.getCurrentPosition() + 10000);
-               break;
+                break;
             case R.id.speedBtn:
 
                 break;
@@ -216,7 +210,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
 
             // Running this thread after 100 milliseconds
-           handler.postDelayed(this, 100);
+            handler.postDelayed(this, 100);
         }
     };
     /**
@@ -305,13 +299,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     /**
-    @Override
-    public void onBackPressed() {
-        pf = new PlaylistsFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.menu_frag_container, pf).commit();
-    }
-    */
+     @Override
+     public void onBackPressed() {
+     pf = new PlaylistsFragment();
+     getActivity().getSupportFragmentManager().beginTransaction()
+     .replace(R.id.menu_frag_container, pf).commit();
+     }
+     */
 
 
 }
