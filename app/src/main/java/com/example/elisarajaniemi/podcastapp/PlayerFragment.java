@@ -33,8 +33,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     MainActivity mActivity;
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
