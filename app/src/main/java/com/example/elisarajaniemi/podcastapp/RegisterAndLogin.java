@@ -54,8 +54,12 @@ public class RegisterAndLogin {
     }
 
     public boolean testIfExists(String username, String password){
-        //here check if user is not already registered
+        encryptedUsername = myCrypt.doEncoding(username);
+        encryptedPassword = myCrypt.doEncoding(password);
+        //here check if user is already registered
         exists = false;
         return exists;
     }
+
+
 }
