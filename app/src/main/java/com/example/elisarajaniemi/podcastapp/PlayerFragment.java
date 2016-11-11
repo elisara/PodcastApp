@@ -100,6 +100,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             mActivity.pServ.setAudioPath();
             mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
             mActivity.pServ.mPlayer.setOnCompletionListener(this);
+            mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration();
+            updateProgressBar();
         }
         //if(mActivity.pServ.isPaused() || mActivity.pServ.mPlayer.isPlaying()){
         else{

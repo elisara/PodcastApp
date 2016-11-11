@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RemoteViews;
 
 import java.io.IOException;
 
@@ -36,9 +39,12 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     public static final String ACTION_PLAY = "action_play";
     public static final String START_SERVICE = "start_service";
 
+    private ImageView notificationPlayBtn;
+
 
     public PlayService() {
         super("oma");
+
     }
 
 
@@ -73,7 +79,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        System.out.println("onstart-----------------------" + intent.getAction());
+
         String action = intent.getAction();
         if (action.equalsIgnoreCase(START_SERVICE)) {
             createNotification();
@@ -81,7 +87,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         } else if (action.equalsIgnoreCase(ACTION_PAUSE)) {
             pauseMusic();
 
-        }else if (action.equalsIgnoreCase(ACTION_PLAY)) {
+        } else if (action.equalsIgnoreCase(ACTION_PLAY)) {
             playMusic();
         }
 
@@ -95,6 +101,44 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     }
 
     public void createNotification() {
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        RemoteViews notificationView = new RemoteViews(getPackageName(), R.layout.notification);
+
+        //the intent that is started when the notification is clicked (works)
+        Intent playerIntent = new Intent(this, MainActivity.class);
+        playerIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        playerIntent.putExtra("isPlayerFragment", true);
+        PendingIntent playerPendingIntent = PendingIntent.getActivity(this, 0, playerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp).setTicker("Tähän teksti").setContent(notificationView);
+        notificationView.setImageViewResource(R.id.notifiationImage, R.drawable.podcast_headphones);
+        notificationView.setTextViewText(R.id.notifiationText1, pi.title);
+        notificationView.setTextViewText(R.id.notifiationText2, pi.collectionName);
+
+
+        Intent pauseIntent = new Intent(this, PlayService.class);
+        pauseIntent.setAction(ACTION_PAUSE);
+        PendingIntent pendingPauseIntent = PendingIntent.getService(getApplicationContext(), 1, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent playIntent = new Intent(this, PlayService.class);
+        playIntent.setAction(ACTION_PLAY);
+        PendingIntent pendingPlayIntent = PendingIntent.getService(getApplicationContext(), 1, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (mPlayer.isPlaying()) {
+            notificationView.setImageViewResource(R.id.notificationPlayBtn, R.drawable.ic_pause_black_50dp);
+            notificationView.setOnClickPendingIntent(R.id.notificationPlayBtn, pendingPauseIntent);
+            mBuilder.setSmallIcon(R.drawable.ic_play_circle_filled_black_24dp);
+        } else {
+            notificationView.setImageViewResource(R.id.notificationPlayBtn, R.drawable.ic_play_arrow_black_50dp);
+            notificationView.setOnClickPendingIntent(R.id.notificationPlayBtn, pendingPlayIntent);
+            mBuilder.setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp);
+        }
+        notificationView.setImageViewResource(R.id.notificationSkipBtn, R.drawable.ic_skip_next_black_50dp);
+        mBuilder.setContentIntent(playerPendingIntent);
+        mNotificationManager.notify(1, mBuilder.build());
+    }
+
+    public void newNotification() {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setContentTitle(pi.title);
@@ -106,11 +150,10 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         Intent playIntent = new Intent(this, PlayService.class);
         playIntent.setAction(ACTION_PLAY);
         PendingIntent pendingPlayIntent = PendingIntent.getService(getApplicationContext(), 1, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if(mPlayer.isPlaying()){
+        if (mPlayer.isPlaying()) {
             mBuilder.setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp);
             mBuilder.addAction(R.drawable.ic_pause_circle_filled_black_24dp, "Pause", pendingPauseIntent);
-        }
-        else {
+        } else {
             mBuilder.setSmallIcon(R.drawable.ic_play_circle_filled_black_24dp);
             mBuilder.addAction(R.drawable.ic_play_circle_filled_black_24dp, "Play", pendingPlayIntent);
         }
@@ -123,7 +166,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         mBuilder.setContentIntent(playerPendingIntent);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int mNotificationId = 001;
-        mNotificationManager.notify(mNotificationId, mBuilder.build());
+        mNotificationManager.notify(1, mBuilder.build());
 
     }
 
