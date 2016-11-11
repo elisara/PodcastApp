@@ -1,5 +1,6 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -19,7 +20,7 @@ import java.io.IOException;
  * Created by Kade on 31.10.2016.
  */
 
-public class PlayService extends Service implements MediaPlayer.OnErrorListener {
+public class PlayService extends IntentService implements MediaPlayer.OnErrorListener {
 
     private final IBinder mBinder = new ServiceBinder();
     MediaPlayer mPlayer;
@@ -31,11 +32,25 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
     private boolean isPaused = false;
     private NotificationManager mNotificationManager;
 
-
+    public static final String ACTION_PAUSE = "action_pause";
+    public static final String ACTION_PLAY = "action_play";
+    public static final String START_SERVICE = "start_service";
 
 
     public PlayService() {
+        super("oma");
     }
+
+
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+     * @param name Used to name the worker thread, important only for debugging.
+     */
+    public PlayService(String name) {
+        super(name);
+    }
+
 
     public class ServiceBinder extends Binder {
         PlayService getService() {
@@ -48,6 +63,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         return mBinder;
     }
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -57,41 +73,74 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        started = true;
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_favorite_black_24dp)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        resultIntent.putExtra("isPlayerFragment",true);
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int mNotificationId = 001;
-        mNotificationManager.notify(mNotificationId, mBuilder.build());
+        System.out.println("onstart-----------------------" + intent.getAction());
+        String action = intent.getAction();
+        if (action.equalsIgnoreCase(START_SERVICE)) {
+            createNotification();
+            started = true;
+        } else if (action.equalsIgnoreCase(ACTION_PAUSE)) {
+            pauseMusic();
 
+        }else if (action.equalsIgnoreCase(ACTION_PLAY)) {
+            playMusic();
+        }
 
         return START_STICKY;
     }
 
-    public void cancelNotification(){
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        System.out.println("PlayerServise onHandleIntent");
+
+    }
+
+    public void createNotification() {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setContentTitle(pi.title);
+
+        Intent pauseIntent = new Intent(this, PlayService.class);
+        pauseIntent.setAction(ACTION_PAUSE);
+        PendingIntent pendingPauseIntent = PendingIntent.getService(getApplicationContext(), 1, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent playIntent = new Intent(this, PlayService.class);
+        playIntent.setAction(ACTION_PLAY);
+        PendingIntent pendingPlayIntent = PendingIntent.getService(getApplicationContext(), 1, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if(mPlayer.isPlaying()){
+            mBuilder.setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp);
+            mBuilder.addAction(R.drawable.ic_pause_circle_filled_black_24dp, "Pause", pendingPauseIntent);
+        }
+        else {
+            mBuilder.setSmallIcon(R.drawable.ic_play_circle_filled_black_24dp);
+            mBuilder.addAction(R.drawable.ic_play_circle_filled_black_24dp, "Play", pendingPlayIntent);
+        }
+        //mBuilder.addAction(R.drawable.ic_pause_circle_filled_black_24dp, "Pause", pendingPauseIntent);
+        //mBuilder.addAction(R.drawable.ic_play_circle_filled_black_24dp, "Play", pendingPlayIntent);
+        Intent playerIntent = new Intent(this, MainActivity.class);
+        playerIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        playerIntent.putExtra("isPlayerFragment", true);
+        PendingIntent playerPendingIntent = PendingIntent.getActivity(this, 0, playerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(playerPendingIntent);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        int mNotificationId = 001;
+        mNotificationManager.notify(mNotificationId, mBuilder.build());
+
+    }
+
+
+    public void cancelNotification() {
         mNotificationManager.cancelAll();
     }
-    public boolean isPaused(){
+
+    public boolean isPaused() {
         return isPaused;
     }
 
-    public boolean isStarted() {return this.started;}
+    public boolean isStarted() {
+        return this.started;
+    }
 
-    public void setAudioPath(){
+    public void setAudioPath() {
         try {
             mPlayer.setDataSource(this.pi.url); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
             mPlayer.prepare();
@@ -102,14 +151,18 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         }
 
     }
-    public void setPodcastObject(PodcastItem pi){
+
+    public void setPodcastObject(PodcastItem pi) {
         this.pi = pi;
         hasPodcast = true;
+        createNotification();
     }
-    public PodcastItem getPodcastObject(){
-         return this.pi;
+
+    public PodcastItem getPodcastObject() {
+        return this.pi;
     }
-    public void initPlayer(){
+
+    public void initPlayer() {
         mPlayer = new MediaPlayer();
         mPlayer.setOnErrorListener(this);
 
@@ -128,16 +181,22 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         });
 
     }
+
     public void playMusic() {
         if (!mPlayer.isPlaying()) {
             mPlayer.start();
             isPaused = false;
+            createNotification();
+
         }
-    }public void pauseMusic() {
+    }
+
+    public void pauseMusic() {
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
             length = mPlayer.getCurrentPosition();
             isPaused = true;
+            createNotification();
 
         }
     }
@@ -146,6 +205,7 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         if (!mPlayer.isPlaying()) {
             mPlayer.seekTo(length);
             mPlayer.start();
+            createNotification();
         }
     }
 
@@ -156,7 +216,8 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         length = 0;
         mPlayer = null;
     }
-    public void setPosition(int position){
+
+    public void setPosition(int position) {
         this.length = position;
     }
 
@@ -175,8 +236,11 @@ public class PlayService extends Service implements MediaPlayer.OnErrorListener 
         }
     }
 
+
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         return false;
     }
+
+
 }
