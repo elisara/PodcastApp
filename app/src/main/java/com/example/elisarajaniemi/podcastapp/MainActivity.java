@@ -1,9 +1,6 @@
 package com.example.elisarajaniemi.podcastapp;
 
-import android.app.ActionBar;
 import android.app.ActivityManager;
-import android.app.Dialog;
-import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,29 +9,18 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,27 +29,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import static android.R.attr.apiKey;
 
 public class MainActivity extends AppCompatActivity {
 
     private ImageButton menuBtn, searchBtn;
-    AlertDialog alertDialog;
+    private AlertDialog alertDialog;
     private MenuFragment mf;
     private SearchFragment searchFragment;
     private TextView title;
@@ -147,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                                             || PodcastItems.getInstance().getItems().get(j).category.toLowerCase().contains(searchField.getText().toString().toLowerCase())
                                                 || PodcastItems.getInstance().getItems().get(j).collectionName.toLowerCase().contains(searchField.getText().toString().toLowerCase())) {
 
-                                //searchList.add(PodcastItems.getInstance().getItems().get(j));
                                 SearchItems.getInstance().addSearchItem(PodcastItems.getInstance().getItems().get(j));
                                 System.out.println("Added to list: " + PodcastItems.getInstance().getItems().get(j).title);
 

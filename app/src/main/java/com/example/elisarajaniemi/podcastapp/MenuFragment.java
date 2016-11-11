@@ -28,16 +28,14 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private PlaylistsFragment plf;
     private SinglePlaylistFragment splf;
     private MenuFragment mf;
+    private RegisterAndLogin rali;
     private String password_, password2_, username_, email_;
-    private boolean registered;
     AlertDialog alertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.menu_layout, container, false);
-
-        registered = false;
 
         playList = (TextView) view.findViewById(R.id.playlists);
         favorite = (TextView) view.findViewById(R.id.favorites);
@@ -59,6 +57,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         plf = new PlaylistsFragment();
         splf = new SinglePlaylistFragment();
         mf = new MenuFragment();
+        rali = new RegisterAndLogin();
 
         return view;
     }
@@ -197,7 +196,8 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                                 System.out.println("ENCRYPTED: " + encryptedStr);
 */
 
-                                registered = true;
+                                rali.registerUser(username_, password_, password2_, email_);
+                                System.out.println("Registers executed");
                                 alertDialog.cancel();
                                 //alertDialogBuilder.
 
