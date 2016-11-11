@@ -16,6 +16,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by Elisa Rajaniemi on 26.10.2016.
  */
@@ -25,11 +36,12 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private MainActivity ma;
     private FrameLayout fl;
     private TextView playList, favorite, queue, history, continuePlay, signIn;
+    private Button logOutBtn;
     private PlaylistsFragment plf;
     private SinglePlaylistFragment splf;
     private MenuFragment mf;
     private RegisterAndLogin rali;
-    private String password_, password2_, username_, email_;
+    private String password_, password2_, username_, email_, token;
     AlertDialog alertDialog;
 
     @Override
@@ -44,6 +56,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         continuePlay = (TextView) view.findViewById(R.id.continuePlaying);
         signIn = (TextView) view.findViewById(R.id.signIn);
         fl = (FrameLayout) view.findViewById(R.id.outside);
+        logOutBtn = (Button) view.findViewById(R.id.logout);
 
 
         playList.setOnClickListener(this);
@@ -53,6 +66,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         continuePlay.setOnClickListener(this);
         signIn.setOnClickListener(this);
         fl.setOnClickListener(this);
+        logOutBtn.setOnClickListener(this);
 
         plf = new PlaylistsFragment();
         splf = new SinglePlaylistFragment();
@@ -122,10 +136,6 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 password.setHint("Password");
                 lp.addView(password);
 
-                final EditText email = new EditText(getActivity());
-                email.setHint("Email");
-                lp.addView(email);
-
                 final Button register = new Button(getActivity());
                 register.setText("Register");
                 lp.addView(register);
@@ -136,7 +146,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                     public void onClick(DialogInterface dialog, int id) {
                         username_ = username.getText().toString();
                         password_ = password.getText().toString();
-                        email_ = email.getText().toString();
+                        rali.login(username_, password_);
                         Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
 
                     }
@@ -222,6 +232,10 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
                 break;
+
+            case R.id.logout:
+            rali.logout();
+            break;
         }
 
     }

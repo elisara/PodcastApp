@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class SerieItems {
 
     private ArrayList<PodcastItem> series;
-    PodcastItem value;
 
     private static SerieItems ourInstance = new SerieItems();
 
