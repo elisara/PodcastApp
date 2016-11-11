@@ -28,6 +28,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private boolean playServiceStarted;
     private Utilities utils;
     private PodcastItem piFromService, piFromClick, pi2;
+    public static final String START_SERVICE = "start_service";
 
 
     MainActivity mActivity;
@@ -93,6 +94,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         utils = new Utilities();
         if(!playServiceStarted) {
             Intent podcast = new Intent(getActivity(), PlayService.class);
+            podcast.setAction(START_SERVICE);
             getActivity().startService(podcast);
 
             playServiceStarted = true;
@@ -137,20 +139,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 break;
             case R.id.playBtn:
 
-                if(!playServiceStarted) {
+                if(!playServiceStarted) mActivity.pServ.playMusic();
+                else if(mActivity.pServ.mPlayer.isPlaying()) mActivity.pServ.pauseMusic();
+                     else mActivity.pServ.resumeMusic();
 
-                    mActivity.pServ.playMusic();
-                    playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
-                }else{
-                    if(mActivity.pServ.mPlayer.isPlaying()){
-                        mActivity.pServ.pauseMusic();
-                        playBtn.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
-
-                    }else {
-                        mActivity.pServ.resumeMusic();
-                        playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
-                    }
-                }
 
                 mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration(); // gets the song length in milliseconds from URL
                 updateProgressBar();
@@ -211,6 +203,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
             // Running this thread after 100 milliseconds
             handler.postDelayed(this, 100);
+            if(mActivity.pServ.mPlayer.isPlaying())playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
+            else playBtn.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
+
+
         }
     };
     /**

@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         mf = new MenuFragment();
         sf = new SerieFragment();
         searchFragment = new SearchFragment();
-        pServ = new PlayService();
+        pServ = new PlayService("PodcastApp");
         ef = new EpisodesFragment();
         pf = new PlayerFragment();
         doBindService();
