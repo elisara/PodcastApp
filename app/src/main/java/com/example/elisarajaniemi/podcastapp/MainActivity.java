@@ -206,12 +206,12 @@ public class MainActivity extends AppCompatActivity {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         if (reloadFragmentFromNotification){
             Fragment fragment = new PlayerFragment();
-            fragmentManager.beginTransaction()
+            fragmentManager.beginTransaction().addToBackStack("pf")
                     .replace(R.id.frag_container, fragment)
                     .commitAllowingStateLoss();
         } else {
 
-            fragmentManager.beginTransaction()
+            fragmentManager.beginTransaction().addToBackStack("sf")
                     .replace(R.id.frag_container, sf).commit();
 
         }
