@@ -60,7 +60,8 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="2"
-                android:src="@drawable/ic_snooze_black_24dp" />
+                android:src="@drawable/ic_snooze_black_24dp"
+                android:tint="@color/unAvailableIcon"/>
 
             <ImageView
                 android:id="@+id/replayBtn"
@@ -68,14 +69,16 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="2"
-                android:src="@drawable/ic_replay_10_black_24dp" />
+                android:src="@drawable/ic_replay_10_black_24dp"
+                android:tint="@color/availableIcon"/>
 
             <ImageView
                 android:id="@+id/playBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
                 android:layout_weight="3"
-                android:src="@drawable/ic_play_circle_filled_black_24dp" />
+                android:src="@drawable/ic_pause_circle_filled_black_24dp"
+                android:tint="@color/availableIcon"/>
 
             <ImageView
                 android:id="@+id/forwardBtn"
@@ -83,7 +86,8 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="2"
-                android:src="@drawable/ic_forward_10_black_24dp" />
+                android:src="@drawable/ic_forward_10_black_24dp"
+                android:tint="@color/availableIcon"/>
 
             <ImageView
                 android:id="@+id/speedBtn"
@@ -92,7 +96,8 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="2"
-                android:src="@drawable/ic_rowing_black_24dp" />
+                android:src="@drawable/ic_rowing_black_24dp"
+                android:tint="@color/unAvailableIcon"/>
         </LinearLayout>
 
         <LinearLayout
@@ -106,14 +111,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:src="@android:drawable/ic_media_previous" />
+                android:src="@drawable/ic_skip_previous_black_24dp"
+                android:tint="@color/unAvailableIcon"/>
 
             <ImageView
                 android:id="@+id/nextBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:src="@android:drawable/ic_media_next" />
+                android:src="@drawable/ic_skip_next_black_24dp"
+                android:tint="@color/unAvailableIcon"/>
         </LinearLayout>
 
         <LinearLayout
@@ -127,29 +134,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_library_books_black_24dp" />
+                android:src="@drawable/ic_library_books_black_24dp"
+                android:tint="@color/unAvailableIcon"/>
 
             <ImageView
                 android:id="@+id/playlistBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_library_books_black_24dp" />
+                android:src="@drawable/ic_library_books_black_24dp"
+                android:tint="@color/unAvailableIcon"/>
 
             <ImageView
                 android:id="@+id/favoriteBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_favorite_black_24dp" />
+                android:src="@drawable/ic_favorite_black_24dp"
+                android:tint="@color/unAvailableIcon"/>
 
             <ImageView
                 android:id="@+id/shareBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:src="@android:drawable/ic_menu_share" />
+                android:src="@drawable/ic_share_black_24dp"
+                android:tint="@color/unAvailableIcon"/>
         </LinearLayout>
-
+v
     </LinearLayout>
 </LinearLayout>
