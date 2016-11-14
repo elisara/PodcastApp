@@ -145,6 +145,7 @@ public class EpisodesFragment extends Fragment {
 
     public void fillList(){
         list = new ArrayList<>();
+        System.out.println("ListAll size in fill: " + PodcastItems.getInstance().getItems().size());
         if(list.size() == 0) {
             for (int i = 0; i < listAll.size(); i++) {
                 if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {

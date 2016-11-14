@@ -68,7 +68,7 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
                                 jObject.getInt("Length (sec)"), jObject.getString("Tags"), jObject.getString("Tags"), jObject.getString("Collection name"),
                                 jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
 
-                        podcastItems.addPodcastItem(podcastItem);
+                        //podcastItems.addPodcastItem(podcastItem);
                         System.out.println("Added " + podcastItem.title);
                         if (serieItems.getSerieItems().size() == 0) serieItems.addSerieItem(podcastItem);
                         else {
@@ -78,6 +78,14 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
                             }
                             if (idFound == false) serieItems.addSerieItem(podcastItem);
 
+                        }
+                        if (podcastItems.getItems().size() == 0) podcastItems.addPodcastItem(podcastItem);
+                        else {
+                            boolean titleFound = false;
+                            for (int k = 0; k < podcastItems.getItems().size(); k++) {
+                                if (podcastItems.getItems().get(k).title.equalsIgnoreCase( podcastItem.title)) titleFound = true;
+                            }
+                            if (titleFound == false) podcastItems.addPodcastItem(podcastItem);
                         }
                     }
 
