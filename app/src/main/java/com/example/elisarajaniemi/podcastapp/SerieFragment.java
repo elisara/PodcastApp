@@ -36,7 +36,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private boolean categoryOpen;
     private PlayerFragment pf;
     private String apiKey;
-    public boolean history;
+    private boolean humor, techonology, health, economy, all;
     private EpisodesFragment ef;
     private HttpGetHelper httpGetHelper;
     private boolean itemsAdded;
@@ -48,11 +48,6 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         //httpGetHelper = new HttpGetHelper();
-
-        //Sorting stuff
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        history = prefs.getBoolean("history", true);
-        System.out.println("History in series onCreateView: " + history);
 
         View view = inflater.inflate(R.layout.serie_layout, container, false);
         spinner = (Spinner) view.findViewById(R.id.spinner);
@@ -157,5 +152,46 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
         });
         System.out.println("Searchin jälkeen: " + SerieItems.getInstance().getSerieItems());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //TÄMÄ KESKEN
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        humor = prefs.getBoolean("humor", true);
+        techonology = prefs.getBoolean("technology", true);
+        economy = prefs.getBoolean("economy", true);
+        health = prefs.getBoolean("health", true);
+        all = prefs.getBoolean("all", true);
+
+        System.out.println("Categories: humor: "+humor+ " techonoly: "+techonology+ " economy: "+ economy+ " health: "+health + " all: "+all);
+        list.clear();
+
+        for(int i = 0; i < SerieItems.getInstance().getSerieItems().size(); i++){
+            if(all == false) {
+                if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:huumori") && humor == true) {
+                    list.add(SerieItems.getInstance().getSerieItems().get(i));
+                } else if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:technology") && techonology == true) {
+                    list.add(SerieItems.getInstance().getSerieItems().get(i));
+                } else if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:economy") && economy == true) {
+                    list.add(SerieItems.getInstance().getSerieItems().get(i));
+                } else if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:terveys") && health == true) {
+                    list.add(SerieItems.getInstance().getSerieItems().get(i));
+                }
+            }
+            else{
+                list = SerieItems.getInstance().getSerieItems();
+            }
+        }
+
+        System.out.println("LIST in resume: "+list.size());
+        adapter = new SerieArrayAdapter(getContext(), list);
+        listView.setAdapter(adapter);
+        System.out.println("CATEGORY: humor");
+
+        System.out.println("Humor in series onCreateView: " + humor);
+
     }
 }

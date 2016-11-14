@@ -71,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Context context = this;
-        System.out.println("-----------Main OnCreate");
+        System.out.println("---------CREATE--------------");
+
 
         Thread t = new Thread(r);
         t.start();
@@ -285,6 +286,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        System.out.println("---------START--------------");
+
+        //doUnbindService();
+        //pServ.onDestroy();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        System.out.println("---------STOP--------------");
+
+        //doUnbindService();
+        //pServ.onDestroy();
+
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         System.out.println("----------Main OnPause");
@@ -299,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("----------Main OnResume");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
-        sf.history = prefs.getBoolean("history", true);
 
     }
 
@@ -320,6 +340,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count == 0 ) {
+            System.out.println("----------COUNT 0----------");
             super.onBackPressed();
 
 
