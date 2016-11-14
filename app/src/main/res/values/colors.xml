@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="black">#000000</color>
+    <color name="availableIcon">#000000</color>
+    <color name="unAvailableIcon">#7A7A7A</color>
+    <color name="primaryText">#060001</color>
+    <color name="secondaryText">#060001</color>
+
+
 </resources>

@@ -3,50 +3,41 @@ package com.example.elisarajaniemi.podcastapp;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
-import android.os.Bundle;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
-
-import java.io.IOException;
-
 
 /**
  * Created by Kade on 31.10.2016.
  */
 
-public class PlayService extends IntentService implements MediaPlayer.OnErrorListener {
+public class PlayService extends IntentService implements MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
 
     private final IBinder mBinder = new ServiceBinder();
     MediaPlayer mPlayer;
     private int length = 0;
-    private String audioPath;
     private boolean started = false;
     private PodcastItem pi;
-    private boolean hasPodcast;
-    private boolean isPaused = false;
     private NotificationManager mNotificationManager;
-
+    private int status;
+    private ServiceCallbacks serviceCallbacks;
     public static final String ACTION_PAUSE = "action_pause";
     public static final String ACTION_PLAY = "action_play";
     public static final String START_SERVICE = "start_service";
 
-    private ImageView notificationPlayBtn;
 
 
-    public PlayService() {
-        super("oma");
+    public PlayService(){
+        super("");
 
     }
-
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -55,20 +46,8 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
      */
     public PlayService(String name) {
         super(name);
+        status = 0;
     }
-
-
-    public class ServiceBinder extends Binder {
-        PlayService getService() {
-            return PlayService.this;
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return mBinder;
-    }
-
 
     @Override
     public void onCreate() {
@@ -77,12 +56,25 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     }
 
+    public void initPlayer() {
+        mPlayer = new MediaPlayer();
+        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mPlayer.setOnPreparedListener(this);
+        mPlayer.setOnCompletionListener(this);
+        status = 1;
+        mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                onError(mPlayer, what, extra);
+                return true;
+            }
+        });
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         String action = intent.getAction();
         if (action.equalsIgnoreCase(START_SERVICE)) {
-            createNotification();
             started = true;
         } else if (action.equalsIgnoreCase(ACTION_PAUSE)) {
             pauseMusic();
@@ -94,11 +86,6 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         return START_STICKY;
     }
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        System.out.println("PlayerServise onHandleIntent");
-
-    }
 
     public void createNotification() {
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -111,7 +98,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         PendingIntent playerPendingIntent = PendingIntent.getActivity(this, 0, playerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp).setTicker("Tähän teksti").setContent(notificationView);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp).setTicker("joku teksti").setContent(notificationView);
         notificationView.setImageViewResource(R.id.notifiationImage, R.drawable.podcast_headphones);
         notificationView.setTextViewText(R.id.notifiationText1, pi.title);
         notificationView.setTextViewText(R.id.notifiationText2, pi.collectionName);
@@ -137,6 +124,159 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         mBuilder.setContentIntent(playerPendingIntent);
         mNotificationManager.notify(1, mBuilder.build());
     }
+
+
+    public void cancelNotification() {
+        mNotificationManager.cancelAll();
+    }
+
+    public boolean isStarted() {
+        return this.started;
+    }
+
+    public void setPodcastObject(PodcastItem pi) {
+        this.pi = pi;
+        status = 2;
+        createNotification();
+    }
+
+    public void setAudioPath() {
+        try {
+            mPlayer.setDataSource(this.pi.url); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
+            mPlayer.prepareAsync();
+            createNotification();
+
+
+
+            // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public PodcastItem getPodcastObject() {
+        return this.pi;
+    }
+
+    public void playMusic() {
+        if (!mPlayer.isPlaying()) {
+            mPlayer.start();
+            createNotification();
+        }
+    }
+
+    public void pauseMusic() {
+        if (mPlayer.isPlaying()) {
+            mPlayer.pause();
+            length = mPlayer.getCurrentPosition();
+            createNotification();
+        }
+    }
+
+    public void resumeMusic() {
+        if (!mPlayer.isPlaying()) {
+            mPlayer.seekTo(length);
+            mPlayer.start();
+            createNotification();
+        }
+    }
+
+    public void stopMusic() {
+        mPlayer.stop();
+        mPlayer.reset();
+        mPlayer.release();
+        length = 0;
+        mPlayer = null;
+    }
+
+    public void setPosition(int position) {
+        this.length = position;
+    }
+
+    public void setSpeed() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            float speed = mPlayer.getPlaybackParams().getSpeed();
+            System.out.println("play spped: " + speed);
+            int mediaFileLengthInMilliseconds = mPlayer.getDuration();
+            mPlayer.pause();
+            if (speed <= 1.0)
+                mPlayer.setPlaybackParams(mPlayer.getPlaybackParams().setSpeed(1.25f));
+            else if (speed <= 1.25)
+                mPlayer.setPlaybackParams(mPlayer.getPlaybackParams().setSpeed(1.5f));
+            else mPlayer.setPlaybackParams(mPlayer.getPlaybackParams().setSpeed(1.0f));
+
+
+            //mPlayer.setPlaybackParams(mPlayer.getPlaybackParams().setSpeed());
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cancelNotification();
+        if (mPlayer != null) {
+            try {
+                mPlayer.stop();
+                mPlayer.release();
+            } finally {
+                mPlayer = null;
+            }
+        }
+    }
+
+    /**
+     * 0 = Service started
+     * 1 = Mediaplayer created
+     * 2 = PodcastObject set
+     * 3 = Mediaplayer prepared
+     */
+    public int getStatus() {
+        return this.status;
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        return false;
+    }
+
+    @Override
+    public IBinder onBind(Intent arg0) {
+        return mBinder;
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        if (serviceCallbacks != null) {
+            serviceCallbacks.serviceCallbackMethod();
+        }
+        playMusic();
+
+        status = 3;
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+
+    }
+
+    public class ServiceBinder extends Binder {
+    PlayService getService() {
+        return PlayService.this;
+    }
+    }
+
+    public void setCallbacks(ServiceCallbacks callbacks) {
+        serviceCallbacks = callbacks;
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        System.out.println("PlayerServise onHandleIntent");
+
+    }
+
 
     public void newNotification() {
         NotificationCompat.Builder mBuilder =
@@ -169,121 +309,4 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         mNotificationManager.notify(1, mBuilder.build());
 
     }
-
-
-    public void cancelNotification() {
-        mNotificationManager.cancelAll();
-    }
-
-    public boolean isPaused() {
-        return isPaused;
-    }
-
-    public boolean isStarted() {
-        return this.started;
-    }
-
-    public void setAudioPath() {
-        try {
-            mPlayer.setDataSource(this.pi.url); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
-            mPlayer.prepare();
-
-            // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void setPodcastObject(PodcastItem pi) {
-        this.pi = pi;
-        hasPodcast = true;
-        createNotification();
-    }
-
-    public PodcastItem getPodcastObject() {
-        return this.pi;
-    }
-
-    public void initPlayer() {
-        mPlayer = new MediaPlayer();
-        mPlayer.setOnErrorListener(this);
-
-        if (mPlayer != null) {
-            mPlayer.setLooping(true);
-            mPlayer.setVolume(100, 100);
-        }
-
-        mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-
-            public boolean onError(MediaPlayer mp, int what, int
-                    extra) {
-                onError(mPlayer, what, extra);
-                return true;
-            }
-        });
-
-    }
-
-    public void playMusic() {
-        if (!mPlayer.isPlaying()) {
-            mPlayer.start();
-            isPaused = false;
-            createNotification();
-
-        }
-    }
-
-    public void pauseMusic() {
-        if (mPlayer.isPlaying()) {
-            mPlayer.pause();
-            length = mPlayer.getCurrentPosition();
-            isPaused = true;
-            createNotification();
-
-        }
-    }
-
-    public void resumeMusic() {
-        if (!mPlayer.isPlaying()) {
-            mPlayer.seekTo(length);
-            mPlayer.start();
-            createNotification();
-        }
-    }
-
-    public void stopMusic() {
-        mPlayer.stop();
-        mPlayer.reset();
-        mPlayer.release();
-        length = 0;
-        mPlayer = null;
-    }
-
-    public void setPosition(int position) {
-        this.length = position;
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        cancelNotification();
-        if (mPlayer != null) {
-            try {
-                mPlayer.stop();
-                mPlayer.release();
-            } finally {
-                mPlayer = null;
-            }
-        }
-    }
-
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        return false;
-    }
-
-
 }

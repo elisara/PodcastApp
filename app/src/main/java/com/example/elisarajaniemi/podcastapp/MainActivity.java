@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             pServ = ((PlayService.ServiceBinder) service).getService();
+
         }
 
 
@@ -62,11 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
     };
     private String apiKey;
+    public static final String START_SERVICE = "start_service";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         final Context context = this;
 
 
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+
         title = (TextView) toolbar.findViewById(R.id.title);
 
         menuOpen = false;
@@ -87,7 +90,12 @@ public class MainActivity extends AppCompatActivity {
         pServ = new PlayService("PodcastApp");
         ef = new EpisodesFragment();
         pf = new PlayerFragment();
-        doBindService();
+
+
+        Intent playerIntent = new Intent(this, PlayService.class);
+        playerIntent.setAction(START_SERVICE);
+        doBindService(playerIntent);
+        startService(playerIntent);
 
         onNewIntent(getIntent());
 
@@ -264,9 +272,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    void doBindService() {
-        bindService(new Intent(this, PlayService.class),
-                Scon, Context.BIND_AUTO_CREATE);
+    void doBindService(Intent intent) {
+        bindService(intent, Scon, Context.BIND_AUTO_CREATE);
         mIsBound = true;
     }
 
