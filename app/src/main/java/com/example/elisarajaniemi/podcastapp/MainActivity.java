@@ -169,19 +169,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -289,10 +283,6 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         System.out.println("---------START--------------");
-
-        //doUnbindService();
-        //pServ.onDestroy();
-
     }
 
     @Override
@@ -300,17 +290,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         System.out.println("---------STOP--------------");
 
-        //doUnbindService();
-        //pServ.onDestroy();
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
         System.out.println("----------Main OnPause");
-        //doUnbindService();
-        //pServ.onDestroy();
 
     }
 
@@ -318,8 +303,6 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         System.out.println("----------Main OnResume");
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Category things
 
     }
 
@@ -330,8 +313,7 @@ public class MainActivity extends AppCompatActivity {
         doUnbindService();
         pServ.onDestroy();
         finish();
-        //doUnbindService();
-        //pServ.onDestroy();
+
 
     }
 

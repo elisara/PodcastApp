@@ -43,7 +43,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private MenuFragment mf;
     private RegisterAndLogin rali;
     private String password_, password2_, username_, email_, token;
-    AlertDialog alertDialog;
+    private AlertDialog alertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -205,18 +205,9 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                                 email_ = email.getText().toString();
                                 Toast.makeText(getContext(), "User "+ username_ +" created", Toast.LENGTH_SHORT).show();
 
-                                /**
-                                MyCrypt mc = new MyCrypt();
-                                String dummyStr = "asfaesdf237263923902;/.’;./>23y283g2k3nre”D;ASdsn;fnddffk";
-                                byte[] bytes = dummyStr.getBytes("UTF-8");
-                                String encryptedStr = mc.byteArrayToHexString(dummyStr);
-                                System.out.println("ENCRYPTED: " + encryptedStr);
-*/
-
                                 rali.registerUser(username_, password_, password2_, email_);
                                 System.out.println("Registers executed");
                                 alertDialog.cancel();
-                                //alertDialogBuilder.
 
                             }
                         })

@@ -43,7 +43,7 @@ public class EpisodesFragment extends Fragment {
     private ArrayList<PodcastItem> list;
     private PodcastItem pi;
     private MainActivity ma;
-    AlertDialog alertDialog;
+    private AlertDialog alertDialog;
     private TextView collectionName;
     private LinearLayout headerBox;
     private PlayerFragment pf;
@@ -54,8 +54,6 @@ public class EpisodesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         pi = (PodcastItem) getArguments().getSerializable("message");
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
-        //httpGetHelper = new HttpGetHelper();
-
         collectionName = (TextView) view.findViewById(R.id.collectionTitle);
         collectionName.setText(pi.collectionName);
 
@@ -74,8 +72,6 @@ public class EpisodesFragment extends Fragment {
 
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("ef")
                         .replace(R.id.frag_container, pf).commit();
-
-
 
             }
 
@@ -146,33 +142,9 @@ public class EpisodesFragment extends Fragment {
         return url;
     }
 
-    /**
-     public Drawable getDrawableFromURL(String imageUrl) {
-     try {
-     URL url = new URL(imageUrl);
-     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-     connection.setDoInput(true);
-     connection.connect();
-     InputStream input = connection.getInputStream();
-     Drawable d = Drawable.createFromStream(input, "src name");
-     //Bitmap myBitmap = BitmapFactory.decodeStream(input);
-     return d;
-     } catch (IOException e) {
-     e.printStackTrace();
-     return null;
-     }
-     }*/
-
-
 
     public void fillList(){
-        //PodcastItems podcastItems = PodcastItems.getInstance();
-
         list = new ArrayList<>();
-        //listAll = new ArrayList<>();
-
-       //listAll = podcastItems.getItems();
-
         if(list.size() == 0) {
             for (int i = 0; i < listAll.size(); i++) {
                 if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
@@ -181,11 +153,8 @@ public class EpisodesFragment extends Fragment {
             }
         }
 
-
         adapter = new EpisodeListArrayAdapter(getContext(), list);
         listView.setAdapter(adapter);
-
-
 
     }
 

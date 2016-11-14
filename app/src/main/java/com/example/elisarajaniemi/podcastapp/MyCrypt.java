@@ -10,8 +10,6 @@ import java.io.UnsupportedEncodingException;
 
 public class MyCrypt {
 
-    //String base64;
-
     public MyCrypt(){
 
     }
@@ -59,6 +57,7 @@ public class MyCrypt {
 
     }
 
+    //NOT READY
     public String doDecoding(String base64){
         // Receiving side
         byte[] data1 = Base64.decode(base64, Base64.DEFAULT);

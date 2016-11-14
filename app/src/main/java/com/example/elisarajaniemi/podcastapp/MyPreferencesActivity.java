@@ -15,7 +15,7 @@ import android.widget.Button;
 
 public class MyPreferencesActivity extends PreferenceActivity {
 
-    boolean humor, technology, economy, health, all;
+    private boolean humor, technology, economy, health, all;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

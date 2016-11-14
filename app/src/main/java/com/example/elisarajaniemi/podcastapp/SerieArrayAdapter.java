@@ -17,7 +17,7 @@ import java.util.Date;
 
 public class SerieArrayAdapter extends ArrayAdapter<PodcastItem> {
 
-    PodcastItem value;
+    private PodcastItem value;
 
     public SerieArrayAdapter(Context context, ArrayList<PodcastItem> list) {
         super(context, 0, list);
@@ -33,7 +33,6 @@ public class SerieArrayAdapter extends ArrayAdapter<PodcastItem> {
         }
         TextView tv = (TextView) convertView.findViewById(R.id.serieName);
         tv.setText(value.collectionName);
-        //convertView.setVisibility((value.collectionID == value.collectionID) ? View.GONE : View.VISIBLE);
         return convertView;
     }
 }

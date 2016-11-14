@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class HttpGetHelper extends AsyncTask<String, String, String> {
 
-    String result = "";
+    private String result = "";
     public PodcastItems podcastItems = PodcastItems.getInstance();
     public SerieItems serieItems = SerieItems.getInstance();
 

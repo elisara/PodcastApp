@@ -21,7 +21,7 @@ import java.net.URL;
 
 public class GetUsersHelper extends AsyncTask<String, String, String> {
 
-    String result = "";
+    private String result = "";
     public Users users = Users.getInstance();
 
     protected void onPreExecute() {
@@ -57,31 +57,8 @@ public class GetUsersHelper extends AsyncTask<String, String, String> {
                 for (int i = 0; i < jArray.length(); i++) {
 
                     JSONObject jsonObject = jArray.getJSONObject(i);
-
                     User user = new User(jsonObject.getInt("id"), jsonObject.getString("username"), jsonObject.getString("email"));
-
                     users.addUser(user);
-
-                   /** for (int j = 0; j < finalArray.length(); j++) {
-
-                        JSONObject jObject = finalArray.getJSONObject(j);
-
-                        PodcastItem podcastItem = new PodcastItem(jObject.getString("Title"), jObject.getString("Download link"), jObject.getString("Description"),
-                                jObject.getInt("Length (sec)"), jObject.getString("Tags"), jObject.getString("Tags"), jObject.getString("Collection name"),
-                                jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
-
-                        podcastItems.addPodcastItem(podcastItem);
-                        System.out.println("Added " + podcastItem.title);
-                        if (serieItems.getSerieItems().size() == 0) serieItems.addSerieItem(podcastItem);
-                        else {
-                            boolean idFound = false;
-                            for (int k = 0; k < serieItems.getSerieItems().size(); k++) {
-                                if (serieItems.getSerieItems().get(k).collectionID == podcastItem.collectionID) idFound = true;
-                            }
-                            if (idFound == false) serieItems.addSerieItem(podcastItem);
-
-                        }
-                    }*/
 
                 }// End Loop
 
