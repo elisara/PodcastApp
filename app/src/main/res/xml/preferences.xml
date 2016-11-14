@@ -6,20 +6,33 @@
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:title="History"
+        android:title="All"
         android:defaultValue="false"
-        android:key="history" />
+        android:key="all" />
     <CheckBoxPreference
+        android:id="@+id/humorbox"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:title="Nature"
+        android:title="Humor"
         android:defaultValue="false"
-        android:key="nature" />
+        android:key="humor" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Health"
         android:defaultValue="false"
         android:key="health" />
+    <CheckBoxPreference
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:title="Technology"
+        android:defaultValue="false"
+        android:key="technology" />
+    <CheckBoxPreference
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:title="Economy"
+        android:defaultValue="false"
+        android:key="economy" />
 
 </PreferenceScreen>

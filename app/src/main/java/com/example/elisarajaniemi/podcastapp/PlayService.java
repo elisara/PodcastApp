@@ -127,7 +127,10 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
 
     public void cancelNotification() {
-        mNotificationManager.cancelAll();
+
+        if(mNotificationManager != null){
+            mNotificationManager.cancelAll();
+        }
     }
 
     public boolean isStarted() {

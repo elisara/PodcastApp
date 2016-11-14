@@ -2,6 +2,7 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -14,7 +15,7 @@ import android.widget.Button;
 
 public class MyPreferencesActivity extends PreferenceActivity {
 
-    boolean history;
+    boolean humor, technology, economy, health, all;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +26,11 @@ public class MyPreferencesActivity extends PreferenceActivity {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         //SharedPreferences sp = getSharedPreferences("myCustomSharedPrefs", Activity.MODE_PRIVATE);
-        history = sp.getBoolean("history", false);
-        System.out.println(history);
+        all = sp.getBoolean("all", false);
+        humor = sp.getBoolean("humor", false);
+        technology = sp.getBoolean("technology", false);
+        economy = sp.getBoolean("economy", false);
+        health = sp.getBoolean("health", false);
 
         Button button = (Button) findViewById(R.id.close);
         button.setOnClickListener(new View.OnClickListener() {
