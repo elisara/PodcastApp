@@ -10,9 +10,11 @@ public class User implements Serializable {
 
     public String username;
     public String email;
+    public int id;
 
-    public User(String username, String email){
+    public User(int id, String username, String email){
 
+        this.id = id;
         this.username = username;
         this.email = email;
     }

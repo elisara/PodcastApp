@@ -308,8 +308,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        System.out.println("---------PAUSE--------------");
-
+        System.out.println("----------Main OnPause");
         //doUnbindService();
         //pServ.onDestroy();
 
@@ -317,21 +316,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        System.out.println("---------RESUME--------------");
         super.onResume();
-
+        System.out.println("----------Main OnResume");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
 
     }
 
     @Override
     public void onDestroy() {
-        System.out.println("---------DESTROY--------------");
         super.onDestroy();
-        pServ.onDestroy();
+        System.out.println("----------Main OnDestroy");
         doUnbindService();
+        pServ.onDestroy();
         finish();
-
         //doUnbindService();
         //pServ.onDestroy();
 
@@ -347,6 +345,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         } else {
+            System.out.println("FManager----- "+getSupportFragmentManager().toString());
             getSupportFragmentManager().popBackStackImmediate();
         }
 

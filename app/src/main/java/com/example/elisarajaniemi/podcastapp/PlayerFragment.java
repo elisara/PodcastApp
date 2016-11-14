@@ -105,7 +105,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             serviceCallbackMethod();
         }
         return view;
- 
     }
 
 

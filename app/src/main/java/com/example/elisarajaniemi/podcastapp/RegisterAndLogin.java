@@ -18,6 +18,7 @@ import java.net.URL;
 public class RegisterAndLogin {
 
     private boolean loggedIn;
+    private User currentUser;
     private Thread t;
     private boolean exists;
     private boolean registered;
@@ -28,16 +29,15 @@ public class RegisterAndLogin {
 
     public boolean registerUser(String username, String password, String password2, String email) {
 
-        t = new Thread(connectToUsers);
-        t.start();
+        exists = false;
         testIfExists(username, password);
 
         if (password.equals(password2)) {
             testIfExists(username, password);
-            System.out.println("Password match");
+            System.out.println("Register: Password match");
 
             if (this.exists == false) {
-                System.out.println("Register User didn't exist");
+                System.out.println("Register: User didn't exist");
                 this.encryptedUsername = myCrypt.doEncoding(username).toString();
                 this.encryptedPassword = myCrypt.doEncoding(password).toString();
                 this.encryptedEmail = myCrypt.doEncoding(email).toString();
@@ -48,20 +48,22 @@ public class RegisterAndLogin {
                 //here send encrypted userdata to database
                 loggedIn = true;
             } else {
-                System.out.println("Register User existed");
+                System.out.println("Register: User existed");
                 loggedIn = false;
             }
         } else {
-            System.out.println("Register Password didn't match");
+            System.out.println("Register: Password didn't match");
             loggedIn = false;
         }
         return loggedIn;
     }
 
     public String login(String username, String password) {
+
+        exists = false;
         testIfExists(username, password);
 
-        System.out.println("Log In exists = " + exists + ", loggedIn = " + loggedIn);
+        System.out.println("LogIn: exists = " + exists + ", loggedIn = " + loggedIn);
 
         if (exists == true && loggedIn != true) {
             this.encryptedUsername = myCrypt.doEncoding(username).toString();
@@ -69,8 +71,9 @@ public class RegisterAndLogin {
             t = new Thread(r2);
             t.start();
             loggedIn = true;
+            System.out.println("Current userID: " + currentUser.id);
         } else {
-            System.out.println("Login User doesn't exist");
+            System.out.println("Login: User doesn't exist");
             loggedIn = false;
         }
         return username;
@@ -92,13 +95,13 @@ public class RegisterAndLogin {
 
         //exists = false;
 
-        for (int i = 0; i < Users.getInstance().getUsers().size(); i++){
+        for (int i = 0; i < Users.getInstance().getUsers().size(); i++) {
             System.out.println("FOR Username: " + Users.getInstance().getUsers().get(i).username.length() + ", " + encryptedUsername.length());
-            if (Users.getInstance().getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)){
+            if (Users.getInstance().getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)) {
                 System.out.println("----true---");
+                currentUser = Users.getInstance().getUsers().get(i);
                 this.exists = true;
-            }
-            else {
+            } else {
                 System.out.println("ELSE");
             }
         }
@@ -109,7 +112,10 @@ public class RegisterAndLogin {
     Runnable r = new Runnable() {
         public void run() {
             try {
-                URL url = new URL("http://media.mw.metropolia.fi/arsu/users?token=" + token);
+                URL url = new URL("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+                        "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
+                        "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
+                        "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setRequestMethod("POST");
@@ -206,6 +212,7 @@ public class RegisterAndLogin {
 
     };
 
+    /**
     Runnable connectToUsers = new Runnable() {
         public void run() {
             try {
@@ -251,5 +258,5 @@ public class RegisterAndLogin {
             }
         }
 
-    };
+    };*/
 }
