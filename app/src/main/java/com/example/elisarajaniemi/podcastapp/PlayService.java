@@ -18,7 +18,7 @@ import android.widget.RemoteViews;
  * Created by Kade on 31.10.2016.
  */
 
-public class PlayService extends IntentService implements MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+public class PlayService extends IntentService implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
 
     private final IBinder mBinder = new ServiceBinder();
     MediaPlayer mPlayer;
@@ -33,8 +33,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     public static final String START_SERVICE = "start_service";
 
 
-
-    public PlayService(){
+    public PlayService() {
         super("");
 
     }
@@ -53,6 +52,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     public void onCreate() {
         super.onCreate();
         initPlayer();
+        System.out.println("---------Setvice OnCreate");
 
     }
 
@@ -72,6 +72,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        System.out.println("------------------------onStartcommand");
 
         String action = intent.getAction();
         if (action.equalsIgnoreCase(START_SERVICE)) {
@@ -127,7 +128,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
 
     public void cancelNotification() {
-        mNotificationManager.cancelAll();
+        if (mNotificationManager != null) mNotificationManager.cancelAll();
     }
 
     public boolean isStarted() {
@@ -137,15 +138,17 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     public void setPodcastObject(PodcastItem pi) {
         this.pi = pi;
         status = 2;
-        createNotification();
+        //createNotification();
     }
 
     public void setAudioPath() {
         try {
+            if (mPlayer == null) initPlayer();
+
+
             mPlayer.setDataSource(this.pi.url); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
             mPlayer.prepareAsync();
             createNotification();
-
 
 
             // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
@@ -183,11 +186,14 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     }
 
     public void stopMusic() {
-        mPlayer.stop();
-        mPlayer.reset();
-        mPlayer.release();
-        length = 0;
-        mPlayer = null;
+        if(mPlayer!=null) {
+            mPlayer.stop();
+            mPlayer.reset();
+            mPlayer.release();
+            length = 0;
+            mPlayer = null;
+            status = 0;
+        }
     }
 
     public void setPosition(int position) {
@@ -215,10 +221,11 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     @Override
     public void onDestroy() {
         super.onDestroy();
+        System.out.println("----------Service OnDestroy");
         cancelNotification();
         if (mPlayer != null) {
             try {
-                mPlayer.stop();
+                //mPlayer.stop();
                 mPlayer.release();
             } finally {
                 mPlayer = null;
@@ -248,7 +255,8 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        if (serviceCallbacks != null) {
+        if (serviceCallbacks != null && mPlayer != null) {
+
             serviceCallbacks.serviceCallbackMethod();
         }
         playMusic();
@@ -262,9 +270,9 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     }
 
     public class ServiceBinder extends Binder {
-    PlayService getService() {
-        return PlayService.this;
-    }
+        PlayService getService() {
+            return PlayService.this;
+        }
     }
 
     public void setCallbacks(ServiceCallbacks callbacks) {

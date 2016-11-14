@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Context context = this;
-
+        System.out.println("-----------Main OnCreate");
 
         Thread t = new Thread(r);
         t.start();
@@ -287,6 +287,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+        System.out.println("----------Main OnPause");
         //doUnbindService();
         //pServ.onDestroy();
 
@@ -295,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        System.out.println("----------Main OnResume");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Category things
         sf.history = prefs.getBoolean("history", true);
@@ -304,8 +306,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        pServ.onDestroy();
+        System.out.println("----------Main OnDestroy");
         doUnbindService();
+        pServ.onDestroy();
         finish();
         //doUnbindService();
         //pServ.onDestroy();
@@ -321,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         } else {
+            System.out.println("FManager----- "+getSupportFragmentManager().toString());
             getSupportFragmentManager().popBackStackImmediate();
         }
 
