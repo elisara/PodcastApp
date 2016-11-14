@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.widget.TextView;
 
 /**
@@ -25,7 +24,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private TextView currentTime, fullTime;
     private int mediaFileLengthInMilliseconds;
     private final Handler handler = new Handler();
-    private boolean playServiceStarted;
     private Utilities utils;
     private PodcastItem piFromService, piFromClick, pi2;
 
