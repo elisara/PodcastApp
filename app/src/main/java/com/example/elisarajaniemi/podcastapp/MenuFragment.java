@@ -35,6 +35,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
     private MainActivity ma;
     private FrameLayout fl;
+    private GetUsersHelper getUsersHelper;
     private TextView playList, favorite, queue, history, continuePlay, signIn;
     private Button logOutBtn;
     private PlaylistsFragment plf;
@@ -48,6 +49,13 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.menu_layout, container, false);
+
+        getUsersHelper = new GetUsersHelper();
+
+        getUsersHelper.execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+                "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
+                "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
+                "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM");
 
         playList = (TextView) view.findViewById(R.id.playlists);
         favorite = (TextView) view.findViewById(R.id.favorites);
@@ -148,7 +156,6 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                         password_ = password.getText().toString();
                         rali.login(username_, password_);
                         Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
-
                     }
                 })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
