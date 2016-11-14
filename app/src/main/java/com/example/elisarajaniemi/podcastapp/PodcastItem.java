@@ -1,6 +1,9 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
+
 
 /**
  * Created by jari on 31/10/2016.
@@ -17,6 +20,7 @@ public class PodcastItem implements Serializable {
     public String collectionName;
     public int collectionID;
     public String imageURL;
+    public Bitmap picture;
 
     public PodcastItem(){
 

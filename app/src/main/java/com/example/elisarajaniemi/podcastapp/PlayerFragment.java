@@ -1,6 +1,7 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,12 +15,14 @@ import android.widget.SeekBar;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
 /**
  * Created by Kade on 28.10.2016.
  */
 
 public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, OnBufferingUpdateListener, SeekBar.OnSeekBarChangeListener, ServiceCallbacks {
-    private ImageView sleepBtn, replayBtn, playBtn, forwardBtn, speedBtn, previousBtn, nextBtn, queueBtn, playlistBtn, favoriteBtn, shareBtn;
+    private ImageView sleepBtn, replayBtn, playBtn, forwardBtn, speedBtn, previousBtn, nextBtn, queueBtn, playlistBtn, favoriteBtn, shareBtn, podcastPic;
     private SeekBar seekbar;
     private TextView currentTime, fullTime;
     private int mediaFileLengthInMilliseconds;
@@ -48,7 +51,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 System.out.println("Podcast URL ELSE IF: " + piFromClick.url);
             }
         }
-
+        podcastPic = (ImageView) view.findViewById(R.id.podcastPic);
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
         playBtn = (ImageView) view.findViewById(R.id.playBtn);
@@ -252,6 +255,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public void serviceCallbackMethod() {
+        mActivity.imageLoader.loadImage(mActivity.pServ.getPodcastObject().imageURL, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                podcastPic.setImageBitmap(loadedImage);
+            }
+        });
 
         mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration();
         updateProgressBar();

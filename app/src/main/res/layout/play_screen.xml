@@ -6,10 +6,19 @@
     android:weightSum="2">
 
     <LinearLayout
+
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@drawable/podcast_headphones"></LinearLayout>
+        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/podcastPic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

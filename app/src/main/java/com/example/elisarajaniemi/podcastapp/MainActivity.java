@@ -22,6 +22,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private PlayerFragment pf;
     private PodcastItem pi, pi2;
     PlayService pServ;
+    ImageLoader imageLoader;
     public ServiceConnection Scon = new ServiceConnection() {
 
         @Override
@@ -72,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         final Context context = this;
         System.out.println("---------CREATE--------------");
+
+        // Create global configuration and initialize ImageLoader with this config
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
+        imageLoader = ImageLoader.getInstance();
 
 
         Thread t = new Thread(r);
