@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * Created by Elisa Rajaniemi on 27.10.2016.
@@ -42,15 +43,18 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private boolean itemsAdded;
     private MainActivity ma;
     private ArrayList<PodcastItem> list;
-
+    private ArrayList<PodcastItem> categoryList;
+    private ArrayList<Boolean> prefCategoryList;
+    private String[] backendCategories;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.serie_layout, container, false);
         spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         addItemsOnSpinner();
+        categoryList = new ArrayList<>();
+        prefCategoryList = new ArrayList<>();
 
         categoryBtn = (Button) view.findViewById(R.id.categoryBtn);
         categoryBtn.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +96,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         String value = parent.getItemAtPosition(position).toString();
         if (value.contains("NAME")) {
             list = getListByCategories();
-            Collections.sort(list, new Comparator<PodcastItem>(){
+            Collections.sort(list, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return pod1.collectionName.compareToIgnoreCase(pod2.collectionName); // To compare string values
                 }
@@ -102,7 +106,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
         } else if (value.contains("NEW")) {
             list = getListByCategories();
-            Collections.sort(list, new Comparator<PodcastItem>(){
+            Collections.sort(list, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
                 }
@@ -125,20 +129,12 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
     }
 
-    public boolean testIfListContains(ArrayList<PodcastItem> testList, PodcastItem podcastItem){
-        boolean listContains = false;
-        for (int i = 0; i < testList.size(); i++){
-            if(testList.get(i).collectionName.equalsIgnoreCase(podcastItem.collectionName)){
-                listContains = true;
-            }
-        }
-        return listContains;
-    }
-
-    public ArrayList<PodcastItem> getListByCategories(){
-        ArrayList<PodcastItem> categoryList = new ArrayList<>();
-        if(categoryList.size()!=0){
+    public ArrayList<PodcastItem> getListByCategories() {
+        if (categoryList.size() != 0) {
             categoryList.clear();
+        }
+        if(prefCategoryList.size() != 0){
+            prefCategoryList.clear();
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         humor = prefs.getBoolean("humor", true);
@@ -152,57 +148,52 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         history = prefs.getBoolean("history", true);
         all = prefs.getBoolean("all", true);
 
-        System.out.println("Categories: humor:"+humor+ " technology:"+technology+ " economy:"+ economy+ " health:"+health + " all:"+all);
+        prefCategoryList.add(humor);
+        prefCategoryList.add(technology);
+        prefCategoryList.add(economy);
+        prefCategoryList.add(health);
+        prefCategoryList.add(politics);
+        prefCategoryList.add(nature);
+        prefCategoryList.add(music);
+        prefCategoryList.add(entertainment);
+        prefCategoryList.add(history);
 
-        for(int i = 0; i < PodcastItems.getInstance().getItems().size(); i++) {
-            if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains("category:huumori") && humor == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
-                }
-            } else if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains("category:technology") && technology == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
-                }
-            } else if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains("category:economy") && economy == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
-                }
-            } else if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains("category:terveys") && health == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
-                }
-            } else if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains("category:politics") && politics == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
-                }
-            } else if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains("category:nature") && nature == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
-                }
-            } else if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains("category:music") && music == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
-                }
-            } else if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains("category:history") && history == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
-                }
-            } else if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains("category:entertainment") && entertainment == true) {
+        backendCategories = new String[] {"category:huumori", "category:technology", "category:economy",
+                "category:terveys", "category:politics", "category:nature",
+                "category:music", "category:entertainment", "category:history"};
+
+        for (int i = 0; i < PodcastItems.getInstance().getItems().size(); i++) {
+            for(int u = 0; u < backendCategories.length; u++) {
+                getCategory(backendCategories[u], prefCategoryList.get(u), i);
+            }
+            if (all == true) {
                 if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
                     categoryList.add(PodcastItems.getInstance().getItems().get(i));
                 }
             }
-            else if (all == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
-                }
-            }
-
         }
         adapter = new SerieArrayAdapter(getContext(), categoryList);
         adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
         return categoryList;
 
+    }
+
+    public void getCategory(String categoryInBackend, Boolean prefCategory, int i) {
+        if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(categoryInBackend) && prefCategory == true) {
+            if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
+                categoryList.add(PodcastItems.getInstance().getItems().get(i));
+            }
+        }
+    }
+
+    public boolean testIfListContains(ArrayList<PodcastItem> testList, PodcastItem podcastItem) {
+        boolean listContains = false;
+        for (int i = 0; i < testList.size(); i++) {
+            if (testList.get(i).collectionName.equalsIgnoreCase(podcastItem.collectionName)) {
+                listContains = true;
+            }
+        }
+        return listContains;
     }
 }
