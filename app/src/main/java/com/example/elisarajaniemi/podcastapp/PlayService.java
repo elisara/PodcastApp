@@ -219,7 +219,6 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         System.out.println("----------Service OnDestroy");
         cancelNotification();
         if (mPlayer != null) {
@@ -230,6 +229,8 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
                 mPlayer = null;
             }
         }
+        super.onDestroy();
+
     }
 
     /**
