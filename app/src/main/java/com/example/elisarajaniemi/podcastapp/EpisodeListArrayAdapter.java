@@ -1,6 +1,7 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.text.method.ScrollingMovementMethod;
@@ -67,13 +68,19 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
                 lp.addView(toQueue);
 
                 final TextView toFavorites = new TextView(getContext());
-                toFavorites.setText("Queue");
-                toFavorites.setPadding(30, 20, 20, 20);
+                toFavorites.setText("Favorites");
+                toFavorites.setPadding(30, 20, 20, 10);
                 toFavorites.setTextSize(20);
                 lp.addView(toFavorites);
 
                 alertDialogBuilder.setView(lp);
                 final AlertDialog alertDialog = alertDialogBuilder.create();
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
 
                 toPlaylist.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {

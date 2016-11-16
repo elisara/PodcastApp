@@ -36,4 +36,3 @@ public class PlaylistsArrayAdapter extends ArrayAdapter<PlaylistItem> {
         return convertView;
     }
 }
-

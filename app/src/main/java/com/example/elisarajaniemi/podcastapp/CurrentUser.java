@@ -20,7 +20,7 @@ public class CurrentUser {
     }
 
     public void addCurrentUser(User user){
-        this.currentUser.add(user);
+        this.currentUser.add(0, user);
     }
 
     public ArrayList<User> getCurrentUser(){
@@ -29,6 +29,6 @@ public class CurrentUser {
 
     public void replaceCurrentUser(User user){
         this.currentUser.clear();
-        this.currentUser.add(user);
+        this.currentUser.add(0, user);
     }
 }

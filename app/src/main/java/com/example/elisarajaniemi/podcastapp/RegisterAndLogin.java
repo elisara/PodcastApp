@@ -19,7 +19,7 @@ public class RegisterAndLogin {
 
     private boolean loggedIn;
     private User user;
-    private CurrentUser currentUser = CurrentUser.getInstance();
+    CurrentUser currentUser = CurrentUser.getInstance();
     private Thread t;
     private boolean exists;
     private boolean registered;
@@ -72,7 +72,7 @@ public class RegisterAndLogin {
             t = new Thread(r2);
             t.start();
             loggedIn = true;
-            System.out.println("Current userID: " + currentUser.getCurrentUser().get(0).id);
+            System.out.println("Current userID: " + currentUser.getCurrentUser().get(0).id + " CurrentUser array size: " + currentUser.getCurrentUser().size());
         } else {
             System.out.println("Login: User doesn't exist");
             loggedIn = false;
@@ -92,6 +92,8 @@ public class RegisterAndLogin {
     }
 
     public boolean testIfExists(String username, String email) {
+
+        currentUser.getCurrentUser().clear();
         //here check if user is not already registered
         this.encryptedUsername = myCrypt.doEncoding(username).trim();
         this.encryptedEmail = myCrypt.doEncoding(email).toString();
@@ -194,8 +196,8 @@ public class RegisterAndLogin {
                         token = jObject.getString("token");
                         System.out.println("Token: " + token);
                         user = new User(CurrentUser.getInstance().getCurrentUser().get(0).id, CurrentUser.getInstance().getCurrentUser().get(0).username, CurrentUser.getInstance().getCurrentUser().get(0).email, token);
-                        CurrentUser.getInstance().replaceCurrentUser(user);
-                        System.out.println("Current user token: " + CurrentUser.getInstance().getCurrentUser().get(0).token);
+                        currentUser.replaceCurrentUser(user);
+                        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ currentUser.getCurrentUser().get(0).id + "?token=" + currentUser.getCurrentUser().get(0).token);
                     } catch (JSONException e) {
                         System.out.println(e);
                     }
