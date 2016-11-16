@@ -242,8 +242,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public void onDestroy() {
+
         super.onDestroy();
         handler.removeCallbacks(mUpdateTimeTask);
+        mActivity.showPlayer();
     }
 
 

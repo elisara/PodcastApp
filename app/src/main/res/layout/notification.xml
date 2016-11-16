@@ -6,7 +6,7 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:weightSum="100"
-    android:background="@color/black"
+    android:background="@android:color/background_light"
     >
 
     <ImageView
