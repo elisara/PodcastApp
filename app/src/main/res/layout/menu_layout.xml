@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_alignParentLeft="true"
+    android:gravity="left"
+    android:minWidth="250dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_weight="1"
-        android:background="#FFFFFF"
-        android:orientation="vertical"
-        android:paddingTop="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-    <LinearLayout
         android:id="@+id/loggedIn"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -49,15 +45,20 @@
         <TextView
             android:id="@+id/playlists"
             android:text="Playlists"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@drawable/text_color"
             android:clickable="true"
             android:paddingTop="16dp"
-            android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/favorites"
             android:text="Favorites"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@drawable/text_color"
             android:clickable="true"
             android:paddingTop="16dp"
             android:background="@android:color/transparent"
@@ -67,6 +68,9 @@
         <TextView
             android:id="@+id/queue"
             android:text="Queue"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@drawable/text_color"
             android:clickable="true"
             android:paddingTop="16dp"
             android:background="@android:color/transparent"
@@ -76,6 +80,9 @@
         <TextView
             android:id="@+id/history"
             android:text="History"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@drawable/text_color"
             android:clickable="true"
             android:paddingTop="16dp"
             android:background="@android:color/transparent"
@@ -85,6 +92,9 @@
         <TextView
             android:id="@+id/continuePlaying"
             android:text="Continue playing"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@drawable/text_color"
             android:clickable="true"
             android:paddingTop="16dp"
             android:background="@android:color/transparent"
@@ -95,7 +105,7 @@
 
     <LinearLayout
         android:id="@+id/settings"
-        android:padding="16dp"
+        android:padding="30dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -103,34 +113,20 @@
         <CheckBox
             android:id="@+id/autoplay"
             android:text="Autoplay"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/signIn"
             android:text="Login/Register"
+            android:textColor="@drawable/text_color"
             android:clickable="true"
+            android:textSize="20dp"
+            android:textStyle="bold"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Log out"
-            />
-
     </LinearLayout>
-    </LinearLayout>
-    <FrameLayout
-        android:id="@+id/outside"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:background="#88000000"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-    </FrameLayout>
 
 </LinearLayout>

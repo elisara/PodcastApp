@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -31,24 +33,31 @@ import java.net.URL;
  * Created by Elisa Rajaniemi on 26.10.2016.
  */
 
-public class MenuFragment extends Fragment implements View.OnClickListener {
+public class MenuFragment extends DialogFragment implements View.OnClickListener {
 
     private MainActivity ma;
-    private FrameLayout fl;
     private GetUsersHelper getUsersHelper;
     private TextView playList, favorite, queue, history, continuePlay, signIn;
-    private Button logOutBtn;
     private PlaylistsFragment plf;
     private SinglePlaylistFragment splf;
     private MenuFragment mf;
     private RegisterAndLogin rali;
     private String password_, password2_, username_, email_, token;
     private AlertDialog alertDialog;
+    private boolean loggedIn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.menu_layout, container, false);
+        View view = inflater.inflate(R.layout.menu_layout, container , false);
+
+        getDialog().getWindow().setGravity(Gravity.LEFT | Gravity.TOP);
+        WindowManager.LayoutParams p = getDialog().getWindow().getAttributes();
+        //p.width = 700;
+        p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
+        p.x = 0;
+        p.y = 170;
+        getDialog().getWindow().setAttributes(p);
 
         getUsersHelper = new GetUsersHelper();
 
@@ -63,8 +72,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         history = (TextView) view.findViewById(R.id.history);
         continuePlay = (TextView) view.findViewById(R.id.continuePlaying);
         signIn = (TextView) view.findViewById(R.id.signIn);
-        fl = (FrameLayout) view.findViewById(R.id.outside);
-        logOutBtn = (Button) view.findViewById(R.id.logout);
+        //logOutBtn = (Button) view.findViewById(R.id.logout);
 
 
         playList.setOnClickListener(this);
@@ -73,8 +81,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         history.setOnClickListener(this);
         continuePlay.setOnClickListener(this);
         signIn.setOnClickListener(this);
-        fl.setOnClickListener(this);
-        logOutBtn.setOnClickListener(this);
+        //logOutBtn.setOnClickListener(this);
 
         plf = new PlaylistsFragment();
         splf = new SinglePlaylistFragment();
@@ -127,47 +134,51 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
             case R.id.signIn:
 
-                //LOGIN
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                alertDialogBuilder.setTitle("Login");
+                if(!loggedIn) {
+                    //LOGIN
+                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                    alertDialogBuilder.setTitle("Login");
 
-                //editTexts in dialog
-                LinearLayout lp = new LinearLayout(getContext());
-                lp.setOrientation(LinearLayout.VERTICAL);
-                lp.setPadding(16,16,16,16);
+                    //editTexts in dialog
+                    LinearLayout lp = new LinearLayout(getContext());
+                    lp.setOrientation(LinearLayout.VERTICAL);
+                    lp.setPadding(16, 16, 16, 16);
 
-                final EditText username = new EditText(getActivity());
-                username.setHint("Username");
-                lp.addView(username);
+                    final EditText username = new EditText(getActivity());
+                    username.setHint("Username");
+                    lp.addView(username);
 
-                final EditText password = new EditText(getActivity());
-                password.setHint("Password");
-                lp.addView(password);
+                    final EditText password = new EditText(getActivity());
+                    password.setHint("Password");
+                    lp.addView(password);
 
-                final Button register = new Button(getActivity());
-                register.setText("Register");
-                lp.addView(register);
+                    final Button register = new Button(getActivity());
+                    register.setText("Register");
+                    lp.addView(register);
 
-                alertDialogBuilder.setView(lp);
+                    alertDialogBuilder.setView(lp);
 
-                alertDialogBuilder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        username_ = username.getText().toString();
-                        password_ = password.getText().toString();
-                        rali.login(username_, password_);
-                        Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                    alertDialogBuilder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            username_ = username.getText().toString();
+                            password_ = password.getText().toString();
+                            rali.login(username_, password_);
+                            Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
+                            signIn.setText("Sign out");
+                            loggedIn = true;
+                        }
+                    })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
 
 
-                // create alert dialog
-                alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                    // create alert dialog
+                    alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+
 
                 //REGISTER
                 register.setOnClickListener(new View.OnClickListener() {
@@ -204,7 +215,6 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                                 password2_ = password2.getText().toString();
                                 email_ = email.getText().toString();
                                 Toast.makeText(getContext(), "User "+ username_ +" created", Toast.LENGTH_SHORT).show();
-
                                 rali.registerUser(username_, password_, password2_, email_);
                                 System.out.println("Registers executed");
                                 alertDialog.cancel();
@@ -223,17 +233,14 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
                     }
                 });
+                }
+                else{
+                    rali.logout();
+                    loggedIn = false;
+                }
 
                 break;
 
-            case R.id.outside:
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .remove(this).commit();
-                break;
-
-            case R.id.logout:
-            rali.logout();
-            break;
         }
 
     }

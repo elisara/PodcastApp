@@ -34,5 +34,35 @@
         android:title="Economy"
         android:defaultValue="false"
         android:key="economy" />
+    <CheckBoxPreference
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:title="Politics"
+        android:defaultValue="false"
+        android:key="politics" />
+    <CheckBoxPreference
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:title="Entertainment"
+        android:defaultValue="false"
+        android:key="entertainment" />
+    <CheckBoxPreference
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:title="Music"
+        android:defaultValue="false"
+        android:key="music" />
+    <CheckBoxPreference
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:title="Nature"
+        android:defaultValue="false"
+        android:key="nature" />
+    <CheckBoxPreference
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:title="History"
+        android:defaultValue="false"
+        android:key="history" />
 
 </PreferenceScreen>

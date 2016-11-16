@@ -6,28 +6,27 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -161,15 +160,12 @@ public class MainActivity extends AppCompatActivity {
         menuBtn = (ImageButton) findViewById(R.id.menuBtn);
         menuBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (menuOpen == false) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.menu_frag_container, mf).commit();
-                    menuOpen = true;
-                } else {
-                    getSupportFragmentManager().beginTransaction().remove(mf).commit();
-                    menuOpen = false;
-                }
-                System.out.println("menu clicked");
+                DialogFragment dial = (DialogFragment) Fragment.instantiate(getApplicationContext(), MenuFragment.class.getCanonicalName());
+                dial.setStyle( DialogFragment.STYLE_NO_TITLE, R.style.CustomDialog );
+                dial.show(getSupportFragmentManager(), "dialog");
 
+                // mf.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog );
+                   // mf.show(getSupportFragmentManager(), "Dialog Fragment");
             }
         });
 
@@ -317,15 +313,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         System.out.println("----------Main OnDestroy");
         doUnbindService();
         pServ.onDestroy();
-        finish();
+        super.onDestroy();
 
 
     }
-
 
     @Override
     public void onBackPressed() {
