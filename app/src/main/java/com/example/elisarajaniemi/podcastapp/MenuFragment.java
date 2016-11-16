@@ -183,6 +183,8 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             rali.login(username_, password_);
                             Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
 
+                            System.out.println("CurrentUser array size: " + currentUser.getCurrentUser().size());
+
                             if(currentUser.getCurrentUser().size() > 0) {
                                 System.out.println("--------User in list-------");
                                 signIn.setText("Sign out");
@@ -264,6 +266,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 else{
                     System.out.println("-----in else logout----");
                     rali.logout();
+                    System.out.println("CurrentUser array size: " + currentUser.getCurrentUser().size());
                     dismiss();
                 }
 

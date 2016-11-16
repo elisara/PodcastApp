@@ -43,6 +43,8 @@ public class PlaylistsFragment extends Fragment {
     private MenuFragment mf;
     private String playlistName, message;
     private ArrayList<PlaylistItem> list;
+    CurrentUser currentUser = CurrentUser.getInstance();
+    Playlists playlists = Playlists.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class PlaylistsFragment extends Fragment {
 
 
         listView = (ListView) view.findViewById(R.id.playlist_list);
-        adapter = new PlaylistsArrayAdapter(getContext(), list);
+        adapter = new PlaylistsArrayAdapter(getContext(), playlists.getPlaylists());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -166,12 +168,12 @@ public class PlaylistsFragment extends Fragment {
     Runnable r = new Runnable() {
         public void run() {
             try {
-                URL url = new URL("http://media.mw.metropolia.fi/arsu/playlists?token=" + CurrentUser.getInstance().getCurrentUser().get(0).token);
+                URL url = new URL("http://media.mw.metropolia.fi/arsu/playlists?token=" + currentUser.getCurrentUser().get(0).token);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
-                String input = "{\"playlist_name\":\"" + playlistName + "\",\"user_id\":\"" + CurrentUser.getInstance().getCurrentUser().get(0).id + "\"}";
+                String input = "{\"playlist_name\":\"" + playlistName + "\",\"user_id\":\"" + currentUser.getCurrentUser().get(0).id + "\"}";
                 input = input.replace("\n", "");
                 System.out.println(input);
 
@@ -189,6 +191,7 @@ public class PlaylistsFragment extends Fragment {
                         JSONObject jObject = new JSONObject(output);
                         message = jObject.getString("message");
                         System.out.println("Database message: " + message);
+                        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ currentUser.getCurrentUser().get(0).id + "?token=" + currentUser.getCurrentUser().get(0).token);
                     } catch (JSONException e) {
                         System.out.println(e);
                     }
