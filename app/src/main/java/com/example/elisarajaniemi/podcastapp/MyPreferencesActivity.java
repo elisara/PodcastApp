@@ -3,6 +3,7 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -25,7 +26,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
         getFragmentManager().beginTransaction().replace(R.id.displayPrefs, new MyPreferenceFragment()).commit();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        //SharedPreferences sp = getSharedPreferences("myCustomSharedPrefs", Activity.MODE_PRIVATE);
+
         all = sp.getBoolean("all", false);
         humor = sp.getBoolean("humor", false);
         technology = sp.getBoolean("technology", false);

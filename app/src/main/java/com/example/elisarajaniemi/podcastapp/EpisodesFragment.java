@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
@@ -69,9 +70,9 @@ public class EpisodesFragment extends Fragment {
                 Bundle bundle2 = new Bundle();
                 bundle2.putSerializable("episode", pi);
                 pf.setArguments(bundle2);
-
-                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("ef")
-                        .replace(R.id.frag_container, pf).commit();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                fm.beginTransaction().addToBackStack("pf")
+                        .replace(R.id.frag_container, pf, "pf").commit();
 
             }
 

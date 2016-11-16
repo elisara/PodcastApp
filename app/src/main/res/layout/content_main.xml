@@ -18,17 +18,18 @@
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/player_frag_container"
+        android:id="@+id/menu_frag_container"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/menu_frag_container"
+        android:id="@+id/player_frag_container"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true">
     </LinearLayout>
 
 </RelativeLayout>
