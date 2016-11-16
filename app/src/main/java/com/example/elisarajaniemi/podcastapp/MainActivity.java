@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +35,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLOutput;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog alertDialog;
     private MenuFragment mf;
     private SearchFragment searchFragment;
+    public SmallPlayerFragment spf;
     private TextView title;
     private boolean categoryOpen, menuOpen;
     private SerieFragment sf;
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private PodcastItem pi, pi2;
     PlayService pServ;
     ImageLoader imageLoader;
+    android.support.v4.app.FragmentManager fragmentManager;
     public ServiceConnection Scon = new ServiceConnection() {
 
         @Override
@@ -69,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String START_SERVICE = "start_service";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);
         imageLoader = ImageLoader.getInstance();
-
+        fragmentManager = getSupportFragmentManager();
 
         Thread t = new Thread(r);
         t.start();
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         pServ = new PlayService("PodcastApp");
         ef = new EpisodesFragment();
         pf = new PlayerFragment();
+        spf = new SmallPlayerFragment();
 
 
         Intent playerIntent = new Intent(this, PlayService.class);
@@ -133,9 +137,9 @@ public class MainActivity extends AppCompatActivity {
 
                             if (PodcastItems.getInstance().getItems().get(j).title.toLowerCase().contains(searchField.getText().toString().toLowerCase())
                                     || PodcastItems.getInstance().getItems().get(j).description.toLowerCase().contains(searchField.getText().toString().toLowerCase())
-                                        || PodcastItems.getInstance().getItems().get(j).tags.toLowerCase().contains(searchField.getText().toString().toLowerCase())
-                                            || PodcastItems.getInstance().getItems().get(j).category.toLowerCase().contains(searchField.getText().toString().toLowerCase())
-                                                || PodcastItems.getInstance().getItems().get(j).collectionName.toLowerCase().contains(searchField.getText().toString().toLowerCase())) {
+                                    || PodcastItems.getInstance().getItems().get(j).tags.toLowerCase().contains(searchField.getText().toString().toLowerCase())
+                                    || PodcastItems.getInstance().getItems().get(j).category.toLowerCase().contains(searchField.getText().toString().toLowerCase())
+                                    || PodcastItems.getInstance().getItems().get(j).collectionName.toLowerCase().contains(searchField.getText().toString().toLowerCase())) {
 
                                 SearchItems.getInstance().addSearchItem(PodcastItems.getInstance().getItems().get(j));
                                 System.out.println("Added to list: " + PodcastItems.getInstance().getItems().get(j).title);
@@ -187,9 +191,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
     public boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -203,24 +204,39 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public void onNewIntent(Intent playerIntent){
-        Bundle extras = playerIntent.getExtras();
-        boolean reloadFragmentFromNotification = playerIntent.getBooleanExtra("isPlayerFragment",false);
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        if (reloadFragmentFromNotification){
-            Fragment fragment = new PlayerFragment();
-            fragmentManager.beginTransaction().addToBackStack("pf")
-                    .replace(R.id.frag_container, fragment)
-                    .commitAllowingStateLoss();
+    public void onNewIntent(Intent playerIntent) {
+        boolean reloadFragmentFromNotification = playerIntent.getBooleanExtra("isPlayerFragment", false);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        if (reloadFragmentFromNotification) {
+            boolean fragmentPopped = fragmentManager.popBackStackImmediate("pf", 0);
+            System.out.println(fragmentPopped);
+            if (fragmentPopped) {
+                Fragment fragment = new PlayerFragment();
+                ft.replace(R.id.frag_container, fragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack("pf");
+                ft.commitAllowingStateLoss();
+            }
         } else {
 
-            fragmentManager.beginTransaction().addToBackStack("sf")
-                    .replace(R.id.frag_container, sf).commit();
+            ft.addToBackStack("sf")
+                    .replace(R.id.frag_container, sf);
+
+            ft.add(R.id.player_frag_container, spf);
+            ft.commit();
+
 
         }
     }
 
+    public void showPlayer() {
 
+        fragmentManager.beginTransaction().show(spf).commit();
+    }
+
+    public void hidePlayer() {
+        fragmentManager.beginTransaction().hide(spf).commit();
+    }
 
     Runnable r = new Runnable() {
         public void run() {
@@ -322,13 +338,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (count == 0 ) {
+        if (count == 1) {
             System.out.println("----------COUNT 0----------");
-            super.onBackPressed();
+            finish();
+            //super.onBackPressed();
 
 
         } else {
-            System.out.println("FManager----- "+getSupportFragmentManager().toString());
+            System.out.println("FManager----- " + getSupportFragmentManager().toString());
             getSupportFragmentManager().popBackStackImmediate();
         }
 
