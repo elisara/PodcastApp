@@ -105,7 +105,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         //list.clear();
         if (value.contains("NAME")) {
             list = SerieItems.getInstance().getSerieItems();
-            Collections.sort(list, new Comparator<PodcastItem>(){
+            Collections.sort(list, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return pod1.collectionName.compareToIgnoreCase(pod2.collectionName); // To compare string values
                 }
@@ -116,7 +116,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
         } else if (value.contains("NEW")) {
             list2 = SerieItems.getInstance().getSerieItems();
-            Collections.sort(list2, new Comparator<PodcastItem>(){
+            Collections.sort(list2, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
                 }
@@ -131,8 +131,8 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         // TODO Auto-generated method stub
     }
 
-    public void refreshLists(){
-        episodeAdapter = new EpisodeListArrayAdapter(getContext() ,PodcastItems.getInstance().getItems());
+    public void refreshLists() {
+        episodeAdapter = new EpisodeListArrayAdapter(getContext(), PodcastItems.getInstance().getItems());
         listView.setAdapter(episodeAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -166,27 +166,22 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         health = prefs.getBoolean("health", true);
         all = prefs.getBoolean("all", true);
 
-        System.out.println("Categories: humor: "+humor+ " techonoly: "+techonology+ " economy: "+ economy+ " health: "+health + " all: "+all);
+        System.out.println("Categories: humor: " + humor + " techonoly: " + techonology + " economy: " + economy + " health: " + health + " all: " + all);
         list.clear();
 
-        for(int i = 0; i < SerieItems.getInstance().getSerieItems().size(); i++){
-            if(all == false) {
-                if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:huumori") && humor == true) {
-                    list.add(SerieItems.getInstance().getSerieItems().get(i));
-                } else if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:technology") && techonology == true) {
-                    list.add(SerieItems.getInstance().getSerieItems().get(i));
-                } else if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:economy") && economy == true) {
-                    list.add(SerieItems.getInstance().getSerieItems().get(i));
-                } else if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:terveys") && health == true) {
-                    list.add(SerieItems.getInstance().getSerieItems().get(i));
-                }
-            }
-            else{
-                list = SerieItems.getInstance().getSerieItems();
+        for (int i = 0; i < SerieItems.getInstance().getSerieItems().size(); i++) {
+            if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:huumori") && humor == true) {
+                list.add(SerieItems.getInstance().getSerieItems().get(i));
+            } else if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:technology") && techonology == true) {
+                list.add(SerieItems.getInstance().getSerieItems().get(i));
+            } else if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:economy") && economy == true) {
+                list.add(SerieItems.getInstance().getSerieItems().get(i));
+            } else if (SerieItems.getInstance().getSerieItems().get(i).tags.toLowerCase().contains("category:terveys") && health == true) {
+                list.add(SerieItems.getInstance().getSerieItems().get(i));
             }
         }
 
-        System.out.println("LIST in resume: "+list.size());
+        System.out.println("LIST in resume: " + list.size());
         adapter = new SerieArrayAdapter(getContext(), list);
         listView.setAdapter(adapter);
         System.out.println("CATEGORY: humor");
