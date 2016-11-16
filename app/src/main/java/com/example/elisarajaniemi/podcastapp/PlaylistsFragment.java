@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -164,6 +165,50 @@ public class PlaylistsFragment extends Fragment {
         String koira = "koira";
         return koira;
     }
+
+    public void addToPlaylistDialog(final PodcastItem podcastItem, final Context context){
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle("Add to");
+
+        LinearLayout lp = new LinearLayout(context);
+        lp.setOrientation(LinearLayout.VERTICAL);
+        lp.setPadding(30,30,30,30);
+
+        final TextView toPlaylist = new TextView(context);
+        final PlaylistItem playlist = getPlaylists().get(0);
+        toPlaylist.setText(playlist.name);
+        toPlaylist.setTextSize(20);
+        toPlaylist.setPadding(30, 20, 20, 20);
+        lp.addView(toPlaylist);
+
+        final ImageButton addPlaylist = new ImageButton(context);
+        addPlaylist.setImageResource(R.drawable.ic_add_black_24dp);
+        lp.addView(addPlaylist);
+
+        alertDialogBuilder.setView(lp);
+        final AlertDialog alertDialog2 = alertDialogBuilder.create();
+
+        //Add podcast to existing playlist
+        toPlaylist.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                alertDialog2.cancel();
+                addToExcistingPlaylist(playlist.list, podcastItem);
+                System.out.println("Playlistin koko episodearrayadapterissa lisäämisen jälkeen: "+playlist.list.size());
+
+            }
+        });
+        //create a new playlist
+        addPlaylist.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                createNewPlaylist(context);
+                alertDialog2.cancel();
+
+            }
+        });
+        alertDialog2.show();
+    }
+
+
 
     Runnable r = new Runnable() {
         public void run() {

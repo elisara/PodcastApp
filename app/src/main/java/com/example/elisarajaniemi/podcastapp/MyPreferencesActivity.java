@@ -33,6 +33,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
         economy = sp.getBoolean("economy", false);
         health = sp.getBoolean("health", false);
 
+
         Button button = (Button) findViewById(R.id.close);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

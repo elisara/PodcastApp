@@ -84,54 +84,10 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
 
                 toPlaylist.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        System.out.println("Clicked to playlist");
                         alertDialog.cancel();
                         addToPlaylist = true;
                         podcastItem = value;
-
-                        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                        alertDialogBuilder.setTitle("Add to");
-
-                        LinearLayout lp = new LinearLayout(getContext());
-                        lp.setOrientation(LinearLayout.VERTICAL);
-                        lp.setPadding(30,30,30,30);
-
-                        final TextView toPlaylist = new TextView(getContext());
-                        playlistItem = playlistsFragment.getPlaylists().get(0);
-                        toPlaylist.setText(playlistItem.name);
-                        toPlaylist.setTextSize(20);
-                        toPlaylist.setPadding(30, 20, 20, 20);
-                        lp.addView(toPlaylist);
-
-                        final ImageButton addPlaylist = new ImageButton(getContext());
-                        addPlaylist.setImageResource(R.drawable.ic_add_black_24dp);
-                        lp.addView(addPlaylist);
-
-                        alertDialogBuilder.setView(lp);
-                        final AlertDialog alertDialog2 = alertDialogBuilder.create();
-
-                        //Add podcast to excisting playlist
-                        toPlaylist.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                System.out.println("Clicked to playlist");
-                                alertDialog2.cancel();
-                                playlistsFragment.addToExcistingPlaylist(playlistItem.list, value);
-                                System.out.println("Playlistin koko episodearrayadapterissa lisäämisen jälkeen: "+playlistItem.list.size());
-
-                            }
-                        });
-
-                        addPlaylist.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                System.out.println("Clicked to playlist");
-                                alertDialog2.cancel();
-                                playlistsFragment.createNewPlaylist(getContext());
-
-                            }
-                        });
-
-
-                        alertDialog2.show();
+                        playlistsFragment.addToPlaylistDialog(podcastItem, getContext());
 
                     }
                 });
