@@ -11,16 +11,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 
 /**
  * Created by Elisa Rajaniemi on 27.10.2016.
@@ -65,20 +62,18 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             }
         });
 
-
         listView = (ListView) view.findViewById(R.id.serieList);
         getListByCategories();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                PodcastItem pi = SerieItems.getInstance().getSerieItems().get(position);
+                PodcastItem pi = getListByCategories().get(position);
                 ef = new EpisodesFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("message", pi);
                 ef.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("sf")
                         .replace(R.id.frag_container, ef).commit();
-
             }
 
         });
@@ -168,7 +163,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             }
             if (all == true) {
                 if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                    categoryList.add(PodcastItems.getInstance().getItems().get(i));
+                    categoryList.add(0,PodcastItems.getInstance().getItems().get(i));
                 }
             }
         }
@@ -182,7 +177,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     public void getCategory(String categoryInBackend, Boolean prefCategory, int i) {
         if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(categoryInBackend) && prefCategory == true) {
             if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                categoryList.add(PodcastItems.getInstance().getItems().get(i));
+                categoryList.add(0,PodcastItems.getInstance().getItems().get(i));
             }
         }
     }

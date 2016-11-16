@@ -18,7 +18,8 @@ import java.net.URL;
 public class RegisterAndLogin {
 
     private boolean loggedIn;
-    private User currentUser;
+    private User user;
+    private CurrentUser currentUser = CurrentUser.getInstance();
     private Thread t;
     private boolean exists;
     private boolean registered;
@@ -71,7 +72,7 @@ public class RegisterAndLogin {
             t = new Thread(r2);
             t.start();
             loggedIn = true;
-            System.out.println("Current userID: " + currentUser.id);
+            System.out.println("Current userID: " + currentUser.getCurrentUser().get(0).id);
         } else {
             System.out.println("Login: User doesn't exist");
             loggedIn = false;
@@ -81,6 +82,8 @@ public class RegisterAndLogin {
     }
 
     public boolean logout() {
+
+        currentUser.getCurrentUser().clear();
         token = null;
         loggedIn = false;
         exists = false;
@@ -99,7 +102,7 @@ public class RegisterAndLogin {
             System.out.println("FOR Username: " + Users.getInstance().getUsers().get(i).username.length() + ", " + encryptedUsername.length());
             if (Users.getInstance().getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)) {
                 System.out.println("----true---");
-                currentUser = Users.getInstance().getUsers().get(i);
+                currentUser.addCurrentUser(Users.getInstance().getUsers().get(i));
                 this.exists = true;
             } else {
                 System.out.println("ELSE");
@@ -190,6 +193,9 @@ public class RegisterAndLogin {
                         JSONObject jObject = new JSONObject(output);
                         token = jObject.getString("token");
                         System.out.println("Token: " + token);
+                        user = new User(CurrentUser.getInstance().getCurrentUser().get(0).id, CurrentUser.getInstance().getCurrentUser().get(0).username, CurrentUser.getInstance().getCurrentUser().get(0).email, token);
+                        CurrentUser.getInstance().replaceCurrentUser(user);
+                        System.out.println("Current user token: " + CurrentUser.getInstance().getCurrentUser().get(0).token);
                     } catch (JSONException e) {
                         System.out.println(e);
                     }

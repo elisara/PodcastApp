@@ -18,6 +18,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -27,10 +37,11 @@ import java.util.ArrayList;
 public class PlaylistsFragment extends Fragment {
 
 
+    private Thread t;
     private ListView listView;
     private PlaylistsArrayAdapter adapter;
     private MenuFragment mf;
-    private String playlistName;
+    private String playlistName, message;
     private ArrayList<PlaylistItem> list;
 
     @Override
@@ -85,6 +96,8 @@ public class PlaylistsFragment extends Fragment {
     public void createNewPlaylist(Context context){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
+        System.out.println("Current User Id: " + CurrentUser.getInstance().getCurrentUser().get(0).id);
+
         // set title
         alertDialogBuilder.setTitle("Create new playlist");
 
@@ -102,11 +115,13 @@ public class PlaylistsFragment extends Fragment {
         //alertDialogBuilder.setCancelable(false)
         alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
+                t = new Thread(r);
+                t.start();
                 playlistName = input.getText().toString();
-                Toast.makeText(getContext(), "Playlist "+ playlistName +" created", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Playlist "+ playlistName +" created", Toast.LENGTH_SHORT).show();
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
                 PlaylistItem addedPlaylistItem = new PlaylistItem(playlistName, addedList);
-                list.add(addedPlaylistItem);
+                //list.add(addedPlaylistItem);
 
             }
         })
@@ -147,4 +162,52 @@ public class PlaylistsFragment extends Fragment {
         String koira = "koira";
         return koira;
     }
+
+    Runnable r = new Runnable() {
+        public void run() {
+            try {
+                URL url = new URL("http://media.mw.metropolia.fi/arsu/playlists?token=" + CurrentUser.getInstance().getCurrentUser().get(0).token);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setDoOutput(true);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                String input = "{\"playlist_name\":\"" + playlistName + "\",\"user_id\":\"" + CurrentUser.getInstance().getCurrentUser().get(0).id + "\"}";
+                input = input.replace("\n", "");
+                System.out.println(input);
+
+                OutputStream os = conn.getOutputStream();
+                os.write(input.getBytes());
+                os.flush();
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        (conn.getInputStream())));
+
+                String output;
+
+                while ((output = br.readLine()) != null) {
+                    try {
+                        JSONObject jObject = new JSONObject(output);
+                        message = jObject.getString("message");
+                        System.out.println("Database message: " + message);
+                    } catch (JSONException e) {
+                        System.out.println(e);
+                    }
+                }
+
+                conn.disconnect();
+            } catch (
+                    MalformedURLException e
+                    ) {
+                e.printStackTrace();
+
+            } catch (
+                    IOException e
+                    )
+
+            {
+                e.printStackTrace();
+            }
+        }
+    };
+
 }
