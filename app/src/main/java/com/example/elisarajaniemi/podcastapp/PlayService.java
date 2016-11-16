@@ -219,6 +219,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         System.out.println("----------Service OnDestroy");
         cancelNotification();
         if (mPlayer != null) {
@@ -229,8 +230,6 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
                 mPlayer = null;
             }
         }
-        super.onDestroy();
-
     }
 
     /**
@@ -286,35 +285,5 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     }
 
 
-    public void newNotification() {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setContentTitle(pi.title);
 
-        Intent pauseIntent = new Intent(this, PlayService.class);
-        pauseIntent.setAction(ACTION_PAUSE);
-        PendingIntent pendingPauseIntent = PendingIntent.getService(getApplicationContext(), 1, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent playIntent = new Intent(this, PlayService.class);
-        playIntent.setAction(ACTION_PLAY);
-        PendingIntent pendingPlayIntent = PendingIntent.getService(getApplicationContext(), 1, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (mPlayer.isPlaying()) {
-            mBuilder.setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp);
-            mBuilder.addAction(R.drawable.ic_pause_circle_filled_black_24dp, "Pause", pendingPauseIntent);
-        } else {
-            mBuilder.setSmallIcon(R.drawable.ic_play_circle_filled_black_24dp);
-            mBuilder.addAction(R.drawable.ic_play_circle_filled_black_24dp, "Play", pendingPlayIntent);
-        }
-        //mBuilder.addAction(R.drawable.ic_pause_circle_filled_black_24dp, "Pause", pendingPauseIntent);
-        //mBuilder.addAction(R.drawable.ic_play_circle_filled_black_24dp, "Play", pendingPlayIntent);
-        Intent playerIntent = new Intent(this, MainActivity.class);
-        playerIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        playerIntent.putExtra("isPlayerFragment", true);
-        PendingIntent playerPendingIntent = PendingIntent.getActivity(this, 0, playerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(playerPendingIntent);
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int mNotificationId = 001;
-        mNotificationManager.notify(1, mBuilder.build());
-
-    }
 }

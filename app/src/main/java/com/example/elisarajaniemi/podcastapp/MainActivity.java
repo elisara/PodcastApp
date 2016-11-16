@@ -208,15 +208,7 @@ public class MainActivity extends AppCompatActivity {
         boolean reloadFragmentFromNotification = playerIntent.getBooleanExtra("isPlayerFragment", false);
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (reloadFragmentFromNotification) {
-            boolean fragmentPopped = fragmentManager.popBackStackImmediate("pf", 0);
-            System.out.println(fragmentPopped);
-            if (fragmentPopped) {
-                Fragment fragment = new PlayerFragment();
-                ft.replace(R.id.frag_container, fragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack("pf");
-                ft.commitAllowingStateLoss();
-            }
+           openPlayer();
         } else {
 
             ft.addToBackStack("sf")
@@ -224,14 +216,29 @@ public class MainActivity extends AppCompatActivity {
 
             ft.add(R.id.player_frag_container, spf);
             ft.commit();
+            hidePlayer();
+            showPlayer();
+
 
 
         }
     }
+    public void openPlayer(){
+        System.out.println("-----open player");
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        boolean fragmentPopped = fragmentManager.popBackStackImmediate("pf", 0);
+        if (!fragmentPopped) {
+            Fragment fragment = new PlayerFragment();
+            ft.replace(R.id.frag_container, fragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.addToBackStack("pf");
+            ft.commitAllowingStateLoss();
+        }
+
+    }
 
     public void showPlayer() {
-
-        fragmentManager.beginTransaction().show(spf).commit();
+        if(pServ.getStatus()>1)fragmentManager.beginTransaction().show(spf).commit();
     }
 
     public void hidePlayer() {
@@ -338,10 +345,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (count == 1) {
+        if (count == 0) {
             System.out.println("----------COUNT 0----------");
-            finish();
-            //super.onBackPressed();
+           super.onBackPressed();
 
 
         } else {
