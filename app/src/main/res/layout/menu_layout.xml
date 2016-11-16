@@ -4,8 +4,8 @@
     android:orientation="vertical"
     android:layout_alignParentLeft="true"
     android:gravity="left"
-    android:minWidth="250dp"
-    android:layout_width="match_parent"
+    android:minWidth="200dp"
+    android:layout_width="250dp"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -16,6 +16,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/user_layout"
             android:orientation="vertical"
             android:gravity="center"
             android:padding="16dp"
@@ -25,7 +26,7 @@
             <ImageView
                 android:layout_gravity="center"
                 android:id="@+id/profileIcon"
-                android:src="@drawable/ic_favorite_black_24dp"
+                android:src="@drawable/ic_person_black_24dp"
                 android:layout_width="80dp"
                 android:layout_height="80dp" />
 
@@ -102,6 +103,11 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="250dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
     <LinearLayout
         android:id="@+id/settings"

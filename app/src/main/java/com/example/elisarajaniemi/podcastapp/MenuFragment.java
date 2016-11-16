@@ -37,14 +37,16 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
     private MainActivity ma;
     private GetUsersHelper getUsersHelper;
-    private TextView playList, favorite, queue, history, continuePlay, signIn;
+    private TextView playList, favorite, queue, history, continuePlay, signIn, usernameView;
     private PlaylistsFragment plf;
+    private LinearLayout userLayout;
     private SinglePlaylistFragment splf;
     private MenuFragment mf;
     private RegisterAndLogin rali;
     private String password_, password2_, username_, email_, token;
     private AlertDialog alertDialog;
-    private boolean loggedIn;
+    CurrentUser currentUser =  CurrentUser.getInstance();
+    private SerieFragment sf;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +74,8 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         history = (TextView) view.findViewById(R.id.history);
         continuePlay = (TextView) view.findViewById(R.id.continuePlaying);
         signIn = (TextView) view.findViewById(R.id.signIn);
+        usernameView = (TextView) view.findViewById(R.id.username);
+        userLayout = (LinearLayout) view.findViewById(R.id.user_layout);
         //logOutBtn = (Button) view.findViewById(R.id.logout);
 
 
@@ -87,6 +91,20 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         splf = new SinglePlaylistFragment();
         mf = new MenuFragment();
         rali = new RegisterAndLogin();
+        sf = new SerieFragment();
+
+        if(currentUser.getCurrentUser().size() < 1){
+            userLayout.setVisibility(View.GONE);
+            playList.setVisibility(View.GONE);
+            favorite.setVisibility(View.GONE);
+            history.setVisibility(View.GONE);
+            continuePlay.setVisibility(View.GONE);
+
+
+        }
+
+
+
 
         return view;
     }
@@ -134,7 +152,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
             case R.id.signIn:
 
-                if(!loggedIn) {
+                if(currentUser.getCurrentUser().size() <1) {
                     //LOGIN
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                     alertDialogBuilder.setTitle("Login");
@@ -164,8 +182,17 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             password_ = password.getText().toString();
                             rali.login(username_, password_);
                             Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
-                            signIn.setText("Sign out");
-                            loggedIn = true;
+
+                            if(currentUser.getCurrentUser().size() > 0) {
+                                System.out.println("--------User in list-------");
+                                signIn.setText("Sign out");
+                                usernameView.setText(username_);
+                                userLayout.setVisibility(View.VISIBLE);
+                                playList.setVisibility(View.VISIBLE);
+                                favorite.setVisibility(View.VISIBLE);
+                                history.setVisibility(View.VISIBLE);
+                                continuePlay.setVisibility(View.VISIBLE);
+                            }
                         }
                     })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -235,8 +262,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 });
                 }
                 else{
+                    System.out.println("-----in else logout----");
                     rali.logout();
-                    loggedIn = false;
+                    dismiss();
                 }
 
                 break;

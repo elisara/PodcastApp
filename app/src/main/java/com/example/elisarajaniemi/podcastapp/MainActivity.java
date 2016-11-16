@@ -164,8 +164,6 @@ public class MainActivity extends AppCompatActivity {
                 dial.setStyle( DialogFragment.STYLE_NO_TITLE, R.style.CustomDialog );
                 dial.show(getSupportFragmentManager(), "dialog");
 
-                // mf.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog );
-                   // mf.show(getSupportFragmentManager(), "Dialog Fragment");
             }
         });
 
