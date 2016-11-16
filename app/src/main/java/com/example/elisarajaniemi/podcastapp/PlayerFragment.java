@@ -39,6 +39,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         this.mActivity = (MainActivity) getActivity();
         mActivity.pServ.setCallbacks(PlayerFragment.this);
+        mActivity.hidePlayer();
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
         piFromService = mActivity.pServ.getPodcastObject();
