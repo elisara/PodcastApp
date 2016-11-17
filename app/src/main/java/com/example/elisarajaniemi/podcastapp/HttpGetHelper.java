@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by jari on 28/10/2016.
@@ -97,7 +98,6 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
                 Log.e("JSONException", "Error: " + e.toString());
             }
 
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -113,6 +113,9 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
+
         }
 
         return result;
@@ -121,6 +124,8 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+
+
     }
 
 }

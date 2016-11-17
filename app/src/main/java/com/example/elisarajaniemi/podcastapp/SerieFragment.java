@@ -43,6 +43,8 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private ArrayList<PodcastItem> categoryList;
     private ArrayList<Boolean> prefCategoryList;
     private String[] backendCategories;
+    private String sortValue;
+
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         addItemsOnSpinner();
         categoryList = new ArrayList<>();
         prefCategoryList = new ArrayList<>();
+        sortValue = "";
 
         categoryBtn = (Button) view.findViewById(R.id.categoryBtn);
         categoryBtn.setOnClickListener(new View.OnClickListener() {
@@ -63,11 +66,11 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         });
 
         listView = (ListView) view.findViewById(R.id.serieList);
-        getListByCategories();
+        categoryList = getListByCategories();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                PodcastItem pi = getListByCategories().get(position);
+                PodcastItem pi = categoryList.get(position);
                 ef = new EpisodesFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("message", pi);
@@ -80,6 +83,12 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         return view;
     }
 
+
+
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
+    }
+
     public void addItemsOnSpinner() {
         ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort_array, android.R.layout.simple_spinner_item);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -89,37 +98,36 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String value = parent.getItemAtPosition(position).toString();
+        //categoryList = getListByCategories();
         if (value.contains("NAME")) {
-            list = getListByCategories();
-            Collections.sort(list, new Comparator<PodcastItem>() {
+
+            Collections.sort(categoryList, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return pod1.collectionName.compareToIgnoreCase(pod2.collectionName); // To compare string values
                 }
             });
-            adapter = new SerieArrayAdapter(getContext(), list);
+            adapter = new SerieArrayAdapter(getContext(), categoryList);
             System.out.println("SORT: NAME");
 
         } else if (value.contains("NEW")) {
-            list = getListByCategories();
-            Collections.sort(list, new Comparator<PodcastItem>() {
+            Collections.sort(categoryList, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
                 }
             });
-            adapter = new SerieArrayAdapter(getContext(), list);
+
+            adapter = new SerieArrayAdapter(getContext(), categoryList);
             System.out.println("SORT: NEW");
         }
+        sortValue = value;
+        adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
-    }
-
-    public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getListByCategories();
+        categoryList = getListByCategories();
         adapter.notifyDataSetChanged();
 
     }
@@ -167,6 +175,21 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
                 }
             }
         }
+        if(sortValue.contains("NAME")){
+            Collections.sort(categoryList, new Comparator<PodcastItem>() {
+                public int compare(PodcastItem pod1, PodcastItem pod2) {
+                    return pod1.collectionName.compareToIgnoreCase(pod2.collectionName); // To compare string values
+                }
+            });
+        }
+        else if(sortValue.contains("NEW")){
+            Collections.sort(categoryList, new Comparator<PodcastItem>() {
+                public int compare(PodcastItem pod1, PodcastItem pod2) {
+                    return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
+                }
+            });
+        }
+
         adapter = new SerieArrayAdapter(getContext(), categoryList);
         adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
@@ -177,7 +200,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     public void getCategory(String categoryInBackend, Boolean prefCategory, int i) {
         if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(categoryInBackend) && prefCategory == true) {
             if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
-                categoryList.add(0,PodcastItems.getInstance().getItems().get(i));
+                categoryList.add(PodcastItems.getInstance().getItems().get(i));
             }
         }
     }
@@ -191,4 +214,6 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         }
         return listContains;
     }
+
+
 }

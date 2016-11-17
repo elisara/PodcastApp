@@ -84,9 +84,13 @@ public class MainActivity extends AppCompatActivity {
         ImageLoader.getInstance().init(config);
         imageLoader = ImageLoader.getInstance();
         fragmentManager = getSupportFragmentManager();
-
+/**
         Thread t = new Thread(r);
         t.start();
+ */
+
+        apiKey = "495i4orWwXCqiW5IuOQUzuAlGmfFeky7BzMPe-X19inh9MRm5RqGhQDUEh5avkZNFjC6mYT6w2xGXdQjm9XfakwHloH027i-tkLX77yFMZJlC3wGWqIjyHIXnvPzvHzW";
+        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true");
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -245,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().hide(spf).commit();
     }
 
+    /**
     Runnable r = new Runnable() {
         public void run() {
             try {
@@ -291,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+     */
 
 
     void doBindService(Intent intent) {

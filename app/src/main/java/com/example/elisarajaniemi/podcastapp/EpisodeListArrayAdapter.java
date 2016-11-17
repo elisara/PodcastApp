@@ -88,7 +88,6 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
                         addToPlaylist = true;
                         podcastItem = value;
                         playlistsFragment.addToPlaylistDialog(podcastItem, getContext());
-
                     }
                 });
 

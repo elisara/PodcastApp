@@ -100,14 +100,9 @@ public class PlaylistsFragment extends Fragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
         System.out.println("Current User Id: " + CurrentUser.getInstance().getCurrentUser().get(0).id);
-
-        // set title
         alertDialogBuilder.setTitle("Create new playlist");
-
-        // set dialog message
         alertDialogBuilder.setMessage("Name of the playlist:");
 
-        //editText in dialog
         final EditText input = new EditText(context);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -115,16 +110,13 @@ public class PlaylistsFragment extends Fragment {
         input.setLayoutParams(lp);
         alertDialogBuilder.setView(input);
 
-        //alertDialogBuilder.setCancelable(false)
         alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
                 t = new Thread(r);
                 t.start();
                 playlistName = input.getText().toString();
-                //Toast.makeText(getContext(), "Playlist "+ playlistName +" created", Toast.LENGTH_SHORT).show();
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
                 PlaylistItem addedPlaylistItem = new PlaylistItem(playlistName, addedList);
-                //list.add(addedPlaylistItem);
 
             }
         })
@@ -133,11 +125,8 @@ public class PlaylistsFragment extends Fragment {
                         dialog.cancel();
                     }
                 });
-
-        // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-
     }
 
     public void addToExcistingPlaylist(ArrayList<PodcastItem> lista, PodcastItem podcastItem){
