@@ -114,8 +114,6 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
                 e.printStackTrace();
             }
 
-
-
         }
 
         return result;
@@ -124,6 +122,7 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+
 
 
     }
