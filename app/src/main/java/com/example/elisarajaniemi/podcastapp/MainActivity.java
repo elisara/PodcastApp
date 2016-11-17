@@ -215,8 +215,7 @@ public class MainActivity extends AppCompatActivity {
            openPlayer();
         } else {
 
-            ft.addToBackStack("sf")
-                    .replace(R.id.frag_container, sf);
+            ft.replace(R.id.frag_container, sf);
 
             ft.add(R.id.player_frag_container, spf);
             ft.commit();
@@ -340,10 +339,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         System.out.println("----------Main OnDestroy");
         doUnbindService();
         pServ.onDestroy();
-        super.onDestroy();
+
 
 
     }
@@ -353,7 +353,8 @@ public class MainActivity extends AppCompatActivity {
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count == 0) {
             System.out.println("----------COUNT 0----------");
-           super.onBackPressed();
+            moveTaskToBack(true);
+            //super.onBackPressed();
 
 
         } else {

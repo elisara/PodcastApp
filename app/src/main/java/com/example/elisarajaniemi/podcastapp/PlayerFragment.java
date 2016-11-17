@@ -160,7 +160,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
      * Update timer on seekbar
      */
     public void updateProgressBar() {
-        handler.postDelayed(mUpdateTimeTask, 100);
+        if(mActivity.pServ.mPlayer != null)handler.postDelayed(mUpdateTimeTask, 100);
     }
 
     /**

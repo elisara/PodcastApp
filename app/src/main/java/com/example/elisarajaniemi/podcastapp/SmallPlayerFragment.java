@@ -1,6 +1,7 @@
 package com.example.elisarajaniemi.podcastapp;
 
-import android.media.Image;import android.os.Bundle;
+import android.media.Image;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -80,23 +81,26 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
         }
 
     }
+
     private Runnable updateTask = new Runnable() {
         public void run() {
 
 
             // Displaying play or pause icon
-            if (mActivity.pServ.mPlayer.isPlaying())
-                button1.setImageResource(R.drawable.ic_pause_black_50dp);
-            else button1.setImageResource(R.drawable.ic_play_arrow_black_50dp);
-            if(mActivity.pServ.getStatus() == 3){
+            if (mActivity.pServ.mPlayer != null) {
+                if (mActivity.pServ.mPlayer.isPlaying())
+                    button1.setImageResource(R.drawable.ic_pause_black_50dp);
+                else button1.setImageResource(R.drawable.ic_play_arrow_black_50dp);
+                if (mActivity.pServ.getStatus() == 3) {
 
-                bar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mActivity.pServ.mPlayer.getDuration()) * 100));
-                text1.setText(mActivity.pServ.getPodcastObject().title);
-                //text2.setText(mActivity.pServ.getPodcastObject().collectionName);
+                    bar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mActivity.pServ.mPlayer.getDuration()) * 100));
+                    text1.setText(mActivity.pServ.getPodcastObject().title);
+                    //text2.setText(mActivity.pServ.getPodcastObject().collectionName);
+                }
+                // Running this thread after 100 milliseconds
+                handler.postDelayed(this, 100);
+
             }
-            // Running this thread after 100 milliseconds
-            handler.postDelayed(this, 100);
-
         }
     };
 }

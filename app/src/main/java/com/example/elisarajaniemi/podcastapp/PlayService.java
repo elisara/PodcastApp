@@ -230,6 +230,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
                 mPlayer = null;
             }
         }
+        stopSelf();
     }
 
     /**
