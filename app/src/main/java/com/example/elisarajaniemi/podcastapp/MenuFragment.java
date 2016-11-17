@@ -2,10 +2,12 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,17 +52,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.menu_layout, container , false);
-
-        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        getDialog().getWindow().setGravity(Gravity.LEFT | Gravity.TOP);
-        WindowManager.LayoutParams p = getDialog().getWindow().getAttributes();
-        p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
-        p.x = 0;
-        p.y = 170;
-        getDialog().getWindow().setAttributes(p);
-
 
         getUsersHelper = new GetUsersHelper();
         getUsersHelper.execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
@@ -258,9 +250,20 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 }
 
                 break;
-
         }
 
+    }
+    public void onResume(){
+        super.onResume();
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        getDialog().getWindow().setGravity(Gravity.LEFT | Gravity.TOP);
+        WindowManager.LayoutParams p = getDialog().getWindow().getAttributes();
+        p.x = 0;
+        p.y = 0;
+        double width = (getResources().getDisplayMetrics().widthPixels)*0.7;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        getDialog().getWindow().setLayout((int)width, height);
+        getDialog().getWindow().setAttributes(p);
     }
 }
 

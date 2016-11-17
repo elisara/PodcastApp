@@ -36,6 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLOutput;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -84,13 +85,17 @@ public class MainActivity extends AppCompatActivity {
         ImageLoader.getInstance().init(config);
         imageLoader = ImageLoader.getInstance();
         fragmentManager = getSupportFragmentManager();
-/**
-        Thread t = new Thread(r);
-        t.start();
- */
 
         apiKey = "495i4orWwXCqiW5IuOQUzuAlGmfFeky7BzMPe-X19inh9MRm5RqGhQDUEh5avkZNFjC6mYT6w2xGXdQjm9XfakwHloH027i-tkLX77yFMZJlC3wGWqIjyHIXnvPzvHzW";
-        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true");
+        try {
+            new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true").get();
+        }
+        catch (ExecutionException e){
+                e.printStackTrace();
+        }
+        catch (InterruptedException e){
+                e.printStackTrace();
+        }
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -175,6 +180,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        title.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, sf).addToBackStack("sf").commit();
+            }
+        });
+
 
     }
 
@@ -247,56 +258,6 @@ public class MainActivity extends AppCompatActivity {
     public void hidePlayer() {
         fragmentManager.beginTransaction().hide(spf).commit();
     }
-
-    /**
-    Runnable r = new Runnable() {
-        public void run() {
-            try {
-                URL url = new URL("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_auth/auth.php");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-
-                String input = "{\"username\":\"podcast\",\"password\":\"podcast16\"}";
-
-                OutputStream os = conn.getOutputStream();
-                os.write(input.getBytes());
-                os.flush();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
-
-                String output;
-
-                while ((output = br.readLine()) != null) {
-                    try {
-                        JSONObject jObject = new JSONObject(output);
-                        apiKey = jObject.getString("api_key");
-                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true");
-                    } catch (JSONException e) {
-                        System.out.println(e);
-                    }
-                }
-
-                conn.disconnect();
-            } catch (
-                    MalformedURLException e
-                    ) {
-                e.printStackTrace();
-
-            } catch (
-                    IOException e
-                    )
-
-            {
-                e.printStackTrace();
-            }
-        }
-
-    };
-     */
-
 
     void doBindService(Intent intent) {
         bindService(intent, Scon, Context.BIND_AUTO_CREATE);
