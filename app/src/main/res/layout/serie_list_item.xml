@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:id="@+id/serieIcon"
         android:layout_gravity="center"
         android:paddingRight="16dp"
         android:src="@drawable/ic_favorite_black_24dp"
