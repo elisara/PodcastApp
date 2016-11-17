@@ -77,6 +77,7 @@ public class RegisterAndLogin {
             System.out.println("Login: User doesn't exist");
             loggedIn = false;
         }
+
         return username;
 
     }
@@ -219,5 +220,6 @@ public class RegisterAndLogin {
         }
 
     };
+
 
 }
