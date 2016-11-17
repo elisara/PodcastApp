@@ -163,10 +163,13 @@ public class PlaylistsFragment extends Fragment {
         lp.setOrientation(LinearLayout.VERTICAL);
         lp.setPadding(30,30,30,30);
 
-        final TextView toPlaylist = new TextView(context);
+        final ListView toPlaylist = new ListView(context);
         final PlaylistItem playlist = getPlaylists().get(0);
-        toPlaylist.setText(playlist.name);
-        toPlaylist.setTextSize(20);
+        adapter = new PlaylistsArrayAdapter(context, playlists.getPlaylists());
+
+        toPlaylist.setAdapter(adapter);
+        //toPlaylist.setText(playlist.name);
+        //toPlaylist.setTextSize(20);
         toPlaylist.setPadding(30, 20, 20, 20);
         lp.addView(toPlaylist);
 
@@ -178,8 +181,8 @@ public class PlaylistsFragment extends Fragment {
         final AlertDialog alertDialog2 = alertDialogBuilder.create();
 
         //Add podcast to existing playlist
-        toPlaylist.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        toPlaylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 alertDialog2.cancel();
                 addToExcistingPlaylist(playlist.list, podcastItem);
                 System.out.println("Playlistin koko episodearrayadapterissa lisäämisen jälkeen: "+playlist.list.size());

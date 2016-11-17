@@ -99,7 +99,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp).setTicker("joku teksti").setContent(notificationView);
-        notificationView.setImageViewResource(R.id.notifiationImage, R.drawable.podcast_headphones);
+        notificationView.setImageViewBitmap(R.id.notifiationImage, pi.picture);
         notificationView.setTextViewText(R.id.notifiationText1, pi.title);
         notificationView.setTextViewText(R.id.notifiationText2, pi.collectionName);
 

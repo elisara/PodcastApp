@@ -257,13 +257,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public void serviceCallbackMethod() {
-        mActivity.imageLoader.loadImage(mActivity.pServ.getPodcastObject().imageURL, new SimpleImageLoadingListener() {
+        /**mActivity.imageLoader.loadImage(mActivity.pServ.getPodcastObject().imageURL, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 podcastPic.setImageBitmap(loadedImage);
             }
-        });
-
+        });*/
+        podcastPic.setImageBitmap(piFromClick.picture);
         mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration();
         updateProgressBar();
     }
