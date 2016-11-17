@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     boolean mIsBound = false;
     private PlayerFragment pf;
     private PodcastItem pi, pi2;
+    private Context context = null;
+    private Bitmap pic;
     PlayService pServ;
     ImageLoader imageLoader;
     android.support.v4.app.FragmentManager fragmentManager;
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Context context = this;
+        context = this;
         System.out.println("---------CREATE--------------");
 
         // Create global configuration and initialize ImageLoader with this config
@@ -268,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject jObject = new JSONObject(output);
                         apiKey = jObject.getString("api_key");
-                        new HttpGetHelper().execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true");
+                        new HttpGetHelper((MainActivity) context).execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true");
                     } catch (JSONException e) {
                         System.out.println(e);
                     }
@@ -341,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
     @Override
     public void onBackPressed() {

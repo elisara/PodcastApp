@@ -26,7 +26,7 @@ public class PodcastItem implements Serializable {
 
     }
 
-    public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL){
+    public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL, Bitmap picture){
 
         this.title = title;
         this.url = url;
@@ -37,7 +37,7 @@ public class PodcastItem implements Serializable {
         this.collectionName = collectionName;
         this.collectionID = collectionID;
         this.imageURL = imageURL;
-
+        this.picture = picture;
     }
 
 }

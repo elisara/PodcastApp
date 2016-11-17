@@ -35,7 +35,7 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
         button1 = (ImageView) view.findViewById(R.id.smallPlayerPlayBtn);
         button2 = (ImageView) view.findViewById(R.id.smallPlayerSkipBtn);
 
-        podcastImage.setImageResource(R.drawable.podcast_headphones);
+        //podcastImage.setImageResource(R.drawable.podcast_headphones);
 
         button1.setImageResource(R.drawable.ic_play_arrow_black_50dp);
         button2.setImageResource(R.drawable.ic_skip_next_black_50dp);
@@ -88,11 +88,12 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
 
             // Displaying play or pause icon
             if (mActivity.pServ.mPlayer != null) {
+
                 if (mActivity.pServ.mPlayer.isPlaying())
                     button1.setImageResource(R.drawable.ic_pause_black_50dp);
                 else button1.setImageResource(R.drawable.ic_play_arrow_black_50dp);
                 if (mActivity.pServ.getStatus() == 3) {
-
+                    podcastImage.setImageBitmap(mActivity.pServ.getPodcastObject().picture);
                     bar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mActivity.pServ.mPlayer.getDuration()) * 100));
                     text1.setText(mActivity.pServ.getPodcastObject().title);
                     //text2.setText(mActivity.pServ.getPodcastObject().collectionName);

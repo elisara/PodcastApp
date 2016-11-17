@@ -1,8 +1,12 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,11 +26,16 @@ import java.util.ArrayList;
  */
 
 public class HttpGetHelper extends AsyncTask<String, String, String> {
+    MainActivity mActivity;
 
     private String result = "";
     public PodcastItems podcastItems = PodcastItems.getInstance();
     public SerieItems serieItems = SerieItems.getInstance();
 
+    public HttpGetHelper(MainActivity mActivity){
+        this.mActivity=mActivity;
+
+    }
     protected void onPreExecute() {
         super.onPreExecute();
     }
@@ -35,8 +44,10 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
 
 
+
         HttpURLConnection connection = null;
         BufferedReader reader = null;
+
 
         try {
             URL url = new URL(params[0]);
@@ -64,9 +75,11 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
 
                         JSONObject jObject = finalArray.getJSONObject(j);
 
+                        Bitmap bmp = mActivity.imageLoader.loadImageSync(jObject.getString("Location - longitude"));
+
                         PodcastItem podcastItem = new PodcastItem(jObject.getString("Title"), jObject.getString("Download link"), jObject.getString("Description"),
                                 jObject.getInt("Length (sec)"), jObject.getString("Tags"), jObject.getString("Tags"), jObject.getString("Collection name"),
-                                jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
+                                jObject.getInt("Collection ID"), jObject.getString("Location - longitude"), bmp);
 
                         //podcastItems.addPodcastItem(podcastItem);
                         System.out.println("Added " + podcastItem.title);
