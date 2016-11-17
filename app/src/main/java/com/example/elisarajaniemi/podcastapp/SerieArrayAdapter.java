@@ -27,13 +27,13 @@ public class SerieArrayAdapter extends ArrayAdapter<PodcastItem> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-
         value = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.serie_list_item, parent, false);
         }
         TextView tv = (TextView) convertView.findViewById(R.id.serieName);
         tv.setText(value.collectionName);
+
         return convertView;
     }
 }

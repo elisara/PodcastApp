@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -41,6 +42,9 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
         }
         TextView tv = (TextView) convertView.findViewById(R.id.episodeName);
         tv.setText(value.title);
+
+        ImageView iv = (ImageView) convertView.findViewById(R.id.episodeIcon);
+        iv.setImageBitmap(value.picture);
 
         ImageButton button = (ImageButton) convertView.findViewById(R.id.itemMenu);
         button.setOnClickListener(new View.OnClickListener() {
