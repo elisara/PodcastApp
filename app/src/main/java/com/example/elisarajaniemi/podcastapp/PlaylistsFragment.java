@@ -100,14 +100,9 @@ public class PlaylistsFragment extends Fragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
         System.out.println("Current User Id: " + CurrentUser.getInstance().getCurrentUser().get(0).id);
-
-        // set title
         alertDialogBuilder.setTitle("Create new playlist");
-
-        // set dialog message
         alertDialogBuilder.setMessage("Name of the playlist:");
 
-        //editText in dialog
         final EditText input = new EditText(context);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -115,16 +110,13 @@ public class PlaylistsFragment extends Fragment {
         input.setLayoutParams(lp);
         alertDialogBuilder.setView(input);
 
-        //alertDialogBuilder.setCancelable(false)
         alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
                 t = new Thread(r);
                 t.start();
                 playlistName = input.getText().toString();
-                //Toast.makeText(getContext(), "Playlist "+ playlistName +" created", Toast.LENGTH_SHORT).show();
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
                 PlaylistItem addedPlaylistItem = new PlaylistItem(playlistName, addedList);
-                //list.add(addedPlaylistItem);
 
             }
         })
@@ -133,11 +125,8 @@ public class PlaylistsFragment extends Fragment {
                         dialog.cancel();
                     }
                 });
-
-        // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-
     }
 
     public void addToExcistingPlaylist(ArrayList<PodcastItem> lista, PodcastItem podcastItem){
@@ -174,10 +163,13 @@ public class PlaylistsFragment extends Fragment {
         lp.setOrientation(LinearLayout.VERTICAL);
         lp.setPadding(30,30,30,30);
 
-        final TextView toPlaylist = new TextView(context);
+        final ListView toPlaylist = new ListView(context);
         final PlaylistItem playlist = getPlaylists().get(0);
-        toPlaylist.setText(playlist.name);
-        toPlaylist.setTextSize(20);
+        adapter = new PlaylistsArrayAdapter(context, playlists.getPlaylists());
+
+        toPlaylist.setAdapter(adapter);
+        //toPlaylist.setText(playlist.name);
+        //toPlaylist.setTextSize(20);
         toPlaylist.setPadding(30, 20, 20, 20);
         lp.addView(toPlaylist);
 
@@ -189,8 +181,8 @@ public class PlaylistsFragment extends Fragment {
         final AlertDialog alertDialog2 = alertDialogBuilder.create();
 
         //Add podcast to existing playlist
-        toPlaylist.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        toPlaylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 alertDialog2.cancel();
                 addToExcistingPlaylist(playlist.list, podcastItem);
                 System.out.println("Playlistin koko episodearrayadapterissa lisäämisen jälkeen: "+playlist.list.size());
