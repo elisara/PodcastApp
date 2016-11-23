@@ -51,7 +51,6 @@ public class MyPreferencesActivity extends PreferenceActivity {
                 @Override
                 public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
                     CheckBoxPreference allBox = (CheckBoxPreference) findPreference("all");
-                    allBox.s
                     CheckBoxPreference humorBox = (CheckBoxPreference) findPreference("humor");
                     CheckBoxPreference historyBox = (CheckBoxPreference) findPreference("history");
                     CheckBoxPreference natureBox = (CheckBoxPreference) findPreference("nature");
