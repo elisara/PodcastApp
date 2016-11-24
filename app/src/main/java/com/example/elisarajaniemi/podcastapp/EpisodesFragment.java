@@ -168,7 +168,6 @@ public class EpisodesFragment extends Fragment {
 
     public void fillList(){
         list = new ArrayList<>();
-        System.out.println("ListAll size in fill: " + PodcastItems.getInstance().getItems().size());
         if(list.size() == 0) {
             for (int i = 0; i < listAll.size(); i++) {
                 if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
@@ -210,13 +209,10 @@ class DecodeURL extends AsyncTask<PodcastItem, String, String> {
 
         try {
             URL url = new URL(params[0].url);
-            System.out.println("URL: " + url);
             URLConnection conn = url.openConnection();
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
             conn.connect();
-
             BufferedReader r  = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
-
             String output;
 
             while ((output = r.readLine()) != null) {
@@ -226,7 +222,6 @@ class DecodeURL extends AsyncTask<PodcastItem, String, String> {
                     for (int i = 0; i < jArray.length(); i++){
                         decryptedURL = jArray.getJSONObject(i).getString("url");
                     }
-
                     resultURL = myCrypt.decryptURL(decryptedURL);
 
                 } catch (JSONException e) {
@@ -269,11 +264,6 @@ class DecodeURL extends AsyncTask<PodcastItem, String, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        System.out.println("Result: " + result);
-
-        //this method will be running on UI thread
-
-        //pdLoading.dismiss();
     }
 
 }

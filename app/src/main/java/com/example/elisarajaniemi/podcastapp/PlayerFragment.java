@@ -53,6 +53,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             }
         }
         podcastPic = (ImageView) view.findViewById(R.id.podcastPic);
+        mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/" + piFromClick.imageURL + ".jpg", new SimpleImageLoadingListener() {
+            ///w_500,h_500,c_fit
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                podcastPic.setImageBitmap(loadedImage);
+            }
+        });
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
         playBtn = (ImageView) view.findViewById(R.id.playBtn);
@@ -87,6 +94,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         fullTime.setText("00:00");
 
 
+
+
         seekbar.setOnSeekBarChangeListener(this);
         utils = new Utilities();
         if (mActivity.pServ.getStatus() < 2) {
@@ -95,7 +104,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
 
 
-        } else if (!piFromClick.decryptedURL.equals(piFromService.decryptedURL)) {
+        } else if (!piFromClick.url.equals(piFromService.url)) {
                 mediaFileLengthInMilliseconds = 0;
                 mActivity.pServ.stopMusic();
                 mActivity.pServ.initPlayer();
@@ -257,13 +266,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public void serviceCallbackMethod() {
-        /**mActivity.imageLoader.loadImage(mActivity.pServ.getPodcastObject().imageURL, new SimpleImageLoadingListener() {
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                podcastPic.setImageBitmap(loadedImage);
-            }
-        });*/
-        //podcastPic.setImageBitmap(piFromClick.picture);
+
+
+
         mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration();
         updateProgressBar();
     }
