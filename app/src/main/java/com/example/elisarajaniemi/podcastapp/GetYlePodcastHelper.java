@@ -37,8 +37,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
     MainActivity mActivity;
 
-    private final String YLE_API_KEY = "";
-    private final String YLE_SECRET = "";
+    private final String YLE_API_KEY = "app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28";
+    private final String YLE_SECRET = "5824ec07e5183ac5";
+
 
     private String result = "";
     public PodcastItems podcastItems = PodcastItems.getInstance();
@@ -86,17 +87,11 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 for (int i = 0; i < jsonArray.length(); i++) {
 
                     JSONObject jObject = jsonArray.getJSONObject(i);
-
                     JSONArray publicationEventArray = jObject.getJSONArray("publicationEvent");
-
-                    //System.out.println("PublicationEvent Array: " + jObject.getJSONArray("publicationEvent"));
-
-                    //String mediaIDArray = "";
 
                     for (int i1 = 0; i1 < publicationEventArray.length(); i1++ ){
                         JSONObject publicationEventObject = publicationEventArray.getJSONObject(i1);
                         if (publicationEventObject.getJSONObject("media").length() > 0) {
-                            //System.out.println("MEdiaID: " + publicationEventObject.getJSONObject("media").getString("id"));
                             mediaIDArray.add(publicationEventObject.getJSONObject("media").getString("id"));
                         }
                     }
