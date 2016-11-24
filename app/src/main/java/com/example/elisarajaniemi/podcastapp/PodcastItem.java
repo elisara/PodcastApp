@@ -22,17 +22,17 @@ public class PodcastItem implements Serializable {
     public String imageURL;
 
 
-    public PodcastItem(String title, String url){
+    public PodcastItem(String title, String url, String description, String collectionName,String imageURL){
 
         this.title = title;
         this.url = url;
-        this.description = "";
+        this.description = description;
         this.length = 0;
         this.category = "";
         this.tags = "";
-        this.collectionName = "";
+        this.collectionName = collectionName;
         this.collectionID = 0;
-        this.imageURL = "";
+        this.imageURL = imageURL;
     }
 
     public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL){
@@ -43,7 +43,8 @@ public class PodcastItem implements Serializable {
         this.length = length;
         this.category = category;
         this.tags = tags;
-        this.collectionName = collectionName;
+        this.collectionName = "Metropolia";
+        //this.collectionName = collectionName;
         this.collectionID = collectionID;
         this.imageURL = imageURL;
     }

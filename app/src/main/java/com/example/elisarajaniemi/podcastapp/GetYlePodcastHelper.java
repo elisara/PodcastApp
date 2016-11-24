@@ -95,10 +95,10 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     }
 
                     String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaIDArray.get(i) + "&" + YLE_API_KEY;
-                    System.out.println("CryptedURL: " + encryptedURL);
+                    //System.out.println("CryptedURL: " + encryptedURL);
 
-                    PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL);
-                    System.out.println("Yle podcast title: " + podcastItem.title);
+                    PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"), jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"),jObject.getJSONObject("image").getString("id"));
+                    System.out.println("Yle podcast collection name: " + jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));
                     podcastItems.addPodcastItem(podcastItem);
 
                 }// End Loop
