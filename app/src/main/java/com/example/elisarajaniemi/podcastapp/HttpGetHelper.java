@@ -76,11 +76,11 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
 
                         JSONObject jObject = finalArray.getJSONObject(j);
 
-                        Bitmap bmp = mActivity.imageLoader.loadImageSync(jObject.getString("Location - longitude"));
+                        //Bitmap bmp = mActivity.imageLoader.loadImageSync(jObject.getString("Location - longitude"));
 
                         PodcastItem podcastItem = new PodcastItem(jObject.getString("Title"), jObject.getString("Download link"), jObject.getString("Description"),
                                 jObject.getInt("Length (sec)"), jObject.getString("Tags"), jObject.getString("Tags"), jObject.getString("Collection name"),
-                                jObject.getInt("Collection ID"), jObject.getString("Location - longitude"), bmp);
+                                jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
 
                         //podcastItems.addPodcastItem(podcastItem);
                         System.out.println("Added " + podcastItem.title);

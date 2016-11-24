@@ -263,7 +263,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 podcastPic.setImageBitmap(loadedImage);
             }
         });*/
-        podcastPic.setImageBitmap(piFromClick.picture);
+        //podcastPic.setImageBitmap(piFromClick.picture);
         mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration();
         updateProgressBar();
     }

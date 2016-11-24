@@ -20,7 +20,7 @@ public class PodcastItem implements Serializable {
     public String collectionName;
     public int collectionID;
     public String imageURL;
-    public Bitmap picture;
+
 
     public PodcastItem(String title, String url){
 
@@ -29,7 +29,7 @@ public class PodcastItem implements Serializable {
 
     }
 
-    public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL, Bitmap picture){
+    public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL){
 
         this.title = title;
         this.url = url;
@@ -40,7 +40,6 @@ public class PodcastItem implements Serializable {
         this.collectionName = collectionName;
         this.collectionID = collectionID;
         this.imageURL = imageURL;
-        this.picture = picture;
     }
 
 }
