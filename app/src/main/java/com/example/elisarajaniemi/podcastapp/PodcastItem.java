@@ -22,7 +22,10 @@ public class PodcastItem implements Serializable {
     public String imageURL;
     public Bitmap picture;
 
-    public PodcastItem(){
+    public PodcastItem(String title, String url){
+
+        this.title = title;
+        this.url = url;
 
     }
 
