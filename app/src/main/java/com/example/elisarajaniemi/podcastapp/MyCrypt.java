@@ -3,12 +3,26 @@ package com.example.elisarajaniemi.podcastapp;
 import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by Elisa Rajaniemi on 7.11.2016.
  */
 
 public class MyCrypt {
+
+    private final String YLE_SECRET = "5824ec07e5183ac5";
+
 
     public MyCrypt(){
 
@@ -71,6 +85,24 @@ public class MyCrypt {
 
         return text1;
 
+    }
+
+    public void decryptURL(String url) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+
+        String secret = YLE_SECRET;
+        String data = url;
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+
+        byte[] baseDecoded = Base64.decode(data, Base64.DEFAULT);
+        byte[] iv = Arrays.copyOfRange(baseDecoded, 0, 16);
+        byte[] msg = Arrays.copyOfRange(baseDecoded, 16, baseDecoded.length);
+
+        SecretKeySpec secretKeySpec = new SecretKeySpec(secret.getBytes("UTF-8"), "AES");
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+
+        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivSpec);
+        byte[] resultBytes = cipher.doFinal(msg);
+        System.out.println("Decrypted URL: " + new String(resultBytes));
     }
 
 }
