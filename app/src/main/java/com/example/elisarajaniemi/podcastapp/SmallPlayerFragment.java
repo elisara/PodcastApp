@@ -93,7 +93,7 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
                     button1.setImageResource(R.drawable.ic_pause_black_50dp);
                 else button1.setImageResource(R.drawable.ic_play_arrow_black_50dp);
                 if (mActivity.pServ.getStatus() == 3) {
-                    podcastImage.setImageBitmap(mActivity.pServ.getPodcastObject().picture);
+                    //podcastImage.setImageBitmap(mActivity.pServ.getPodcastObject().picture);
                     bar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mActivity.pServ.mPlayer.getDuration()) * 100));
                     text1.setText(mActivity.pServ.getPodcastObject().title);
                     //text2.setText(mActivity.pServ.getPodcastObject().collectionName);

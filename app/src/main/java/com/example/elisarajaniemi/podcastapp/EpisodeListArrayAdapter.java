@@ -44,7 +44,7 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
         tv.setText(value.title);
 
         ImageView iv = (ImageView) convertView.findViewById(R.id.episodeIcon);
-        iv.setImageBitmap(value.picture);
+        //iv.setImageBitmap(value.picture);
 
         ImageButton button = (ImageButton) convertView.findViewById(R.id.itemMenu);
         button.setOnClickListener(new View.OnClickListener() {
