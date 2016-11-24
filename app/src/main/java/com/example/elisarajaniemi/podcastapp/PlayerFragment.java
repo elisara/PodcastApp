@@ -49,7 +49,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
             if (pi2 != null) {
                 piFromClick = pi2;
-                System.out.println("Podcast URL ELSE IF: " + piFromClick.url);
+                System.out.println("Podcast URL ELSE IF: " + piFromClick.decryptedURL);
             }
         }
         podcastPic = (ImageView) view.findViewById(R.id.podcastPic);
@@ -95,7 +95,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
 
 
-        } else if (!piFromClick.url.equals(piFromService.url)) {
+        } else if (!piFromClick.decryptedURL.equals(piFromService.decryptedURL)) {
                 mediaFileLengthInMilliseconds = 0;
                 mActivity.pServ.stopMusic();
                 mActivity.pServ.initPlayer();

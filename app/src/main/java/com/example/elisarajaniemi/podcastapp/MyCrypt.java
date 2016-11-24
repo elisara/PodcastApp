@@ -1,8 +1,20 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.util.Base64;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -86,7 +98,7 @@ public class MyCrypt {
 
     }
 
-    public void decryptURL(String url) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+    public String decryptURL(String url) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
 
         String secret = YLE_SECRET;
         String data = url;
@@ -101,9 +113,11 @@ public class MyCrypt {
 
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivSpec);
         byte[] resultBytes = cipher.doFinal(msg);
-        System.out.println("Decrypted URL: " + new String(resultBytes));
-    }
+        String result = new String(resultBytes);
+        System.out.println("Decrypted URL: " + result);
 
+        return result;
+    }
 }
 
 

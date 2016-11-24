@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class PodcastItem implements Serializable {
 
     public String title;
-    public String url;
+    public String url, decryptedURL;
     public String description;
     public int length;
     public String category;
@@ -20,32 +20,42 @@ public class PodcastItem implements Serializable {
     public String collectionName;
     public int collectionID;
     public String imageURL;
+    public boolean fromYLE;
 
 
-    public PodcastItem(String title, String url){
+    public PodcastItem(String title, String url, String description, String collectionName,String imageURL){
 
         this.title = title;
         this.url = url;
-        this.description = "";
+        this.description = description;
         this.length = 0;
         this.category = "";
         this.tags = "";
-        this.collectionName = "Yle";
+        this.collectionName = collectionName;
         this.collectionID = 0;
-        this.imageURL = "";
+        this.fromYLE = true;
+        this.decryptedURL = "";
+        this.imageURL = imageURL;
     }
 
     public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL){
 
         this.title = title;
-        this.url = url;
+        this.url = "";
         this.description = description;
         this.length = length;
         this.category = category;
         this.tags = tags;
-        this.collectionName = collectionName;
+        this.collectionName = "Metropolia";
         this.collectionID = collectionID;
         this.imageURL = imageURL;
+        this.fromYLE = false;
+        this.decryptedURL = url;
+
+    }
+
+    public void setURL(String url){
+        this.decryptedURL = url;
     }
 
 }
