@@ -44,6 +44,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private ArrayList<Boolean> prefCategoryList;
     private String[] backendCategories;
     private String sortValue;
+    private SharedPreferences prefs;
 
 
     @Override
@@ -55,6 +56,9 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         categoryList = new ArrayList<>();
         prefCategoryList = new ArrayList<>();
         sortValue = "";
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs.edit().putBoolean("all", true);
 
         categoryBtn = (Button) view.findViewById(R.id.categoryBtn);
         categoryBtn.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +143,6 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         if(prefCategoryList.size() != 0){
             prefCategoryList.clear();
         }
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         humor = prefs.getBoolean("humor", true);
         technology = prefs.getBoolean("technology", true);
         economy = prefs.getBoolean("economy", true);

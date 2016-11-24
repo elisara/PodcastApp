@@ -16,6 +16,8 @@ import android.widget.Button;
 
 public class MyPreferencesActivity extends PreferenceActivity {
 
+    CheckBoxPreference allBox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
         boolean all;
         boolean allChecked, someChecked;
         private SharedPreferences.OnSharedPreferenceChangeListener listener;
+        CheckBoxPreference allBox, humorBox, historyBox, natureBox, entBox, politicsBox, musicBox, healthBox, ecoBox, techBox;
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
@@ -44,77 +47,80 @@ public class MyPreferencesActivity extends PreferenceActivity {
             sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
             PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, false);
 
-            all = sp.getBoolean("all", true);
+            allBox = (CheckBoxPreference) findPreference("all");
+            humorBox = (CheckBoxPreference) findPreference("humor");
+            historyBox = (CheckBoxPreference) findPreference("history");
+            natureBox = (CheckBoxPreference) findPreference("nature");
+            entBox = (CheckBoxPreference) findPreference("entertainment");
+            politicsBox = (CheckBoxPreference) findPreference("politics");
+            musicBox = (CheckBoxPreference) findPreference("music");
+            healthBox = (CheckBoxPreference) findPreference("health");
+            ecoBox = (CheckBoxPreference) findPreference("economy");
+            techBox = (CheckBoxPreference) findPreference("technology");
 
+            sp.edit().putBoolean("all", true);
+            selectCheckboxes();
 
             listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
                 @Override
                 public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                    CheckBoxPreference allBox = (CheckBoxPreference) findPreference("all");
-                    CheckBoxPreference humorBox = (CheckBoxPreference) findPreference("humor");
-                    CheckBoxPreference historyBox = (CheckBoxPreference) findPreference("history");
-                    CheckBoxPreference natureBox = (CheckBoxPreference) findPreference("nature");
-                    CheckBoxPreference entBox = (CheckBoxPreference) findPreference("entertainment");
-                    CheckBoxPreference politicsBox = (CheckBoxPreference) findPreference("politics");
-                    CheckBoxPreference musicBox = (CheckBoxPreference) findPreference("music");
-                    CheckBoxPreference healthBox = (CheckBoxPreference) findPreference("health");
-                    CheckBoxPreference ecoBox = (CheckBoxPreference) findPreference("economy");
-                    CheckBoxPreference techBox = (CheckBoxPreference) findPreference("technology");
-
-                    if(allBox.isChecked() && allChecked == false && someChecked == false) {
-                        humorBox.setChecked(true);
-                        historyBox.setChecked(true);
-                        humorBox.setChecked(true);
-                        natureBox.setChecked(true);
-                        ecoBox.setChecked(true);
-                        entBox.setChecked(true);
-                        politicsBox.setChecked(true);
-                        musicBox.setChecked(true);
-                        healthBox.setChecked(true);
-                        techBox.setChecked(true);
-                        allChecked = true;
-                        System.out.println("ALL in 1:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
-                    }
-
-                    else if(!allBox.isChecked() && allChecked == true){
-                        humorBox.setChecked(false);
-                        historyBox.setChecked(false);
-                        humorBox.setChecked(false);
-                        natureBox.setChecked(false);
-                        ecoBox.setChecked(false);
-                        entBox.setChecked(false);
-                        politicsBox.setChecked(false);
-                        musicBox.setChecked(false);
-                        healthBox.setChecked(false);
-                        techBox.setChecked(false);
-                        allChecked = false;
-                        someChecked = false;
-                        System.out.println("ALL in 2:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
-                    }
-
-                    else if(allBox.isChecked() && allChecked == true && someChecked == false){
-                        allChecked = false;
-                        someChecked = true;
-                        allBox.setChecked(false);
-                        System.out.println("ALL in 3:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
-                    }
-
-                    else if(!allBox.isChecked() && someChecked == true && allChecked == false){
-                        someChecked = false;
-                        System.out.println("ALL in 4:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
-                    }
-                    else{
-                        System.out.println("Went to ELSE ---- ALL in 4:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
-                    }
+                    selectCheckboxes();
                 }
             };
-
-
             sp.registerOnSharedPreferenceChangeListener(listener);
-
         }
 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        }
+
+        public void selectCheckboxes(){
+            if(allBox.isChecked() && allChecked == false && someChecked == false) {
+                humorBox.setChecked(true);
+                historyBox.setChecked(true);
+                humorBox.setChecked(true);
+                natureBox.setChecked(true);
+                ecoBox.setChecked(true);
+                entBox.setChecked(true);
+                politicsBox.setChecked(true);
+                musicBox.setChecked(true);
+                healthBox.setChecked(true);
+                techBox.setChecked(true);
+                allChecked = true;
+                System.out.println("ALL in 1:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
+            }
+
+            else if(!allBox.isChecked() && allChecked == true){
+                humorBox.setChecked(false);
+                historyBox.setChecked(false);
+                humorBox.setChecked(false);
+                natureBox.setChecked(false);
+                ecoBox.setChecked(false);
+                entBox.setChecked(false);
+                politicsBox.setChecked(false);
+                musicBox.setChecked(false);
+                healthBox.setChecked(false);
+                techBox.setChecked(false);
+                allChecked = false;
+                someChecked = false;
+                System.out.println("ALL in 2:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
+            }
+
+            else if(allBox.isChecked() && allChecked == true && someChecked == false){
+                allChecked = false;
+                someChecked = true;
+                allBox.setChecked(false);
+                System.out.println("ALL in 3:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
+            }
+
+            else if(!allBox.isChecked() && someChecked == true && allChecked == false){
+                someChecked = false;
+                System.out.println("ALL in 4:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
+            }
+            else{
+                System.out.println("Went to ELSE ---- ALL in 4:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
+            }
+
+
         }
 
     }

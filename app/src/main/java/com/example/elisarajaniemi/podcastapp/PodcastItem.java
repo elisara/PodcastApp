@@ -23,19 +23,19 @@ public class PodcastItem implements Serializable {
     public boolean fromYLE;
 
 
-    public PodcastItem(String title, String url){
+    public PodcastItem(String title, String url, String description, String collectionName,String imageURL){
 
         this.title = title;
         this.url = url;
-        this.description = "";
+        this.description = description;
         this.length = 0;
         this.category = "";
         this.tags = "";
-        this.collectionName = "";
+        this.collectionName = collectionName;
         this.collectionID = 0;
-        this.imageURL = "";
         this.fromYLE = true;
         this.decryptedURL = "";
+        this.imageURL = imageURL;
     }
 
     public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL){

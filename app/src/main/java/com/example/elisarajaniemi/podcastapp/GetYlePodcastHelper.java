@@ -83,13 +83,11 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 for (int i = 0; i < jsonArray.length(); i++) {
 
                     JSONObject jObject = jsonArray.getJSONObject(i);
-
                     JSONArray publicationEventArray = jObject.getJSONArray("publicationEvent");
 
                     for (int i1 = 0; i1 < publicationEventArray.length(); i1++ ){
                         JSONObject publicationEventObject = publicationEventArray.getJSONObject(i1);
                         if (publicationEventObject.getJSONObject("media").length() > 0) {
-                            //System.out.println("MEdiaID: " + publicationEventObject.getJSONObject("media").getString("id"));
                             mediaIDArray.add(publicationEventObject.getJSONObject("media").getString("id"));
                         }
                     }
@@ -97,8 +95,8 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaIDArray.get(i) + "&" + R.string.app_id + "&" + R.string.app_key;
                     System.out.println("CryptedURL: " + encryptedURL);
 
-                    PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL);
-                    System.out.println("Yle podcast title: " + podcastItem.title);
+                    PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"), jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"),jObject.getJSONObject("image").getString("id"));
+                    System.out.println("Yle podcast collection name: " + jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));
                     podcastItems.addPodcastItem(podcastItem);
 
                 }// End Loop
