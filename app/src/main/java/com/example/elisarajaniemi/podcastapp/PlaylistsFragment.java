@@ -2,6 +2,7 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +31,16 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by Elisa Rajaniemi on 31.10.2016.
@@ -53,17 +64,6 @@ public class PlaylistsFragment extends Fragment {
 
         mf = new MenuFragment();
         list = new ArrayList<>();
-
-        ArrayList<PodcastItem> kissat = new ArrayList<>();
-        ArrayList<PodcastItem> koirat = new ArrayList<>();
-
-        PlaylistItem playlistItem = new PlaylistItem("kissat", kissat);
-        PlaylistItem playlistItem2 = new PlaylistItem("koirat", koirat);
-
-        list.add(playlistItem);
-        list.add(playlistItem2);
-        getPlaylists();
-
 
         listView = (ListView) view.findViewById(R.id.playlist_list);
         adapter = new PlaylistsArrayAdapter(getContext(), playlists.getPlaylists());
@@ -116,8 +116,6 @@ public class PlaylistsFragment extends Fragment {
                 t.start();
                 playlistName = input.getText().toString();
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
-                PlaylistItem addedPlaylistItem = new PlaylistItem(playlistName, addedList);
-
             }
         })
                 .setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -129,25 +127,10 @@ public class PlaylistsFragment extends Fragment {
         alertDialog.show();
     }
 
-    public void addToExcistingPlaylist(ArrayList<PodcastItem> lista, PodcastItem podcastItem){
-        lista.add(0,podcastItem);
-        System.out.println("LISTA: " + lista.get(0).title);
-    }
+    public void addToExcistingPlaylist(int playlistID, PodcastItem podcastItem){
 
-    public ArrayList<PlaylistItem> getPlaylists(){
-        //System.out.println("listan ekan nimi: " +list.get(0).name);
-        ArrayList<PlaylistItem> lista = new ArrayList<>();
-
-        ArrayList<PodcastItem> kissat = new ArrayList<>();
-        ArrayList<PodcastItem> koirat = new ArrayList<>();
-
-        PlaylistItem playlistItem = new PlaylistItem("kissat", kissat);
-        PlaylistItem playlistItem2 = new PlaylistItem("koirat", koirat);
-
-        lista.add(playlistItem);
-        lista.add(playlistItem2);
-
-        return lista;
+        //lista.add(0,podcastItem);
+        //System.out.println("LISTA: " + lista.get(0).title);
     }
 
     public String getString(){
@@ -164,7 +147,6 @@ public class PlaylistsFragment extends Fragment {
         lp.setPadding(30,30,30,30);
 
         final ListView toPlaylist = new ListView(context);
-        final PlaylistItem playlist = getPlaylists().get(0);
         adapter = new PlaylistsArrayAdapter(context, playlists.getPlaylists());
 
         toPlaylist.setAdapter(adapter);
@@ -184,8 +166,11 @@ public class PlaylistsFragment extends Fragment {
         toPlaylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 alertDialog2.cancel();
-                addToExcistingPlaylist(playlist.list, podcastItem);
-                System.out.println("Playlistin koko episodearrayadapterissa lisäämisen jälkeen: "+playlist.list.size());
+                PlaylistItem playlistItem = playlists.getPlaylists().get(position);
+                //addToExcistingPlaylist(playlist.list, podcastItem);
+                new PutPodcastToPlaylist().execute(podcastItem.programID.replace("-", ""), "http://media.mw.metropolia.fi/arsu/playlists/" + playlistItem.id + "?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+                        "eyJpZCI6MywidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUBleGFtcGxlLmNvbSIsImlzX2FkbWluIjpudWxs" +
+                        "LCJkYXRlIjoiMjAxNi0xMS0xNVQxNjowMToyMy4wMDBaIiwiaWF0IjoxNDc5MjgxNDI5LCJleHAiOjE1MTA4MTc0Mjl9.5BTFGggjtGCSh7ssNjWokmM7CAHHR9omvcGCqYXLlso");
 
             }
         });
@@ -249,5 +234,75 @@ public class PlaylistsFragment extends Fragment {
             }
         }
     };
+
+}
+
+
+class PutPodcastToPlaylist extends AsyncTask<Object, String, String> {
+    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
+
+    String message;
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        //this method will be running on UI thread
+        //pdLoading.setMessage("\tLoading...");
+        //pdLoading.show();
+    }
+    @Override
+    protected String doInBackground(Object... params) {
+
+        try {
+            URL url = new URL((String)params[1]);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json");
+            String input = "{\"podcast_id\":\"" + params[0] + "\"}";
+            //input = input.replace("\n", "");
+            System.out.println(input);
+
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+
+            while ((output = br.readLine()) != null) {
+                try {
+                    JSONObject jObject = new JSONObject(output);
+                    message = jObject.getString("message");
+                    System.out.println("Database message: " + message);
+                } catch (JSONException e) {
+                    System.out.println(e);
+                }
+            }
+
+            conn.disconnect();
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
+
+        System.out.println("Result: " + result);
+
+        //this method will be running on UI thread
+
+        //pdLoading.dismiss();
+    }
 
 }

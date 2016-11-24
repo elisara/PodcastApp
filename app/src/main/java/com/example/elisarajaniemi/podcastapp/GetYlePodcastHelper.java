@@ -80,7 +80,6 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("data");
-                System.out.println("YLE podcast array: " + jsonArray.length());
                 ArrayList<String> mediaIDArray = new ArrayList<>();
                 for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -95,10 +94,10 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     }
 
                     String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaIDArray.get(i) + "&" + YLE_APP_KEY;
-                    System.out.println("CryptedURL: " + encryptedURL);
+                    System.out.println(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi") + ": https://external.api.yle.fi/v1/programs/items.json?id=" + jObject.getString("id") + "&" + YLE_APP_KEY);
 
                     PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"), jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"),jObject.getJSONObject("image").getString("id"));
-                    System.out.println("Yle podcast collection name: " + jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));
+                    //System.out.println("Yle podcast collection name: " + jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));
                     podcastItems.addPodcastItem(podcastItem);
 
                 }// End Loop

@@ -114,7 +114,7 @@ public class MyCrypt {
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivSpec);
         byte[] resultBytes = cipher.doFinal(msg);
         String result = new String(resultBytes);
-        System.out.println("Decrypted URL: " + result);
+
 
         return result;
     }
