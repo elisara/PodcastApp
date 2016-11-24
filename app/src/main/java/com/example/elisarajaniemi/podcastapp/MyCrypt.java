@@ -33,6 +33,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class MyCrypt {
 
+    private final String YLE_SECRET = "5824ec07e5183ac5";
+
     public MyCrypt(){
 
     }
@@ -98,7 +100,7 @@ public class MyCrypt {
 
     public String decryptURL(String url) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
 
-        String secret = "" + R.string.secret;
+        String secret = YLE_SECRET;
         String data = url;
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 

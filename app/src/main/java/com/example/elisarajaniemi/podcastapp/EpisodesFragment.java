@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +36,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -73,8 +76,6 @@ public class EpisodesFragment extends Fragment {
         collectionName = (TextView) view.findViewById(R.id.collectionTitle);
         collectionName.setText(pi.collectionName);
 
-        new AsyncCaller().execute("https://external.api.yle.fi/v1/media/playouts.json?program_id=1-3742989&protocol=PMD&media_id=6-d4783963e5844d699b3650e44b70e9b7&app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
-
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
         fillList();
         sendToPlaylists();
@@ -85,6 +86,10 @@ public class EpisodesFragment extends Fragment {
                 PodcastItem pi = list.get(position);
                 pf = new PlayerFragment();
                 Bundle bundle2 = new Bundle();
+                System.out.println("FromYLE: " + pi.fromYLE);
+                if (pi.fromYLE == true){
+                    new AsyncCaller().execute(pi);
+                }
                 bundle2.putSerializable("episode", pi);
                 pf.setArguments(bundle2);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -116,7 +121,7 @@ public class EpisodesFragment extends Fragment {
                         PodcastItem podcastItem = (PodcastItem) obj;
                         sendIntent.setAction(Intent.ACTION_SEND);
 
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, podcastItem.title + " " + podcastItem.url);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, podcastItem.title + " " + podcastItem.decryptedURL);
                         sendIntent.setType("text/plain");
                         startActivity(sendIntent);
                     }
@@ -185,9 +190,10 @@ public class EpisodesFragment extends Fragment {
 
 }
 
-class AsyncCaller extends AsyncTask<String, String, String> {
+class AsyncCaller extends AsyncTask<PodcastItem, String, String> {
     //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
-    String encryptedURL;
+    String decryptedURL;
+    String resultURL;
     MyCrypt myCrypt = new MyCrypt();
     BufferedReader br;
 
@@ -200,35 +206,44 @@ class AsyncCaller extends AsyncTask<String, String, String> {
         //pdLoading.show();
     }
     @Override
-    protected String doInBackground(String... params) {
+    protected String doInBackground(PodcastItem... params) {
 
         try {
-            URL url = new URL(params[0]);
+            URL url = new URL(params[0].url);
             System.out.println("URL: " + url);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Content-Type", "application/json");
+            URLConnection conn = url.openConnection();
+            //conn.setDoOutput(true);
+            //conn.setRequestMethod("GET");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+            conn.connect();
 
-            OutputStream os = conn.getOutputStream();
-            os.flush();
+            //OutputStream os = conn.getOutputStream();
+            //os.flush();
 
-            int responseCode = conn.getResponseCode();
+            /**int responseCode = conn.getResponseCode();
             if (responseCode >= 400 && responseCode <= 499) {
                 throw new Exception("Bad authentication status: " + responseCode); //provide a more meaningful exception message
             }
             else {
                 br = new BufferedReader(new InputStreamReader(
                         (conn.getInputStream())));
-            }
+            }*/
+
+            BufferedReader r  = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
+
             String output;
 
-            while ((output = br.readLine()) != null) {
+            while ((output = r.readLine()) != null) {
                 try {
                     JSONObject jObject = new JSONObject(output);
-                    encryptedURL = jObject.getString("url");
-                    System.out.println("URL: " + encryptedURL);
-                    myCrypt.decryptURL(encryptedURL);
+                    JSONArray jArray = jObject.getJSONArray("data");
+                    for (int i = 0; i < jArray.length(); i++){
+                        decryptedURL = jArray.getJSONObject(i).getString("url");
+                        System.out.println("DecryptedURL: " + decryptedURL);
+                    }
+                    //encryptedURL = jObject.getString("url");
+                    System.out.println("Output: " + output);
+                    resultURL = myCrypt.decryptURL(decryptedURL);
 
                 } catch (JSONException e) {
                     System.out.println(e);
@@ -247,7 +262,6 @@ class AsyncCaller extends AsyncTask<String, String, String> {
                 }
             }
 
-            conn.disconnect();
         } catch (
                 MalformedURLException e
                 ) {
@@ -263,13 +277,15 @@ class AsyncCaller extends AsyncTask<String, String, String> {
             e.printStackTrace();
         }
 
-
+        params[0].setURL(resultURL);
         return null;
     }
 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+
+        System.out.println("Result: " + result);
 
         //this method will be running on UI thread
 

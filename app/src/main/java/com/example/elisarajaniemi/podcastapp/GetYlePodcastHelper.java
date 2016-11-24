@@ -37,6 +37,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
     MainActivity mActivity;
 
+    private final String YLE_APP_KEY = "app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28";
+
     private String result = "";
     public PodcastItems podcastItems = PodcastItems.getInstance();
     public SerieItems serieItems = SerieItems.getInstance();
@@ -92,7 +94,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                         }
                     }
 
-                    String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaIDArray.get(i) + "&" + R.string.app_id + "&" + R.string.app_key;
+                    String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaIDArray.get(i) + "&" + YLE_APP_KEY;
                     System.out.println("CryptedURL: " + encryptedURL);
 
                     PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"), jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"),jObject.getJSONObject("image").getString("id"));
