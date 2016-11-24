@@ -13,10 +13,10 @@ public class PlaylistItem implements Serializable {
     public int id;
     public ArrayList<PodcastItem> list;
 
-    public PlaylistItem(String name, ArrayList<PodcastItem> list){
+    /**public PlaylistItem(String name, ArrayList<PodcastItem> list){
         this.name = name;
         this.list = list;
-    }
+    }*/
 
     public PlaylistItem(int id, String name){
         this.id = id;

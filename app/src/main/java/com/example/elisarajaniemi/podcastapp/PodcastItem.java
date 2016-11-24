@@ -21,9 +21,11 @@ public class PodcastItem implements Serializable {
     public int collectionID;
     public String imageURL;
     public boolean fromYLE;
+    public String programID;
+    public String mediaID;
 
 
-    public PodcastItem(String title, String url, String description, String collectionName,String imageURL){
+    public PodcastItem(String title, String url, String description, String collectionName,String imageURL, String programID, String mediaID){
 
         this.title = title;
         this.url = url;
@@ -36,6 +38,8 @@ public class PodcastItem implements Serializable {
         this.fromYLE = true;
         this.decryptedURL = "";
         this.imageURL = imageURL;
+        this.programID = programID;
+        this.mediaID = mediaID;
     }
 
     public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL){
@@ -51,6 +55,8 @@ public class PodcastItem implements Serializable {
         this.imageURL = imageURL;
         this.fromYLE = false;
         this.decryptedURL = url;
+        this.programID = "";
+        this.mediaID = "";
 
     }
 
