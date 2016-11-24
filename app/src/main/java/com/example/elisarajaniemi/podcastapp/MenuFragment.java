@@ -49,6 +49,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     private AlertDialog alertDialog;
     CurrentUser currentUser =  CurrentUser.getInstance();
     private SerieFragment sf;
+    private FavoritesFragment favoritesFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +83,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         mf = new MenuFragment();
         rali = new RegisterAndLogin();
         sf = new SerieFragment();
+        favoritesFragment = new FavoritesFragment();
 
         if(currentUser.getCurrentUser().size() < 1){
             userLayout.setVisibility(View.GONE);
@@ -133,7 +135,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
+                        .replace(R.id.frag_container, favoritesFragment).addToBackStack( "tag" ).commit();
                 break;
 
             case R.id.signIn:
