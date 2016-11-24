@@ -30,7 +30,7 @@ public class PodcastItem implements Serializable {
         this.length = 0;
         this.category = "";
         this.tags = "";
-        this.collectionName = "";
+        this.collectionName = "Yle";
         this.collectionID = 0;
         this.imageURL = "";
     }

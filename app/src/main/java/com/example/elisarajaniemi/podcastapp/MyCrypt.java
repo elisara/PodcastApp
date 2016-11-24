@@ -23,7 +23,6 @@ public class MyCrypt {
 
     private final String YLE_SECRET = "5824ec07e5183ac5";
 
-
     public MyCrypt(){
 
     }
