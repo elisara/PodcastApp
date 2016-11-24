@@ -18,8 +18,6 @@ import java.util.ArrayList;
 public class GridViewAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<PodcastItem> list;
-    //private PodcastItem value;
-    View gridView;
 
     public GridViewAdapter(Context context, ArrayList<PodcastItem> list) {
         this.context = context;
@@ -28,28 +26,20 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        View myView;
         if (convertView == null) {
+            //LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            myView = layoutInflater.inflate(R.layout.gridview_item, parent, false);
 
-            gridView = new View(context);
-            gridView = inflater.inflate(R.layout.gridview_item, parent, false);
+            TextView textView = (TextView) myView.findViewById(R.id.grid_item_label);
+            textView.setText(list.get(position).title);
 
-            if (convertView == null) {
-
-                // set value into textview
-                TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
-                textView.setText(list.get(position).title);
-
-                //ImageView imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
-
-            } else {
-                gridView = (View)convertView;
-            }
+        } else {
+            myView = convertView;
         }
 
-        return gridView;
+        return myView;
     }
 
     @Override public int getCount () {
@@ -58,10 +48,10 @@ public class GridViewAdapter extends BaseAdapter {
 
 
     @Override public Object getItem ( int position){
-        return null;
+        return position;
     }
 
     @Override public long getItemId ( int position){
-        return 0;
+        return position;
     }
 }

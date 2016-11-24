@@ -27,9 +27,9 @@ public class FavoritesFragment extends Fragment {
 
         gridView = (GridView) view.findViewById(R.id.gridView1);
 
-        ArrayList<PodcastItem> list = SerieItems.getInstance().getSerieItems();
+        ArrayList<PodcastItem> list = PodcastItems.getInstance().getItems();
 
-        gridView.setAdapter(new GridViewAdapter(getContext(),list));
+        gridView.setAdapter(new GridViewAdapter(getContext(), list));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
