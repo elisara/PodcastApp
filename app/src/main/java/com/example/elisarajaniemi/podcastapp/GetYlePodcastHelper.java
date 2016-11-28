@@ -96,9 +96,16 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaIDArray.get(i) + "&" + YLE_APP_KEY;
                     System.out.println(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi") + ": https://external.api.yle.fi/v1/programs/items.json?id=" + jObject.getString("id") + "&" + YLE_APP_KEY);
 
-                    PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"), jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"),jObject.getJSONObject("image").getString("id"));
-                    //System.out.println("Yle podcast collection name: " + jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));
-                    podcastItems.addPodcastItem(podcastItem);
+                    PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"),
+                            jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"),jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaIDArray.get(i));                    //System.out.println("Yle podcast collection name: " + jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));
+                    if (podcastItems.getItems().size() == 0) podcastItems.addPodcastItem(podcastItem);
+                    else {
+                        boolean titleFound = false;
+                        for (int k = 0; k < podcastItems.getItems().size(); k++) {
+                            if (podcastItems.getItems().get(k).title.equalsIgnoreCase( podcastItem.title)) titleFound = true;
+                        }
+                        if (titleFound == false) podcastItems.addPodcastItem(podcastItem);
+                    }
 
                 }// End Loop
 

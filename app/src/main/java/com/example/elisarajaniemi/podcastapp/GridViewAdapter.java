@@ -18,6 +18,8 @@ import java.util.ArrayList;
 public class GridViewAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<PodcastItem> list;
+    private TextView textView;
+    private PodcastItem pi;
 
     public GridViewAdapter(Context context, ArrayList<PodcastItem> list) {
         this.context = context;
@@ -28,17 +30,13 @@ public class GridViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View myView;
         if (convertView == null) {
-            //LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            myView = layoutInflater.inflate(R.layout.gridview_item, parent, false);
-
-            TextView textView = (TextView) myView.findViewById(R.id.grid_item_label);
-            textView.setText(list.get(position).title);
+            myView = LayoutInflater.from(context).inflate(R.layout.gridview_item, parent, false);
 
         } else {
             myView = convertView;
         }
-
+        textView = (TextView) myView.findViewById(R.id.grid_item_label);
+        textView.setText(list.get(position).collectionName);
         return myView;
     }
 
