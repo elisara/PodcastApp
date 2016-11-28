@@ -44,6 +44,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -63,19 +64,32 @@ public class EpisodesFragment extends Fragment {
     private PodcastItem pi;
     private MainActivity ma;
     private AlertDialog alertDialog;
-    private TextView collectionName;
     private LinearLayout headerBox;
     private PlayerFragment pf;
     public PodcastItems podcastItems = PodcastItems.getInstance();
+    public PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
+    public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
     private ArrayList<PodcastItem> listAll = podcastItems.getItems();
+    private int playlistID = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        pi = (PodcastItem) getArguments().getSerializable("message");
-        View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
-        collectionName = (TextView) view.findViewById(R.id.collectionTitle);
-        collectionName.setText(pi.collectionName);
 
+        pi = (PodcastItem) getArguments().getSerializable("message");
+        playlistID = getArguments().getInt("playlistID");
+
+        if(playlistID != 0) {
+            try {
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "true").get();
+                //new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/"+podcastIDArray.getItems().get(i) + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "true").get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
         fillList();
         sendToPlaylists();
@@ -168,12 +182,16 @@ public class EpisodesFragment extends Fragment {
 
     public void fillList(){
         list = new ArrayList<>();
-        if(list.size() == 0) {
+        if(list.size() == 0 && playlistID == 0) {
             for (int i = 0; i < listAll.size(); i++) {
                 if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
                     list.add(listAll.get(i));
                 }
             }
+        } else if(list.size() == 0 && playlistID != 0){
+            System.out.println("PlaylistPodcastItems size: " + playlistPodcastItems.getItems().size());
+            list = playlistPodcastItems.getItems();
+
         }
 
         adapter = new EpisodeListArrayAdapter(getContext(), list);

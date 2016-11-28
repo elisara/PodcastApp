@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -37,6 +39,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -57,6 +60,7 @@ public class PlaylistsFragment extends Fragment {
     private ArrayList<PlaylistItem> list;
     CurrentUser currentUser = CurrentUser.getInstance();
     Playlists playlists = Playlists.getInstance();
+    PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,16 +75,29 @@ public class PlaylistsFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                PlaylistItem value = list.get(position);
-                //System.out.println(value);
+                PlaylistItem value = playlists.getPlaylists().get(position);
 
                 System.out.println("Playlistin nimi playlistsfragmentissa: " + value.name);
-                System.out.println("Playlistin pituus playlistsfragmentissa: " + value.list.size());
+                System.out.println("Playlistin ID playlistsfragmentissa: " + value.id);
 
+                //new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/1-3742971.json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "true");
 
-               /** SinglePlaylistFragment splf = new SinglePlaylistFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();*/
+                try {
+                    new GetPlaylistPodcasts().execute("http://media.mw.metropolia.fi/arsu/playlists/"+value.id +
+                            "?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUBleGFtcGxlLmNvbSIsImlzX2FkbWl" +
+                            "uIjpudWxsLCJkYXRlIjoiMjAxNi0xMS0xNVQxNjowMToyMy4wMDBaIiwiaWF0IjoxNDc5MjgxNDI5LCJleHAiOjE1MTA4MTc0Mjl9.5BTFGggjtGCSh7ssNjWokmM7CAHHR9omvcGCqYXLlso").get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                EpisodesFragment episodesFragment = new EpisodesFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("playlistID", value.id);
+                episodesFragment.setArguments(bundle);
+                 getActivity().getSupportFragmentManager().beginTransaction()
+                         .replace(R.id.frag_container, episodesFragment).addToBackStack( "playlistFragment" ).commit();
             }
 
         });
@@ -303,6 +320,97 @@ class PutPodcastToPlaylist extends AsyncTask<Object, String, String> {
         //this method will be running on UI thread
 
         //pdLoading.dismiss();
+    }
+
+}
+
+class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
+
+    private String result = "";
+    private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
+
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
+
+    @Override
+    protected String doInBackground(String... params) {
+
+
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+
+        try {
+            URL url = new URL(params[0]);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+
+
+            InputStream stream = connection.getInputStream();
+
+            reader = new BufferedReader(new InputStreamReader(stream));
+
+            StringBuffer buffer = new StringBuffer();
+            String line = "";
+
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line + "\n");
+            }
+            result = buffer.toString();
+            try {
+                JSONObject jObject = new JSONObject(result);
+
+                //System.out.println("Playlist juttuja: " + jObject);
+
+                JSONArray jsonArray = new JSONArray(jObject.getString("content"));
+                for (int i = 0; i < jsonArray.length(); i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String podcastID = jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length());
+                    //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
+                    podcastIDArray.addPodcastID(podcastID);
+                }
+
+                //System.out.println("Playlist podcasts: " + jsonArray);
+                /**for (int i = 0; i < jArray.length(); i++) {
+
+                    JSONObject jsonObject = jArray.getJSONObject(i);
+                    //User user = new User(jsonObject.getInt("id"), jsonObject.getString("username"), jsonObject.getString("email"));
+                    //users.addUser(user);
+
+                }// End Loop
+*/
+                //System.out.println("Users: " + users.getUsers());
+
+                //System.out.println("SeriID array size: " + serieItems.getSerieItems().size());
+
+            } catch (JSONException e) {
+                Log.e("JSONException", "Error: " + e.toString());
+            }
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
     }
 
 }

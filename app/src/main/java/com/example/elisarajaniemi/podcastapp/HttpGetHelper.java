@@ -81,8 +81,6 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
                                 jObject.getInt("Length (sec)"), jObject.getString("Tags"), jObject.getString("Tags"), jObject.getString("Collection name"),
                                 jObject.getInt("Collection ID"), jObject.getString("Location - longitude"));
 
-                        //podcastItems.addPodcastItem(podcastItem);
-                        //System.out.println("Added " + podcastItem.title);
                         if (serieItems.getSerieItems().size() == 0) serieItems.addSerieItem(podcastItem);
                         else {
                             boolean idFound = false;
@@ -103,8 +101,6 @@ public class HttpGetHelper extends AsyncTask<String, String, String> {
                     }
 
                 }// End Loop
-
-                //System.out.println("SeriID array size: " + serieItems.getSerieItems().size());
 
             } catch (JSONException e) {
                 Log.e("JSONException", "Error: " + e.toString());
