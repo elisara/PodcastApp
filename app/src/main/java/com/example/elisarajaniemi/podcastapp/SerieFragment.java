@@ -11,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,8 +29,8 @@ import java.util.Comparator;
 
 public class SerieFragment extends Fragment implements AdapterView.OnItemSelectedListener, Serializable {
 
-    private ListView listView;
-    private SerieArrayAdapter adapter;
+    //private ListView listView;
+    private GridViewAdapter adapter;
     private EpisodeListArrayAdapter episodeAdapter;
     private ImageButton menuBtn;
     private Spinner spinner;
@@ -45,6 +49,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     private String[] backendCategories;
     private String sortValue;
     private SharedPreferences prefs;
+    private GridView gridView;
 
 
     @Override
@@ -69,8 +74,25 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             }
         });
 
-        listView = (ListView) view.findViewById(R.id.serieList);
+        gridView = (GridView) view.findViewById(R.id.episodeGridview);
+
+        //listView = (ListView) view.findViewById(R.id.serieList);
         categoryList = getListByCategories();
+
+        //gridView.setAdapter(new GridViewAdapter(getContext(), list));
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                PodcastItem pi = categoryList.get(position);
+                ef = new EpisodesFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("message", pi);
+                ef.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("sf")
+                        .replace(R.id.frag_container, ef).commit();
+            }
+        });
+        /**
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
@@ -84,6 +106,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             }
 
         });
+         */
         return view;
     }
 
@@ -110,7 +133,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
                     return pod1.collectionName.compareToIgnoreCase(pod2.collectionName); // To compare string values
                 }
             });
-            adapter = new SerieArrayAdapter(getContext(), categoryList);
+            adapter = new GridViewAdapter(getContext(), categoryList);
             System.out.println("SORT: NAME");
 
         } else if (value.contains("NEW")) {
@@ -120,12 +143,12 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
                 }
             });
 
-            adapter = new SerieArrayAdapter(getContext(), categoryList);
+            adapter = new GridViewAdapter(getContext(), categoryList);
             System.out.println("SORT: NEW");
         }
         sortValue = value;
         adapter.notifyDataSetChanged();
-        listView.setAdapter(adapter);
+        gridView.setAdapter(adapter);
     }
 
     @Override
@@ -193,9 +216,9 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             });
         }
 
-        adapter = new SerieArrayAdapter(getContext(), categoryList);
+        adapter = new GridViewAdapter(getContext(), categoryList);
         adapter.notifyDataSetChanged();
-        listView.setAdapter(adapter);
+        gridView.setAdapter(adapter);
         return categoryList;
 
     }

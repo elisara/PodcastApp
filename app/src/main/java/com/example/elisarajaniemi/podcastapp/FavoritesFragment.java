@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class FavoritesFragment extends Fragment {
 
     GridView gridView;
+    PodcastItems podcastItems = PodcastItems.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public class FavoritesFragment extends Fragment {
 
         gridView = (GridView) view.findViewById(R.id.gridView1);
 
-        ArrayList<PodcastItem> list = PodcastItems.getInstance().getItems();
+        ArrayList<PodcastItem> list = podcastItems.getItems();
 
         gridView.setAdapter(new GridViewAdapter(getContext(), list));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
