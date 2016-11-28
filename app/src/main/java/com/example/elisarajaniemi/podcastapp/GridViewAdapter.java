@@ -39,8 +39,6 @@ public class GridViewAdapter extends BaseAdapter {
     public GridViewAdapter(Context context, ArrayList<PodcastItem> list) {
         this.context = context;
         this.list = list;
-
-
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -80,18 +78,8 @@ public class GridViewAdapter extends BaseAdapter {
         //mActivity = new MainActivity();
         System.out.println("IMAGELOADER: " +imageLoader);
         System.out.println("IMAGEURL:" +  list.get(position).imageURL);
-        imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
-       /** if(!list.get(position).collectionName.contains("Metropolia")) {
-            imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/" + list.get(position).imageURL + ".jpg", new SimpleImageLoadingListener() {
-                ///w_500,h_500,c_fit
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    imageView.setImageBitmap(loadedImage);
-                }
-            });
-        }
-                */
 
+        imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
         imageView.setImageResource(R.drawable.ic_add_black_24dp);
         if(!list.get(position).collectionName.contains("Metropolia")) {
             imageLoader.displayImage("http://images.cdn.yle.fi/image/upload/" + list.get(position).imageURL + ".jpg", imageView, options);
@@ -119,36 +107,5 @@ public class GridViewAdapter extends BaseAdapter {
         return position;
     }
 
-    static class ViewHolder {
-        TextView imageTitle;
-        ImageView image;
-    }
-
-    public class ImageItem {
-        private String image;
-        private String title;
-
-        public ImageItem(String imageUrl, String title) {
-            super();
-            this.image = imageUrl;
-            this.title = title;
-        }
-
-        public String getImage() {
-            return image;
-        }
-
-        public void setImage(String image) {
-            this.image = image;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-    }
 }
 
