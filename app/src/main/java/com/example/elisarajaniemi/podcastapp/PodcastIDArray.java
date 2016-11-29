@@ -28,4 +28,8 @@ public class PodcastIDArray {
     public ArrayList<String> getItems(){
         return items;
     }
+
+    public void clearList(){
+        this.items.clear();
+    }
 }

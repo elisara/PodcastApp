@@ -81,7 +81,7 @@ public class EpisodesFragment extends Fragment {
         if(playlistID != 0) {
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "true").get();
-                //new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/"+podcastIDArray.getItems().get(i) + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "true").get();
+                System.out.println("EpisodesFragment onCreateView");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
