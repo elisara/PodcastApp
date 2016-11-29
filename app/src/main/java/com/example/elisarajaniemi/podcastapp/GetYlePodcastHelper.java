@@ -33,18 +33,20 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
     PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
 
-    public GetYlePodcastHelper(MainActivity mActivity){
-        this.mActivity=mActivity;
+    public GetYlePodcastHelper(MainActivity mActivity) {
+        this.mActivity = mActivity;
 
     }
+
     protected void onPreExecute() {
         super.onPreExecute();
+        System.out.println("onPreExecute");
         playlistPodcastItems.clearList();
+
     }
 
     @Override
     protected String doInBackground(String... params) {
-
 
 
         HttpURLConnection connection = null;
@@ -53,22 +55,23 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
 
         try {
             if (params[2].equalsIgnoreCase("false")) {
-            URL url = new URL(params[0] + params[1]);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
+                System.out.println("GetYlePodcastHelper IF");
+                URL url = new URL(params[0] + params[1]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
 
 
-            InputStream stream = connection.getInputStream();
+                InputStream stream = connection.getInputStream();
 
-            reader = new BufferedReader(new InputStreamReader(stream));
+                reader = new BufferedReader(new InputStreamReader(stream));
 
-            StringBuffer buffer = new StringBuffer();
-            String line = "";
+                StringBuffer buffer = new StringBuffer();
+                String line = "";
 
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
-            }
-            result = buffer.toString();
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line + "\n");
+                }
+                result = buffer.toString();
                 try {
                     JSONObject jsonObject = new JSONObject(result);
                     JSONArray jsonArray = jsonObject.getJSONArray("data");
@@ -106,27 +109,26 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 } catch (JSONException e) {
                     Log.e("JSONException", "Error: " + e.toString());
                 }
-            } else{
-                for(int i = 0; i < podcastIDArray.getItems().size(); i++) {
+            } else {
+                System.out.println("GetYlePodcastHelper ELSE, boolean arvo: " + params[2]);
+                for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
+                    System.out.println("GetYlePodcastHelper FOR, I arvo: " + i);
                     URL url = new URL(params[0] + podcastIDArray.getItems().get(i) + params[1]);
-                    System.out.println("URL: " + url);
                     connection = (HttpURLConnection) url.openConnection();
                     if (connection.getResponseCode() == 200) {
-                    connection.connect();
+                        connection.connect();
 
-                    InputStream stream = connection.getInputStream();
+                        InputStream stream = connection.getInputStream();
 
-                    reader = new BufferedReader(new InputStreamReader(stream));
+                        reader = new BufferedReader(new InputStreamReader(stream));
 
-                    StringBuffer buffer = new StringBuffer();
-                    String line = "";
+                        StringBuffer buffer = new StringBuffer();
+                        String line = "";
 
-                    while ((line = reader.readLine()) != null) {
-                        buffer.append(line + "\n");
-                    }
-                    result = buffer.toString();
-
-                    System.out.println("ResponceCode: " + connection.getResponseCode());
+                        while ((line = reader.readLine()) != null) {
+                            buffer.append(line + "\n");
+                        }
+                        result = buffer.toString();
 
                         try {
                             JSONObject jsonObject = new JSONObject(result);
@@ -146,8 +148,6 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                             }
 
                             String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaIDArray.get(0) + "&" + YLE_APP_KEY;
-                            System.out.println(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi") + ": https://external.api.yle.fi/v1/programs/items.json?id=" + jObject.getString("id") + "&" + YLE_APP_KEY);
-
                             PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"),
                                     jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"), jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaIDArray.get(0));
                             //System.out.println("Yle podcast collection name: " + jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));
@@ -193,6 +193,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        System.out.println("onPostExecute");
 
     }
 

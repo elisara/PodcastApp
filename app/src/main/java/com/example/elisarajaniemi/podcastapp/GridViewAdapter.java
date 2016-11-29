@@ -54,7 +54,6 @@ public class GridViewAdapter extends BaseAdapter {
                 .discCacheFileCount(100)
                 .imageDownloader(new BaseImageDownloader(context)) // default
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
-                .writeDebugLogs()
                 .build();
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -64,7 +63,7 @@ public class GridViewAdapter extends BaseAdapter {
                 .cacheOnDisc(true)
                 .build();
 
-        ImageLoader.getInstance().init(config);
+        //ImageLoader.getInstance().init(config);
 
         View myView = convertView;
 
@@ -76,9 +75,6 @@ public class GridViewAdapter extends BaseAdapter {
         }
 
         //mActivity = new MainActivity();
-        System.out.println("IMAGELOADER: " +imageLoader);
-        System.out.println("IMAGEURL:" +  list.get(position).imageURL);
-
         imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
         imageView.setImageResource(R.drawable.ic_add_black_24dp);
         if(!list.get(position).collectionName.contains("Metropolia")) {

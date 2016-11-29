@@ -60,7 +60,6 @@ public class PlaylistsFragment extends Fragment {
     private ArrayList<PlaylistItem> list;
     CurrentUser currentUser = CurrentUser.getInstance();
     Playlists playlists = Playlists.getInstance();
-    PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -331,6 +330,7 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
 
     protected void onPreExecute() {
         super.onPreExecute();
+        podcastIDArray.clearList();
     }
 
     @Override
@@ -369,19 +369,6 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
                     //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
                     podcastIDArray.addPodcastID(podcastID);
                 }
-
-                //System.out.println("Playlist podcasts: " + jsonArray);
-                /**for (int i = 0; i < jArray.length(); i++) {
-
-                    JSONObject jsonObject = jArray.getJSONObject(i);
-                    //User user = new User(jsonObject.getInt("id"), jsonObject.getString("username"), jsonObject.getString("email"));
-                    //users.addUser(user);
-
-                }// End Loop
-*/
-                //System.out.println("Users: " + users.getUsers());
-
-                //System.out.println("SeriID array size: " + serieItems.getSerieItems().size());
 
             } catch (JSONException e) {
                 Log.e("JSONException", "Error: " + e.toString());
