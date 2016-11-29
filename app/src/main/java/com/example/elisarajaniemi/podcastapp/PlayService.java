@@ -144,8 +144,9 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         try {
             if (mPlayer == null) initPlayer();
 
+            System.out.println("PlayService datasource: " + this.pi.decryptedURL);
+            mPlayer.setDataSource(""+this.pi.decryptedURL); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
 
-            mPlayer.setDataSource(this.pi.decryptedURL); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
             mPlayer.prepareAsync();
             createNotification();
 
