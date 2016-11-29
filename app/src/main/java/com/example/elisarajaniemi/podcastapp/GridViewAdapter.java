@@ -2,6 +2,7 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class GridViewAdapter extends BaseAdapter {
                 .discCacheFileCount(100)
                 .imageDownloader(new BaseImageDownloader(context)) // default
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
-                .writeDebugLogs()
+                //.writeDebugLogs()
                 .build();
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -64,12 +65,13 @@ public class GridViewAdapter extends BaseAdapter {
                 .cacheOnDisc(true)
                 .build();
 
-        ImageLoader.getInstance().init(config);
+        //ImageLoader.getInstance().init(config);
 
         View myView = convertView;
 
         if (myView == null) {
             myView = LayoutInflater.from(context).inflate(R.layout.gridview_item, parent, false);
+
 
         } else {
            myView = convertView;
@@ -78,7 +80,7 @@ public class GridViewAdapter extends BaseAdapter {
         imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
         imageView.setImageResource(R.drawable.ic_add_black_24dp);
         if(!list.get(position).collectionName.contains("Metropolia")) {
-            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_0.2/" + list.get(position).imageURL + ".jpg", imageView, options);
+            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_850,c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
             //w_705,h_520,c_fill,g_auto
         }
         else{
