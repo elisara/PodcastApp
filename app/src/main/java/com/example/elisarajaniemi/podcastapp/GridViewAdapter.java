@@ -78,7 +78,8 @@ public class GridViewAdapter extends BaseAdapter {
         imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
         imageView.setImageResource(R.drawable.ic_add_black_24dp);
         if(!list.get(position).collectionName.contains("Metropolia")) {
-            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload/" + list.get(position).imageURL + ".jpg", imageView, options);
+            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_0.2/" + list.get(position).imageURL + ".jpg", imageView, options);
+            //w_705,h_520,c_fill,g_auto
         }
         else{
             imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
