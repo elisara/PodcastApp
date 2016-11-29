@@ -54,6 +54,7 @@ public class GridViewAdapter extends BaseAdapter {
                 .discCacheFileCount(100)
                 .imageDownloader(new BaseImageDownloader(context)) // default
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
+                .writeDebugLogs()
                 .build();
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -70,15 +71,15 @@ public class GridViewAdapter extends BaseAdapter {
         if (myView == null) {
             myView = LayoutInflater.from(context).inflate(R.layout.gridview_item, parent, false);
 
+
         } else {
            myView = convertView;
         }
 
-        //mActivity = new MainActivity();
         imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
         imageView.setImageResource(R.drawable.ic_add_black_24dp);
         if(!list.get(position).collectionName.contains("Metropolia")) {
-            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_0.2/" + list.get(position).imageURL + ".jpg", imageView, options);
+            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_1000,h_650,c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
             //w_705,h_520,c_fill,g_auto
         }
         else{
