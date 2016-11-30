@@ -110,9 +110,8 @@ public class EpisodesFragment extends Fragment {
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
 
         simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
-        listView = (ListView) view.findViewById(R.id.single_playlist_list);
+        //listView = (ListView) view.findViewById(R.id.single_playlist_list);
         fillList();
-        sendToPlaylists();
 
         //expandAll();
 
@@ -134,6 +133,8 @@ public class EpisodesFragment extends Fragment {
                 return true;
             }
         });
+
+        /**
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -201,6 +202,7 @@ public class EpisodesFragment extends Fragment {
                 return true;
             }
         });
+         */
 
         return view;
     }
@@ -259,19 +261,15 @@ public class EpisodesFragment extends Fragment {
             list = favoritePodcastItems.getItems();
         }
 
-        adapter = new EpisodeListArrayAdapter(getContext(), list);
-        listView.setAdapter(adapter);
+        //adapter = new EpisodeListArrayAdapter(getContext(), list);
+        //listView.setAdapter(adapter);
 
         listAdapter = new CustomAdapter(getContext(), list);
         simpleExpandableListView.setAdapter(listAdapter);
 
     }
 
-    public void sendToPlaylists(){
-        if(adapter.addToPlaylist == true){
 
-        }
-    }
 
 }
 
