@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class CustomAdapter extends BaseExpandableListAdapter {
     private PodcastItem podcastItem;
     private PlaylistsFragment playlistsFragment;
     private MainActivity mainActivity;
+    private PlayerFragment playerFragment;
 
     public CustomAdapter(Context context, ArrayList<PodcastItem> groupList) {
         this.context = context;
@@ -90,7 +92,7 @@ public class CustomAdapter extends BaseExpandableListAdapter {
         ImageButton playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
         playBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                PlayerFragment playerFragment = new PlayerFragment();
+                playerFragment = new PlayerFragment();
                 Bundle bundle2 = new Bundle();
                 System.out.println("FromYLE: " + podcastItem.fromYLE);
                 if (podcastItem.fromYLE == true){
@@ -98,6 +100,7 @@ public class CustomAdapter extends BaseExpandableListAdapter {
                 }
                 bundle2.putSerializable("episode", podcastItem);
                 playerFragment.setArguments(bundle2);
+                ((MainActivity) context).setFragment(playerFragment);
 
             }
         });
@@ -194,4 +197,5 @@ public class CustomAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
     }
+
 }
