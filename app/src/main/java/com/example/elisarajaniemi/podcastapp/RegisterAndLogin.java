@@ -24,6 +24,7 @@ public class RegisterAndLogin {
     private boolean loggedIn;
     private User user;
     CurrentUser currentUser = CurrentUser.getInstance();
+    Users users = Users.getInstance();
     private Thread t;
     private boolean exists;
     private boolean registered;
@@ -37,10 +38,10 @@ public class RegisterAndLogin {
     public boolean registerUser(String username, String password, String password2, String email, Context context) {
 
         exists = false;
-        testIfExists(username, password);
+        testIfExists(username, password, context);
 
         if (password.equals(password2)) {
-            testIfExists(username, password);
+            testIfExists(username, password, context);
             System.out.println("Register: Password match");
 
             if (this.exists == false) {
@@ -68,7 +69,7 @@ public class RegisterAndLogin {
     public String login(String username, String password, Context context) {
 
         exists = false;
-        testIfExists(username, password);
+        testIfExists(username, password, context);
 
         System.out.println("LogIn: exists = " + exists + ", loggedIn = " + loggedIn);
 
@@ -107,7 +108,7 @@ public class RegisterAndLogin {
         return loggedIn;
     }
 
-    public boolean testIfExists(String username, String email) {
+    public boolean testIfExists(String username, String email, Context context) {
 
         currentUser.getCurrentUser().clear();
         //here check if user is not already registered
@@ -118,9 +119,14 @@ public class RegisterAndLogin {
 
         for (int i = 0; i < Users.getInstance().getUsers().size(); i++) {
             System.out.println("FOR Username: " + Users.getInstance().getUsers().get(i).username.length() + ", " + encryptedUsername.length());
-            if (Users.getInstance().getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)) {
+            if (users.getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)) {
                 System.out.println("----true---");
-                currentUser.addCurrentUser(Users.getInstance().getUsers().get(i));
+                //currentUser.addCurrentUser(Users.getInstance().getUsers().get(i));
+
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", token).apply();
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", users.getUsers().get(i).id).apply();
+
                 this.exists = true;
             } else {
                 System.out.println("ELSE");
@@ -209,11 +215,12 @@ public class RegisterAndLogin {
                 while ((output = br.readLine()) != null) {
                     try {
                         JSONObject jObject = new JSONObject(output);
+                        System.out.println("Login Output: " + jObject);
                         token = jObject.getString("token");
                         System.out.println("Token: " + token);
-                        user = new User(CurrentUser.getInstance().getCurrentUser().get(0).id, CurrentUser.getInstance().getCurrentUser().get(0).username, CurrentUser.getInstance().getCurrentUser().get(0).email, token);
-                        currentUser.replaceCurrentUser(user);
-                        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ currentUser.getCurrentUser().get(0).id + "?token=" + currentUser.getCurrentUser().get(0).token);
+                        //user = new User(CurrentUser.getInstance().getCurrentUser().get(0).id, CurrentUser.getInstance().getCurrentUser().get(0).username, CurrentUser.getInstance().getCurrentUser().get(0).email, token);
+                        //currentUser.replaceCurrentUser(user);
+                        //new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ currentUser.getCurrentUser().get(0).id + "?token=" + currentUser.getCurrentUser().get(0).token);
                     } catch (JSONException e) {
                         System.out.println(e);
                     }
