@@ -54,7 +54,6 @@ public class GridViewAdapter extends BaseAdapter {
                 .discCacheFileCount(100)
                 .imageDownloader(new BaseImageDownloader(context)) // default
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
-                .writeDebugLogs()
                 .build();
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -64,7 +63,6 @@ public class GridViewAdapter extends BaseAdapter {
                 .cacheOnDisc(true)
                 .build();
 
-        //ImageLoader.getInstance().init(config);
 
         View myView = convertView;
 

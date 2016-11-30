@@ -71,22 +71,33 @@ public class EpisodesFragment extends Fragment {
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
     private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
+    private boolean fromFavorites;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         pi = (PodcastItem) getArguments().getSerializable("message");
         playlistID = getArguments().getInt("playlistID");
+        fromFavorites = getArguments().getBoolean("fromFavorites");
+
 
         if(playlistID != 0) {
             try {
-                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "true").get();
-                System.out.println("EpisodesFragment onCreateView");
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromplaylist").get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+        } else if(fromFavorites == true){
+            try {
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromfavorites").get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
         }
 
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
@@ -102,7 +113,13 @@ public class EpisodesFragment extends Fragment {
                 Bundle bundle2 = new Bundle();
                 System.out.println("FromYLE: " + pi.fromYLE);
                 if (pi.fromYLE == true){
-                    new DecodeURL().execute(pi);
+                    try {
+                        new DecodeURL().execute(pi).get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 }
                 bundle2.putSerializable("episode", pi);
                 pf.setArguments(bundle2);

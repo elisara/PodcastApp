@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Elisa Rajaniemi on 26.10.2016.
@@ -50,6 +51,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     CurrentUser currentUser =  CurrentUser.getInstance();
     private SerieFragment sf;
     private FavoritesFragment favoritesFragment;
+    private EpisodesFragment ef;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -131,11 +133,22 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 break;
 
             case R.id.favorites:
+                try {
+                    favoritesFragment.getFavorites("http://media.mw.metropolia.fi/arsu/favourites/?token=", currentUser.getCurrentUser().get(0).token);
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 System.out.println("FAVS");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, favoritesFragment).addToBackStack( "tag" ).commit();
+                ef = new EpisodesFragment();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("fromFavorites", true);
+                ef.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favoritesFragment")
+                        .replace(R.id.frag_container, ef).commit();
                 break;
 
             case R.id.signIn:
