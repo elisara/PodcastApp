@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import static java.security.AccessController.getContext;
 
@@ -31,6 +32,9 @@ public class CustomAdapter extends BaseExpandableListAdapter {
     private PlaylistsFragment playlistsFragment;
     private MainActivity mainActivity;
     private PlayerFragment playerFragment;
+    CurrentUser currentUser = CurrentUser.getInstance();
+    private FavoritesFragment favoritesFragment;
+
 
     public CustomAdapter(Context context, ArrayList<PodcastItem> groupList) {
         this.context = context;
@@ -163,7 +167,15 @@ public class CustomAdapter extends BaseExpandableListAdapter {
 
                 toFavorites.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        System.out.println("Clicked to queue");
+                        System.out.println("Clicked on: " + podcastItem.programID + ", CurrentUser: " + currentUser.getCurrentUser().get(0).id);
+                        try {
+                            favoritesFragment.addToFavorites(podcastItem.programID.replace("-", ""), currentUser.getCurrentUser().get(0).id,
+                                    "http://media.mw.metropolia.fi/arsu/favourites?token=", currentUser.getCurrentUser().get(0).token);
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         alertDialog.cancel();
                     }
                 });
