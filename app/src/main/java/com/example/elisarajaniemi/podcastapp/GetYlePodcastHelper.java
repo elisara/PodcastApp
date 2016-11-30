@@ -63,7 +63,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
                     result = makeConnection(params[0] + podcastIDArray.getItems().get(i) + params[1]);
                     try {
-                        playlistPodcastItems.addAll(makePodcastItem(result));
+                        playlistPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                     } catch (JSONException e) {
                         Log.e("JSONException", "Error: " + e.toString());
                     }
@@ -74,7 +74,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
                     result = makeConnection(params[0] + podcastIDArray.getItems().get(i) + params[1]);
                     try {
-                        favoritePodcastItems.addAll(makePodcastItem(result));
+                        favoritePodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                     } catch (JSONException e) {
                         Log.e("JSONException", "Error: " + e.toString());
                     }
@@ -98,36 +98,11 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
 
         JSONObject jsonObject = new JSONObject(result);
         JSONArray jsonArray = jsonObject.getJSONArray("data");
-        ArrayList<String> mediaIDArray = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             PodcastItem podcastItem = new PodcastItem();
-            JSONObject jObject = jsonArray.getJSONObject(i);
-            JSONArray publicationEventArray = jObject.getJSONArray("publicationEvent");
+            podcastItem = getSinglePodcast(jsonArray.getJSONObject(i));
 
-            for (int i1 = 0; i1 < publicationEventArray.length(); i1++) {
-                JSONObject publicationEventObject = publicationEventArray.getJSONObject(i1);
-                if (publicationEventObject.getJSONObject("media").length() > 0) {
-                    mediaIDArray.add(publicationEventObject.getJSONObject("media").getString("id"));
-                }
-            }
-
-            JSONArray categoryArray = jObject.getJSONArray("subject");
-            ArrayList<String> categorys = new ArrayList<>();
-
-            for (int i2 = 0; i2 < categoryArray.length(); i2++) {
-                JSONObject categoryObject = categoryArray.getJSONObject(i2);
-
-
-                categorys.add(categoryObject.getJSONObject("title").getString("fi"));
-
-            }
-            String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaIDArray.get(i) + "&" + YLE_APP_KEY;
-            if (jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi")) {
-                System.out.println(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi") + ": https://external.api.yle.fi/v1/programs/items.json?id=" + jObject.getString("id") + "&" + YLE_APP_KEY);
-
-                podcastItem.alterPodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"),
-                        jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"), jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaIDArray.get(i), categorys, podcastLength(jObject.getString("duration").substring(2)));
-
+            if (podcastItem.programID != null) {
                 if (tempPodcastList.size() == 0)
                     tempPodcastList.add(podcastItem);
                 else {
@@ -143,8 +118,9 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 }
             }
         }
-        return tempPodcastList;
-    }
+
+    return tempPodcastList;
+}
 
     public String makeConnection(String urli) throws IOException {
         HttpURLConnection connection = null;
@@ -199,6 +175,41 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
             pituusInt = pituusInt + Integer.parseInt(pituusString.substring(0, i));
         }
         return pituusInt;
+    }
+
+    public PodcastItem getSinglePodcast(JSONObject jObject) throws JSONException {
+
+        PodcastItem podcastItem = new PodcastItem();
+        JSONArray publicationEventArray = jObject.getJSONArray("publicationEvent");
+        String mediaID = "";
+
+        for (int i1 = 0; i1 < publicationEventArray.length(); i1++) {
+            JSONObject publicationEventObject = publicationEventArray.getJSONObject(i1);
+            if (publicationEventObject.getJSONObject("media").length() > 0) {
+                mediaID = publicationEventObject.getJSONObject("media").getString("id");
+            }
+        }
+
+        JSONArray categoryArray = jObject.getJSONArray("subject");
+        ArrayList<String> categorys = new ArrayList<>();
+
+        for (int i2 = 0; i2 < categoryArray.length(); i2++) {
+            JSONObject categoryObject = categoryArray.getJSONObject(i2);
+
+
+            categorys.add(categoryObject.getJSONObject("title").getString("fi"));
+
+        }
+        String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaID + "&" + YLE_APP_KEY;
+        if (jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi")) {
+            System.out.println(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi") + ": https://external.api.yle.fi/v1/programs/items.json?id=" + jObject.getString("id") + "&" + YLE_APP_KEY);
+
+            podcastItem.alterPodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"),
+                    jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"), jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaID, categorys, podcastLength(jObject.getString("duration").substring(2)));
+
+        }
+
+        return podcastItem;
     }
 
 }
