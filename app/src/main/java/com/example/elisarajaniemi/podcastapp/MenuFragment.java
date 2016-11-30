@@ -41,7 +41,6 @@ import java.util.concurrent.ExecutionException;
 public class MenuFragment extends DialogFragment implements View.OnClickListener {
 
     private MainActivity ma;
-    private GetUsersHelper getUsersHelper;
     private TextView playList, favorite, queue, history, continuePlay, signIn, usernameView;
     private PlaylistsFragment plf;
     private LinearLayout userLayout;
@@ -61,8 +60,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.menu_layout, container , false);
         user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "Username1");
 
-        getUsersHelper = new GetUsersHelper();
-        getUsersHelper.execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+        new GetUsersHelper().execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
                 "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
                 "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
                 "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM");
@@ -107,6 +105,14 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.playlists:
+                try {
+                    new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0)
+                    + "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0")).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
                 getActivity().getSupportFragmentManager().beginTransaction()
@@ -188,8 +194,6 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "Username3");
 
                             System.out.println("-------------PREF USER: " + user);
-
-                            System.out.println("CurrentUser array size: " + currentUser.getCurrentUser().size());
 
                             if(user.length() > 0) {
                                 System.out.println("--------User in list-------");
