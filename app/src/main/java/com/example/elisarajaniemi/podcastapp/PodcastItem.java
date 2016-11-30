@@ -30,12 +30,12 @@ public class PodcastItem implements Serializable {
 
     }
 
-    public PodcastItem alterPodcastItem(String title, String url, String description, String collectionName,String imageURL, String programID, String mediaID, ArrayList<String> categorys){
+    public PodcastItem alterPodcastItem(String title, String url, String description, String collectionName,String imageURL, String programID, String mediaID, ArrayList<String> categorys, int length){
 
         this.title = title;
         this.url = url;
         this.description = description;
-        this.length = 0;
+        this.length = length;
         this.category = "";
         this.tags = "";
         this.collectionName = collectionName;

@@ -134,7 +134,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
                 }
             });
             adapter = new GridViewAdapter(getContext(), categoryList);
-            System.out.println("SORT: NAME");
+
 
         } else if (value.contains("NEW")) {
             Collections.sort(categoryList, new Comparator<PodcastItem>() {
@@ -144,7 +144,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             });
 
             adapter = new GridViewAdapter(getContext(), categoryList);
-            System.out.println("SORT: NEW");
+
         }
         sortValue = value;
         adapter.notifyDataSetChanged();
@@ -190,17 +190,18 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         backendCategories = new String[] {"category:huumori", "category:technology", "category:economy",
                 "category:terveys", "category:politics", "category:nature",
                 "category:music", "category:entertainment", "category:history"};
-        System.out.println("kuinka monta: " + PodcastItems.getInstance().getItems().size());
+
 
         for (int i = 0; i < PodcastItems.getInstance().getItems().size(); i++) {
             for(int u = 0; u < backendCategories.length; u++) {
                 getCategory(backendCategories[u], prefCategoryList.get(u), i);
             }
             if (all == true) {
-                if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
+                //if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
                     categoryList.add(0,PodcastItems.getInstance().getItems().get(i));
 
-                }
+
+                //}
             }
         }
         if(sortValue.contains("NAME")){
@@ -229,6 +230,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(categoryInBackend) && prefCategory == true) {
             if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
                 categoryList.add(PodcastItems.getInstance().getItems().get(i));
+
             }
         }
     }
@@ -236,7 +238,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     public boolean testIfListContains(ArrayList<PodcastItem> testList, PodcastItem podcastItem) {
         boolean listContains = false;
         for (int i = 0; i < testList.size(); i++) {
-            if (testList.get(i).collectionName.equalsIgnoreCase(podcastItem.collectionName)) {
+            if (testList.get(i).title.equalsIgnoreCase(podcastItem.title)) {
                 listContains = true;
             }
         }
