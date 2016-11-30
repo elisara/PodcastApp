@@ -131,7 +131,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
             case R.id.favorites:
                 try {
-                    favoritesFragment.getFavorites("http://media.mw.metropolia.fi/arsu/favourites/?token=", currentUser.getCurrentUser().get(0).token);
+                    favoritesFragment.getFavorites("http://media.mw.metropolia.fi/arsu/favourites/?token=", PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {

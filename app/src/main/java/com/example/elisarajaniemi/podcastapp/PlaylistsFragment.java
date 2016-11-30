@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -83,7 +84,7 @@ public class PlaylistsFragment extends Fragment {
 
                 try {
                     new GetPlaylistPodcasts().execute("http://media.mw.metropolia.fi/arsu/playlists/"+value.id +
-                            "?token=" + currentUser.getCurrentUser().get(0).token).get();
+                            "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0")).get();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
