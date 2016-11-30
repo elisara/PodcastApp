@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Elisa Rajaniemi on 27.10.2016.
@@ -25,6 +26,8 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
     PodcastItem value, podcastItem;
     PlaylistItem playlistItem;
     PlaylistsFragment playlistsFragment;
+    FavoritesFragment favoritesFragment;
+    CurrentUser currentUser = CurrentUser.getInstance();
     boolean addToPlaylist = false;
 
     public EpisodeListArrayAdapter(Context context, ArrayList<PodcastItem> list) {
@@ -35,6 +38,7 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         playlistsFragment = new PlaylistsFragment();
+        favoritesFragment = new FavoritesFragment();
 
         value = getItem(position);
         if (convertView == null) {
@@ -104,7 +108,15 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
 
                 toFavorites.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        System.out.println("Clicked to queue");
+                        System.out.println("Clicked on: " + value.programID + ", CurrentUser: " + currentUser.getCurrentUser().get(0).id);
+                        try {
+                            favoritesFragment.addToFavorites(value.programID.replace("-", ""), currentUser.getCurrentUser().get(0).id,
+                                    "http://media.mw.metropolia.fi/arsu/favourites?token=", currentUser.getCurrentUser().get(0).token);
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         alertDialog.cancel();
                     }
                 });

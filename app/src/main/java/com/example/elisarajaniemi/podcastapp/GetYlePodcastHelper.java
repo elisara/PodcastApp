@@ -31,6 +31,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
     private String result = "";
     public PodcastItems podcastItems = PodcastItems.getInstance();
     PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
+    FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
 
     public GetYlePodcastHelper(MainActivity mActivity) {
@@ -52,9 +53,9 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
-
         try {
-            if (params[2].equalsIgnoreCase("false")) {
+            if (params[2].equalsIgnoreCase("fromepisodes")) {
+                System.out.println("From Episodes");
                 System.out.println("GetYlePodcastHelper IF");
                 URL url = new URL(params[0] + params[1]);
                 connection = (HttpURLConnection) url.openConnection();
@@ -109,10 +110,9 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 } catch (JSONException e) {
                     Log.e("JSONException", "Error: " + e.toString());
                 }
-            } else {
-                System.out.println("GetYlePodcastHelper ELSE, boolean arvo: " + params[2]);
+            } else if (params[2].equalsIgnoreCase("fromplaylist")) {
+                System.out.println("From Playlists");
                 for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
-                    System.out.println("GetYlePodcastHelper FOR, I arvo: " + i);
                     URL url = new URL(params[0] + podcastIDArray.getItems().get(i) + params[1]);
                     connection = (HttpURLConnection) url.openConnection();
                     if (connection.getResponseCode() == 200) {
@@ -161,6 +161,64 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                                 }
                                 if (titleFound == false)
                                     playlistPodcastItems.addPodcastItem(podcastItem);
+                            }
+
+                        } catch (JSONException e) {
+                            Log.e("JSONException", "Error: " + e.toString());
+                        }
+                    }
+                }
+            } else if (params[2].equalsIgnoreCase("fromfavorites")) {
+                System.out.println("From Favorites");
+                for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
+                    URL url = new URL(params[0] + podcastIDArray.getItems().get(i) + params[1]);
+                    connection = (HttpURLConnection) url.openConnection();
+                    if (connection.getResponseCode() == 200) {
+                        connection.connect();
+
+                        InputStream stream = connection.getInputStream();
+
+                        reader = new BufferedReader(new InputStreamReader(stream));
+
+                        StringBuffer buffer = new StringBuffer();
+                        String line = "";
+
+                        while ((line = reader.readLine()) != null) {
+                            buffer.append(line + "\n");
+                        }
+                        result = buffer.toString();
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            JSONObject jObject = new JSONObject(jsonObject.getString("data"));
+                            ArrayList<String> mediaIDArray = new ArrayList<>();
+                            //JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            //ArrayList<String> mediaIDArray = new ArrayList<>();
+
+                            //JSONObject jObject = jsonArray.getJSONObject(i);
+                            JSONArray publicationEventArray = jObject.getJSONArray("publicationEvent");
+
+                            for (int i1 = 0; i1 < publicationEventArray.length(); i1++) {
+                                JSONObject publicationEventObject = publicationEventArray.getJSONObject(i1);
+                                if (publicationEventObject.getJSONObject("media").length() > 0) {
+                                    mediaIDArray.add(0, publicationEventObject.getJSONObject("media").getString("id"));
+                                }
+                            }
+
+                            String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaIDArray.get(0) + "&" + YLE_APP_KEY;
+                            PodcastItem podcastItem = new PodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"),
+                                    jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"), jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaIDArray.get(0));
+                            //System.out.println("Yle podcast collection name: " + jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));
+                            if (favoritePodcastItems.getItems().size() == 0)
+                                favoritePodcastItems.addPodcastItem(podcastItem);
+                            else {
+                                boolean titleFound = false;
+                                for (int k = 0; k < favoritePodcastItems.getItems().size(); k++) {
+                                    if (favoritePodcastItems.getItems().get(k).programID.equalsIgnoreCase(podcastItem.programID))
+                                        titleFound = true;
+                                }
+                                if (titleFound == false)
+                                    favoritePodcastItems.addPodcastItem(podcastItem);
                             }
 
                         } catch (JSONException e) {
