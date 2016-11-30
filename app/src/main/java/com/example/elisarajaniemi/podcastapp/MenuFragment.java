@@ -179,6 +179,8 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
 
                             System.out.println("-------------PREF USER: " + user);
+                            System.out.println("-------------PREF TOKEN: " + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+                            System.out.println("-------------PREF ID: " + PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0));
 
                             if(user.length() > 0) {
                                 System.out.println("--------User in list-------");
