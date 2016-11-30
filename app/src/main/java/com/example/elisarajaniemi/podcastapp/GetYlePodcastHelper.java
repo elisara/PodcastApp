@@ -141,7 +141,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                         }
 
                     }
-                    if (titleFound == false) tempPodcastList.add(podcastItem);
+                    if (titleFound == false) tempPodcastList.add(0,podcastItem);
                 }
             }
 

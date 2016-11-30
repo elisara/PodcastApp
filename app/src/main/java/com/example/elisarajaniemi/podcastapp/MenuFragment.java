@@ -7,31 +7,16 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -56,10 +41,11 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     private EpisodesFragment ef;
     private String user;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.menu_layout, container , false);
-        user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "Username1");
+        user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
 
         getUsersHelper = new GetUsersHelper();
         getUsersHelper.execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
@@ -184,8 +170,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             password_ = password.getText().toString();
                             rali.login(username_, password_, getContext());
                             Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
-                            //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                            user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "Username3");
+                            user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
 
                             System.out.println("-------------PREF USER: " + user);
 

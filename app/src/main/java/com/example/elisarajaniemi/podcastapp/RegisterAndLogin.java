@@ -80,6 +80,11 @@ public class RegisterAndLogin {
             loggedIn = true;
 
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
+            /**
+            sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString("current_user", username);
+            editor.commit();*/
 
             System.out.println("Current userID: " + currentUser.getCurrentUser().get(0).id + " CurrentUser array size: " + currentUser.getCurrentUser().size());
         } else {

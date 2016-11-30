@@ -3,8 +3,6 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by Elisa Rajaniemi on 30.11.2016.
@@ -56,7 +51,6 @@ public class CustomAdapter extends BaseExpandableListAdapter {
         return groupList.get(groupPosition);
     }
 
-    //TÄMÄ???
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         String description = groupList.get(groupPosition).description;
@@ -91,7 +85,6 @@ public class CustomAdapter extends BaseExpandableListAdapter {
         tv.setText(podcastItem.title);
 
         ImageView iv = (ImageView) myView.findViewById(R.id.episodeIcon);
-        //iv.setImageBitmap(value.picture);
 
         ImageButton playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
         playBtn.setOnClickListener(new View.OnClickListener() {
@@ -118,8 +111,6 @@ public class CustomAdapter extends BaseExpandableListAdapter {
         ImageButton button = (ImageButton) myView.findViewById(R.id.itemMenu);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                System.out.println("item imagebutton clicked");
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                 alertDialogBuilder.setTitle("Add to");
 
@@ -208,7 +199,6 @@ public class CustomAdapter extends BaseExpandableListAdapter {
 
         TextView descriptionView = (TextView) myView.findViewById(R.id.description_view);
         descriptionView.setText(description);
-        System.out.println("------------CHILD VIEW");
 
         return myView;
     }
