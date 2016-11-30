@@ -119,9 +119,7 @@ public class EpisodesFragment extends Fragment {
         simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                //get the group header
                 PodcastItem podcastItem = list.get(groupPosition);
-                //display it or do something with it
                 return false;
             }
         });

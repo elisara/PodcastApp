@@ -50,7 +50,6 @@ public class MyCrypt {
             e1.printStackTrace();
         }
         String base64 = Base64.encodeToString(data, Base64.DEFAULT);
-        System.out.println("Encoded text: " + base64);
 
         // Receiving side
         byte[] data1 = Base64.decode(base64, Base64.DEFAULT);
@@ -60,7 +59,6 @@ public class MyCrypt {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        System.out.println("Decoded text: " + text1);
 
     }
 
@@ -76,8 +74,6 @@ public class MyCrypt {
             e1.printStackTrace();
         }
         String base64 = Base64.encodeToString(data, Base64.DEFAULT);
-        System.out.println("Encoded text: " + base64);
-
         return base64;
 
     }
@@ -92,8 +88,6 @@ public class MyCrypt {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        System.out.println("Decoded text: " + text1);
-
         return text1;
 
     }

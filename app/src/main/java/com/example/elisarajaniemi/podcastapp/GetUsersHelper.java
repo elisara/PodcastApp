@@ -59,6 +59,7 @@ public class GetUsersHelper extends AsyncTask<String, String, String> {
                     JSONObject jsonObject = jArray.getJSONObject(i);
                     User user = new User(jsonObject.getInt("id"), jsonObject.getString("username"), jsonObject.getString("email"));
                     users.addUser(user);
+                    System.out.println("USER ADDED: " + user.id);
 
                 }// End Loop
 

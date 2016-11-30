@@ -75,11 +75,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         });
 
         gridView = (GridView) view.findViewById(R.id.episodeGridview);
-
-        //listView = (ListView) view.findViewById(R.id.serieList);
         categoryList = getListByCategories();
-
-        //gridView.setAdapter(new GridViewAdapter(getContext(), list));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -92,21 +88,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
                         .replace(R.id.frag_container, ef).commit();
             }
         });
-        /**
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                PodcastItem pi = categoryList.get(position);
-                ef = new EpisodesFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("message", pi);
-                ef.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("sf")
-                        .replace(R.id.frag_container, ef).commit();
-            }
 
-        });
-         */
         return view;
     }
 
@@ -125,7 +107,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String value = parent.getItemAtPosition(position).toString();
-        //categoryList = getListByCategories();
+
         if (value.contains("NAME")) {
 
             Collections.sort(categoryList, new Comparator<PodcastItem>() {
@@ -226,15 +208,16 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
 
     }
 
+    //test if podcast's categories match to application's categories
     public void getCategory(String categoryInBackend, Boolean prefCategory, int i) {
         if (PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(categoryInBackend) && prefCategory == true) {
-            if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
+            //if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
                 categoryList.add(PodcastItems.getInstance().getItems().get(i));
-
-            }
+            //}
         }
     }
 
+    /**
     public boolean testIfListContains(ArrayList<PodcastItem> testList, PodcastItem podcastItem) {
         boolean listContains = false;
         for (int i = 0; i < testList.size(); i++) {
@@ -244,6 +227,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         }
         return listContains;
     }
+     */
 
 
 }

@@ -171,7 +171,6 @@ class GetFavorites extends AsyncTask<Object, String, String> {
                     String podcastID = jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length());
                     //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
                     podcastIDArray.addPodcastID(podcastID);
-                    System.out.println("Added favorite: " + podcastIDArray.getItems().get(i));
                 }
 
             } catch (JSONException e) {

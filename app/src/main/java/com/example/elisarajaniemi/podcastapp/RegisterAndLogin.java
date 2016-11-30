@@ -2,34 +2,41 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Elisa Rajaniemi on 10.11.2016.
  */
 
-public class RegisterAndLogin {
+public class RegisterAndLogin{
 
     private boolean loggedIn;
     private User user;
     CurrentUser currentUser = CurrentUser.getInstance();
+    Users users = Users.getInstance();
     private Thread t;
     private boolean exists;
     private boolean registered;
     private String encryptedPassword, encryptedUsername, encryptedEmail;
     private MyCrypt myCrypt = new MyCrypt();
     private String token;
+    private int userID;
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedpreferences;
 
@@ -37,10 +44,10 @@ public class RegisterAndLogin {
     public boolean registerUser(String username, String password, String password2, String email, Context context) {
 
         exists = false;
-        testIfExists(username, password);
+        testIfExists(username, password, context);
 
         if (password.equals(password2)) {
-            testIfExists(username, password);
+            testIfExists(username, password, context);
             System.out.println("Register: Password match");
 
             if (this.exists == false) {
@@ -66,22 +73,27 @@ public class RegisterAndLogin {
     }
 
     public String login(String username, String password, Context context) {
-
         exists = false;
-        testIfExists(username, password);
-
-        System.out.println("LogIn: exists = " + exists + ", loggedIn = " + loggedIn);
+        testIfExists(username, password, context);
 
         if (exists == true && loggedIn != true) {
             this.encryptedUsername = myCrypt.doEncoding(username).toString();
             this.encryptedPassword = myCrypt.doEncoding(password).toString();
-            t = new Thread(r2);
-            t.start();
+
+            try{
+                token = new Token().execute(encryptedUsername,encryptedPassword).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
             loggedIn = true;
 
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", token).apply();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", userID).apply();
 
-            System.out.println("Current userID: " + currentUser.getCurrentUser().get(0).id + " CurrentUser array size: " + currentUser.getCurrentUser().size());
         } else {
             System.out.println("Login: User doesn't exist");
             loggedIn = false;
@@ -102,24 +114,23 @@ public class RegisterAndLogin {
         return loggedIn;
     }
 
-    public boolean testIfExists(String username, String email) {
-
+    public boolean testIfExists(String username, String email, Context context) {
         currentUser.getCurrentUser().clear();
-        //here check if user is not already registered
+
+        //here check if user is registered
         this.encryptedUsername = myCrypt.doEncoding(username).trim();
         this.encryptedEmail = myCrypt.doEncoding(email).toString();
 
-        //exists = false;
-
         for (int i = 0; i < Users.getInstance().getUsers().size(); i++) {
-            System.out.println("FOR Username: " + Users.getInstance().getUsers().get(i).username.length() + ", " + encryptedUsername.length());
-            if (Users.getInstance().getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)) {
-                System.out.println("----true---");
-                currentUser.addCurrentUser(Users.getInstance().getUsers().get(i));
+
+            if (users.getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)) {
+                //currentUser.addCurrentUser(Users.getInstance().getUsers().get(i));
+                token = users.getUsers().get(i).token;
+                userID = users.getUsers().get(i).id;
+
                 this.exists = true;
-            } else {
-                System.out.println("ELSE");
             }
+
         }
         System.out.println("Test exists: " + exists);
         return this.exists;
@@ -179,57 +190,6 @@ public class RegisterAndLogin {
 
     };
 
-    Runnable r2 = new Runnable() {
-        public void run() {
-            try {
-                URL url = new URL("http://media.mw.metropolia.fi/arsu/login");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-
-                String input = "{\"username\":\"" + encryptedUsername + "\",\"password\":\"" + encryptedPassword + "\"}";
-                input = input.replace("\n", "");
-                System.out.println(input);
-
-                OutputStream os = conn.getOutputStream();
-                os.write(input.getBytes());
-                os.flush();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
-
-                String output;
-
-                while ((output = br.readLine()) != null) {
-                    try {
-                        JSONObject jObject = new JSONObject(output);
-                        token = jObject.getString("token");
-                        System.out.println("Token: " + token);
-                        user = new User(CurrentUser.getInstance().getCurrentUser().get(0).id, CurrentUser.getInstance().getCurrentUser().get(0).username, CurrentUser.getInstance().getCurrentUser().get(0).email, token);
-                        currentUser.replaceCurrentUser(user);
-                        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ currentUser.getCurrentUser().get(0).id + "?token=" + currentUser.getCurrentUser().get(0).token);
-                    } catch (JSONException e) {
-                        System.out.println(e);
-                    }
-                }
-
-                conn.disconnect();
-            } catch (
-                    MalformedURLException e
-                    ) {
-                e.printStackTrace();
-
-            } catch (
-                    IOException e
-                    )
-
-            {
-                e.printStackTrace();
-            }
-        }
-
-    };
-
 
 }
+
