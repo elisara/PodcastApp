@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/collectionTitle"
-            android:text="Episodes lol"
+            android:text="Serie"
             android:textAlignment="center"
             android:layout_gravity="center"
             android:textSize="40dp"
@@ -21,6 +21,16 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/expandable_listview"
+        android:layout_width="match_parent"
+        android:divider="@color/colorAccent"
+        android:dividerHeight="1dp"
+        android:listSelector="@color/colorPrimary"
+        android:childDivider="@color/colorPrimaryDark"
+        android:layout_height="wrap_content">
+    </ExpandableListView>
 
     <ListView
         android:id="@+id/single_playlist_list"

@@ -70,6 +70,7 @@ public class GridViewAdapter extends BaseAdapter {
             myView = LayoutInflater.from(context).inflate(R.layout.gridview_item, parent, false);
 
 
+
         } else {
            myView = convertView;
         }
