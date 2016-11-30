@@ -71,6 +71,7 @@ public class EpisodesFragment extends Fragment {
     public PodcastItems podcastItems = PodcastItems.getInstance();
     public PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
+    FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
     private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
@@ -84,8 +85,10 @@ public class EpisodesFragment extends Fragment {
         playlistID = getArguments().getInt("playlistID");
         fromFavorites = getArguments().getBoolean("fromFavorites");
 
+        System.out.println("From Favorites: " + fromFavorites);
 
-        if(playlistID != 0) {
+
+        if(playlistID != 0 && fromFavorites == false) {
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromplaylist").get();
             } catch (InterruptedException e) {
@@ -93,7 +96,7 @@ public class EpisodesFragment extends Fragment {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-        } else if(fromFavorites == true){
+        } else if(playlistID == 0 && fromFavorites == true){
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromfavorites").get();
             } catch (InterruptedException e) {
@@ -242,16 +245,18 @@ public class EpisodesFragment extends Fragment {
 
     public void fillList(){
         list = new ArrayList<>();
-        if(list.size() == 0 && playlistID == 0) {
+        if(list.size() == 0 && playlistID == 0 && fromFavorites == false) {
             for (int i = 0; i < listAll.size(); i++) {
                 if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
                     list.add(listAll.get(i));
                 }
             }
-        } else if(list.size() == 0 && playlistID != 0){
+        } else if(list.size() == 0 && playlistID != 0 && fromFavorites == false){
             System.out.println("PlaylistPodcastItems size: " + playlistPodcastItems.getItems().size());
             list = playlistPodcastItems.getItems();
 
+        } else if(list.size() == 0 && fromFavorites == true){
+            list = favoritePodcastItems.getItems();
         }
 
         adapter = new EpisodeListArrayAdapter(getContext(), list);
