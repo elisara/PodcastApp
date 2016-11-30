@@ -118,7 +118,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             adapter = new GridViewAdapter(getContext(), categoryList);
 
 
-        } else if (value.contains("NEW")) {
+        } else if (value.contains("TOP")) {
             Collections.sort(categoryList, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
@@ -128,6 +128,27 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             adapter = new GridViewAdapter(getContext(), categoryList);
 
         }
+        else if (value.contains("NEW")) {
+            Collections.sort(categoryList, new Comparator<PodcastItem>() {
+                public int compare(PodcastItem pod1, PodcastItem pod2) {
+                    return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
+                }
+            });
+
+            adapter = new GridViewAdapter(getContext(), categoryList);
+
+        }
+        else if (value.contains("LENGTH")) {
+            Collections.sort(categoryList, new Comparator<PodcastItem>() {
+                public int compare(PodcastItem pod1, PodcastItem pod2) {
+                    return Integer.valueOf(pod1.length).compareTo(pod2.length);
+                }
+            });
+
+            adapter = new GridViewAdapter(getContext(), categoryList);
+
+        }
+
         sortValue = value;
         adapter.notifyDataSetChanged();
         gridView.setAdapter(adapter);
