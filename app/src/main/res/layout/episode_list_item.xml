@@ -7,12 +7,13 @@
     android:layout_height="72dp"
     android:weightSum="100">
 
-    <ImageView
+    <ImageButton
         android:id="@+id/episodeIcon"
         android:paddingRight="16dp"
         android:layout_weight="30"
-        android:src="@drawable/ic_favorite_black_24dp"
+        android:src="@drawable/ic_play_arrow_black_50dp"
         android:layout_width="0dp"
+        android:background="@android:color/transparent"
         android:layout_height="match_parent" />
 
     <TextView

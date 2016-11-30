@@ -167,7 +167,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
                 break;
             case R.id.shareBtn:
-
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, piFromClick.title + " " + piFromClick.decryptedURL);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
                 break;
         }
     }
