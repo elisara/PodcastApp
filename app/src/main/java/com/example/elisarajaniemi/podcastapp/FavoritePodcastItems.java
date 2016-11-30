@@ -24,7 +24,9 @@ public class FavoritePodcastItems {
             items.add(item);
         }
     }
-
+    public void addAll(ArrayList<PodcastItem> lista){
+        items = lista;
+    }
     public ArrayList<PodcastItem> getItems(){
         return items;
     }

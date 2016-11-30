@@ -100,7 +100,13 @@ public class CustomAdapter extends BaseExpandableListAdapter {
                 Bundle bundle2 = new Bundle();
                 System.out.println("FromYLE: " + podcastItem.fromYLE);
                 if (podcastItem.fromYLE == true){
-                    new DecodeURL().execute(podcastItem);
+                    try {
+                        new DecodeURL().execute(podcastItem).get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 }
                 bundle2.putSerializable("episode", podcastItem);
                 playerFragment.setArguments(bundle2);

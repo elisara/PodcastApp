@@ -43,8 +43,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         utils = new Utilities();
         View view = inflater.inflate(R.layout.play_screen, container, false);
         piFromService = mActivity.pServ.getPodcastObject();
-        if (getArguments() == null) piFromClick = piFromService;
+        if (getArguments() == null){
+            System.out.println("if1");
+            piFromClick = piFromService;
+        }
         else {
+            System.out.println("if2");
             piFromClick = (PodcastItem) getArguments().getSerializable("episode");
             pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
             if (pi2 != null) {
@@ -53,7 +57,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             }
         }
         podcastPic = (ImageView) view.findViewById(R.id.podcastPic);
-        mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/" + piFromClick.imageURL + ".jpg", new SimpleImageLoadingListener() {
+        mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_500,h_500,c_fit/" + piFromClick.imageURL + ".jpg", new SimpleImageLoadingListener() {
             ///w_500,h_500,c_fit
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
@@ -99,12 +103,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         seekbar.setOnSeekBarChangeListener(this);
         utils = new Utilities();
         if (mActivity.pServ.getStatus() < 2) {
+
             mActivity.pServ.setPodcastObject(piFromClick);
             mActivity.pServ.setAudioPath();
             mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
 
 
         } else if (!piFromClick.url.equals(piFromService.url)) {
+
                 mediaFileLengthInMilliseconds = 0;
                 mActivity.pServ.stopMusic();
                 mActivity.pServ.initPlayer();
@@ -113,6 +119,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
 
             }else if (mActivity.pServ.getStatus() == 3) {
+
             serviceCallbackMethod();
         }
         return view;

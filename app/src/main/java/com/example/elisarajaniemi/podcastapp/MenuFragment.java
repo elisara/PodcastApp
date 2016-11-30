@@ -2,8 +2,10 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -52,10 +54,12 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     private SerieFragment sf;
     private FavoritesFragment favoritesFragment;
     private EpisodesFragment ef;
+    private String user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.menu_layout, container , false);
+        user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "Username1");
 
         getUsersHelper = new GetUsersHelper();
         getUsersHelper.execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
@@ -86,8 +90,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         rali = new RegisterAndLogin();
         sf = new SerieFragment();
         favoritesFragment = new FavoritesFragment();
+        usernameView.setText(user);
 
-        if(currentUser.getCurrentUser().size() < 1){
+        if(user.length() < 1){
             userLayout.setVisibility(View.GONE);
             playList.setVisibility(View.GONE);
             favorite.setVisibility(View.GONE);
@@ -153,7 +158,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
             case R.id.signIn:
 
-                if(currentUser.getCurrentUser().size() <1) {
+                if(user.length() <1) {
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                     alertDialogBuilder.setTitle("Login");
 
@@ -177,15 +182,19 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                         public void onClick(DialogInterface dialog, int id) {
                             username_ = username.getText().toString();
                             password_ = password.getText().toString();
-                            rali.login(username_, password_);
+                            rali.login(username_, password_, getContext());
                             Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
+                            //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                            user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "Username3");
+
+                            System.out.println("-------------PREF USER: " + user);
 
                             System.out.println("CurrentUser array size: " + currentUser.getCurrentUser().size());
 
-                            if(currentUser.getCurrentUser().size() > 0) {
+                            if(user.length() > 0) {
                                 System.out.println("--------User in list-------");
                                 signIn.setText("Sign out");
-                                usernameView.setText(username_);
+                                usernameView.setText(user);
                                 userLayout.setVisibility(View.VISIBLE);
                                 playList.setVisibility(View.VISIBLE);
                                 favorite.setVisibility(View.VISIBLE);
@@ -237,18 +246,23 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                     password_ = password.getText().toString();
                                     password2_ = password2.getText().toString();
                                     email_ = email.getText().toString();
-                                    Toast.makeText(getContext(), "User "+ username_ +" created", Toast.LENGTH_SHORT).show();
-                                    rali.registerUser(username_, password_, password2_, email_);
-                                    System.out.println("Registers executed");
+                                    rali.registerUser(username_, password_, password2_, email_, getContext());
+
+                                    if(user.length() > 0) {
+                                        Toast.makeText(getContext(), "User " + username_ + " created", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Toast.makeText(getContext(), "Registering failed", Toast.LENGTH_SHORT).show();
+                                    }
                                     alertDialog.cancel();
 
                                 }
                             });
-                                    alertDialog2.setButton(AlertDialog.BUTTON_NEGATIVE,"Cancel",new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                            alertDialog2.setButton(AlertDialog.BUTTON_NEGATIVE,"Cancel",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
 
                             alertDialog2.show();
 
@@ -258,9 +272,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                 }
                 else{
-                    System.out.println("-----in else logout----");
-                    rali.logout();
-                    System.out.println("CurrentUser array size: " + currentUser.getCurrentUser().size());
+                    rali.logout(getContext());
                     dismiss();
                 }
 

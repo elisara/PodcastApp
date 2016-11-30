@@ -151,6 +151,7 @@ public class EpisodesFragment extends Fragment {
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     }
+
                 }
                 bundle2.putSerializable("episode", pi);
                 pf.setArguments(bundle2);

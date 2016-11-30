@@ -1,5 +1,9 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +30,11 @@ public class RegisterAndLogin {
     private String encryptedPassword, encryptedUsername, encryptedEmail;
     private MyCrypt myCrypt = new MyCrypt();
     private String token;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedpreferences;
 
 
-    public boolean registerUser(String username, String password, String password2, String email) {
+    public boolean registerUser(String username, String password, String password2, String email, Context context) {
 
         exists = false;
         testIfExists(username, password);
@@ -46,7 +52,7 @@ public class RegisterAndLogin {
                 t = new Thread(r);
                 t.start();
 
-                //here send encrypted userdata to database
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
                 loggedIn = true;
             } else {
                 System.out.println("Register: User existed");
@@ -59,7 +65,7 @@ public class RegisterAndLogin {
         return loggedIn;
     }
 
-    public String login(String username, String password) {
+    public String login(String username, String password, Context context) {
 
         exists = false;
         testIfExists(username, password);
@@ -72,6 +78,9 @@ public class RegisterAndLogin {
             t = new Thread(r2);
             t.start();
             loggedIn = true;
+
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
+
             System.out.println("Current userID: " + currentUser.getCurrentUser().get(0).id + " CurrentUser array size: " + currentUser.getCurrentUser().size());
         } else {
             System.out.println("Login: User doesn't exist");
@@ -82,13 +91,14 @@ public class RegisterAndLogin {
 
     }
 
-    public boolean logout() {
+    public boolean logout(Context context) {
 
         currentUser.getCurrentUser().clear();
         token = null;
         loggedIn = false;
         exists = false;
-        System.out.println("Logged out, Token = " + token + ", loggedIn = " + loggedIn);
+        //System.out.println("Logged out, Token = " + token + ", loggedIn = " + loggedIn);
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", "").apply();
         return loggedIn;
     }
 

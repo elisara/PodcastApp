@@ -190,6 +190,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
         backendCategories = new String[] {"category:huumori", "category:technology", "category:economy",
                 "category:terveys", "category:politics", "category:nature",
                 "category:music", "category:entertainment", "category:history"};
+        System.out.println("kuinka monta: " + PodcastItems.getInstance().getItems().size());
 
         for (int i = 0; i < PodcastItems.getInstance().getItems().size(); i++) {
             for(int u = 0; u < backendCategories.length; u++) {
@@ -198,6 +199,7 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             if (all == true) {
                 if (testIfListContains(categoryList, PodcastItems.getInstance().getItems().get(i)) == false) {
                     categoryList.add(0,PodcastItems.getInstance().getItems().get(i));
+
                 }
             }
         }
