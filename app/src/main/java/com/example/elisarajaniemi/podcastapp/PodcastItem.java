@@ -3,6 +3,7 @@ package com.example.elisarajaniemi.podcastapp;
 import android.graphics.Bitmap;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 /**
@@ -23,9 +24,13 @@ public class PodcastItem implements Serializable {
     public boolean fromYLE;
     public String programID;
     public String mediaID;
+    public ArrayList<String> categorys;
 
+    public PodcastItem(){
 
-    public PodcastItem(String title, String url, String description, String collectionName,String imageURL, String programID, String mediaID){
+    }
+
+    public PodcastItem alterPodcastItem(String title, String url, String description, String collectionName,String imageURL, String programID, String mediaID, ArrayList<String> categorys){
 
         this.title = title;
         this.url = url;
@@ -40,6 +45,9 @@ public class PodcastItem implements Serializable {
         this.imageURL = imageURL;
         this.programID = programID;
         this.mediaID = mediaID;
+        this.categorys = categorys;
+
+        return this;
     }
 
     public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL){
@@ -57,6 +65,8 @@ public class PodcastItem implements Serializable {
         this.decryptedURL = url;
         this.programID = "";
         this.mediaID = "";
+        this.categorys = null;
+
 
     }
 

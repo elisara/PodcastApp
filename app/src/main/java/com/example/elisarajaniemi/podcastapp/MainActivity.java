@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                                     || PodcastItems.getInstance().getItems().get(j).collectionName.toLowerCase().contains(searchField.getText().toString().toLowerCase())) {
 
                                 SearchItems.getInstance().addSearchItem(PodcastItems.getInstance().getItems().get(j));
-                                System.out.println("Added to list: " + PodcastItems.getInstance().getItems().get(j).title);
+                                //System.out.println("Added to list: " + PodcastItems.getInstance().getItems().get(j).title);
 
                             }
                         }
