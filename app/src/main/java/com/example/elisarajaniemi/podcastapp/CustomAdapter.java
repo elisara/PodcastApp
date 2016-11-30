@@ -151,6 +151,7 @@ public class CustomAdapter extends BaseExpandableListAdapter {
 
                 toPlaylist.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        playlistsFragment = new PlaylistsFragment();
                         alertDialog.cancel();
                         //addToPlaylist = true;
                         //podcastItem = value;
@@ -167,6 +168,7 @@ public class CustomAdapter extends BaseExpandableListAdapter {
 
                 toFavorites.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        favoritesFragment = new FavoritesFragment();
                         System.out.println("Clicked on: " + podcastItem.programID + ", CurrentUser: " + currentUser.getCurrentUser().get(0).id);
                         try {
                             favoritesFragment.addToFavorites(podcastItem.programID.replace("-", ""), currentUser.getCurrentUser().get(0).id,
