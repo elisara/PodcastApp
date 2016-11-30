@@ -130,7 +130,6 @@ public class EpisodesFragment extends Fragment {
         simpleExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                //System.out.println("child clicked");
                 collapseAll();
                 return true;
             }
@@ -352,5 +351,6 @@ class DecodeURL extends AsyncTask<PodcastItem, String, String> {
         super.onPostExecute(result);
 
     }
+
 
 }

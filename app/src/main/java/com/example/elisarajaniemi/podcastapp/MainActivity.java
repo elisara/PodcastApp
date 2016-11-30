@@ -330,6 +330,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void setFragment(Fragment frag){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frag_container, frag).addToBackStack("ef").commit();
+    }
+
 
 }
 

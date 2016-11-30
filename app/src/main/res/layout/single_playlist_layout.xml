@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:divider="@color/colorAccent"
         android:dividerHeight="1dp"
-        android:listSelector="@color/colorPrimary"
+        android:groupIndicator="@null"
         android:childDivider="@color/colorPrimaryDark"
         android:layout_height="wrap_content">
     </ExpandableListView>
