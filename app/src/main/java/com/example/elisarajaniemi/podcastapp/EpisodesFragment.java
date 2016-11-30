@@ -19,10 +19,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,9 +73,11 @@ public class EpisodesFragment extends Fragment {
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
     private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
+    private ExpandableListView simpleExpandableListView;
+    private CustomAdapter listAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         pi = (PodcastItem) getArguments().getSerializable("message");
         playlistID = getArguments().getInt("playlistID");
@@ -90,9 +94,33 @@ public class EpisodesFragment extends Fragment {
         }
 
         View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
+
+        simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
         listView = (ListView) view.findViewById(R.id.single_playlist_list);
         fillList();
         sendToPlaylists();
+
+        //expandAll();
+
+        // setOnGroupClickListener listener for group heading click
+        simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                //get the group header
+                PodcastItem podcastItem = list.get(groupPosition);
+                //display it or do something with it
+                return false;
+            }
+        });
+
+        simpleExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                //System.out.println("child clicked");
+                collapseAll();
+                return true;
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -158,6 +186,22 @@ public class EpisodesFragment extends Fragment {
         return view;
     }
 
+    //method to expand all groups
+    private void expandAll() {
+        int count = listAdapter.getGroupCount();
+        for (int i = 0; i < count; i++){
+            simpleExpandableListView.expandGroup(i);
+        }
+    }
+
+    //method to collapse all groups
+    private void collapseAll() {
+        int count = listAdapter.getGroupCount();
+        for (int i = 0; i < count; i++){
+            simpleExpandableListView.collapseGroup(i);
+        }
+    }
+
 
     @Override
     public void onPause() {
@@ -196,6 +240,9 @@ public class EpisodesFragment extends Fragment {
 
         adapter = new EpisodeListArrayAdapter(getContext(), list);
         listView.setAdapter(adapter);
+
+        listAdapter = new CustomAdapter(getContext(), list);
+        simpleExpandableListView.setAdapter(listAdapter);
 
     }
 

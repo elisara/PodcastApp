@@ -54,7 +54,7 @@ public class GridViewAdapter extends BaseAdapter {
                 .discCacheFileCount(100)
                 .imageDownloader(new BaseImageDownloader(context)) // default
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
-                .writeDebugLogs()
+                //.writeDebugLogs()
                 .build();
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -70,6 +70,7 @@ public class GridViewAdapter extends BaseAdapter {
 
         if (myView == null) {
             myView = LayoutInflater.from(context).inflate(R.layout.gridview_item, parent, false);
+
 
 
         } else {
