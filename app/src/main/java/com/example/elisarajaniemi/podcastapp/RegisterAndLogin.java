@@ -28,7 +28,6 @@ public class RegisterAndLogin{
 
     private boolean loggedIn;
     private User user;
-    CurrentUser currentUser = CurrentUser.getInstance();
     Users users = Users.getInstance();
     private Thread t;
     private boolean exists;
@@ -105,7 +104,6 @@ public class RegisterAndLogin{
 
     public boolean logout(Context context) {
 
-        currentUser.getCurrentUser().clear();
         token = null;
         loggedIn = false;
         exists = false;
@@ -114,7 +112,6 @@ public class RegisterAndLogin{
     }
 
     public boolean testIfExists(String username, String email, Context context) {
-        currentUser.getCurrentUser().clear();
 
         //here check if user is registered
         this.encryptedUsername = myCrypt.doEncoding(username).trim();
@@ -225,7 +222,6 @@ class GetToken extends AsyncTask<String, String, String> {
                     System.out.println("Login Output: " + jObject);
                     token = jObject.getString("token");
                     System.out.println("Token: " + token);
-                    //user = new User(CurrentUser.getInstance().getCurrentUser().get(0).id, CurrentUser.getInstance().getCurrentUser().get(0).username, CurrentUser.getInstance().getCurrentUser().get(0).email, token);
                     //currentUser.replaceCurrentUser(user);
                     //new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ currentUser.getCurrentUser().get(0).id + "?token=" + currentUser.getCurrentUser().get(0).token);
                 } catch (JSONException e) {

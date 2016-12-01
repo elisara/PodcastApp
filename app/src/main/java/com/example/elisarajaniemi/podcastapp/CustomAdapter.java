@@ -3,6 +3,7 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +26,7 @@ public class CustomAdapter extends BaseExpandableListAdapter {
     private ArrayList<PodcastItem> groupList;
     private PodcastItem podcastItem;
     private PlaylistsFragment playlistsFragment;
-    private MainActivity mainActivity;
     private PlayerFragment playerFragment;
-    CurrentUser currentUser = CurrentUser.getInstance();
     private FavoritesFragment favoritesFragment;
 
 
@@ -166,10 +165,10 @@ public class CustomAdapter extends BaseExpandableListAdapter {
                 toFavorites.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         favoritesFragment = new FavoritesFragment();
-                        System.out.println("Clicked on: " + podcastItem.programID + ", CurrentUser: " + currentUser.getCurrentUser().get(0).id);
+                        System.out.println("Clicked on: " + podcastItem.programID + ", CurrentUser: " + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
                         try {
-                            favoritesFragment.addToFavorites(podcastItem.programID.replace("-", ""), currentUser.getCurrentUser().get(0).id,
-                                    "http://media.mw.metropolia.fi/arsu/favourites?token=", currentUser.getCurrentUser().get(0).token);
+                            favoritesFragment.addToFavorites(podcastItem.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0),
+                                    "http://media.mw.metropolia.fi/arsu/favourites?token=", PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {

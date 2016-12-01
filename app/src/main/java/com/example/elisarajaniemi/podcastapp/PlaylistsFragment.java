@@ -59,7 +59,6 @@ public class PlaylistsFragment extends Fragment {
     private MenuFragment mf;
     private String playlistName, message;
     private ArrayList<PlaylistItem> list;
-    CurrentUser currentUser = CurrentUser.getInstance();
     Playlists playlists = Playlists.getInstance();
 
     @Override
@@ -115,7 +114,6 @@ public class PlaylistsFragment extends Fragment {
     public void createNewPlaylist(Context context){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
-        System.out.println("Current User Id: " + CurrentUser.getInstance().getCurrentUser().get(0).id);
         alertDialogBuilder.setTitle("Create new playlist");
         alertDialogBuilder.setMessage("Name of the playlist:");
 
@@ -206,12 +204,12 @@ public class PlaylistsFragment extends Fragment {
     Runnable r = new Runnable() {
         public void run() {
             try {
-                URL url = new URL("http://media.mw.metropolia.fi/arsu/playlists?token=" + currentUser.getCurrentUser().get(0).token);
+                URL url = new URL("http://media.mw.metropolia.fi/arsu/playlists?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
-                String input = "{\"playlist_name\":\"" + playlistName + "\",\"user_id\":\"" + currentUser.getCurrentUser().get(0).id + "\"}";
+                String input = "{\"playlist_name\":\"" + playlistName + "\",\"user_id\":\"" + PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0) + "\"}";
                 input = input.replace("\n", "");
                 System.out.println(input);
 
@@ -229,7 +227,7 @@ public class PlaylistsFragment extends Fragment {
                         JSONObject jObject = new JSONObject(output);
                         message = jObject.getString("message");
                         System.out.println("Database message: " + message);
-                        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ currentUser.getCurrentUser().get(0).id + "?token=" + currentUser.getCurrentUser().get(0).token);
+                        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0) + "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
                     } catch (JSONException e) {
                         System.out.println(e);
                     }
@@ -365,9 +363,9 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
                 JSONArray jsonArray = new JSONArray(jObject.getString("content"));
                 for (int i = 0; i < jsonArray.length(); i++){
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    String podcastID = jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length());
+                    PodcastItem podcastItem = new PodcastItem(jsonObject.getString("id"), jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
                     //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
-                    podcastIDArray.addPodcastID(podcastID);
+                    podcastIDArray.addPodcastID(podcastItem);
                 }
 
             } catch (JSONException e) {
