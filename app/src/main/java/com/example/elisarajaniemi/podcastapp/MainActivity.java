@@ -3,7 +3,6 @@ package com.example.elisarajaniemi.podcastapp;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
@@ -15,41 +14,27 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLOutput;
+
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
     private ImageButton menuBtn, searchBtn;
+    private Search search;
     private AlertDialog alertDialog;
     private MenuFragment mf;
-    private SearchFragment searchFragment;
     public SmallPlayerFragment spf;
     private TextView title;
     private boolean categoryOpen, menuOpen;
-    private SerieFragment sf;
-    private EpisodesFragment ef;
+    private FrontPageFragment frontPageFragment;
+    private CollectionFragment collectionFragment;
     boolean mIsBound = false;
     private PlayerFragment pf;
     private PodcastItem pi, pi2;
@@ -91,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         apiKey = "495i4orWwXCqiW5IuOQUzuAlGmfFeky7BzMPe-X19inh9MRm5RqGhQDUEh5avkZNFjC6mYT6w2xGXdQjm9XfakwHloH027i-tkLX77yFMZJlC3wGWqIjyHIXnvPzvHzW";
         try {
-            new HttpGetHelper((MainActivity) context).execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true").get();
+            new GetMetropoliaPodcastHelper((MainActivity) context).execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true").get();
             new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.6h:desc&limit=50&type=radioprogram", "fromepisodes").get();
         }
         catch (ExecutionException e){
@@ -111,12 +96,12 @@ public class MainActivity extends AppCompatActivity {
         categoryOpen = false;
 
         mf = new MenuFragment();
-        sf = new SerieFragment();
-        searchFragment = new SearchFragment();
+        frontPageFragment = new FrontPageFragment();
         pServ = new PlayService("PodcastApp");
-        ef = new EpisodesFragment();
+        collectionFragment = new CollectionFragment();
         pf = new PlayerFragment();
         spf = new SmallPlayerFragment();
+        search = new Search();
 
 
         Intent playerIntent = new Intent(this, PlayService.class);
@@ -129,49 +114,7 @@ public class MainActivity extends AppCompatActivity {
         searchBtn = (ImageButton) findViewById(R.id.searchBtn);
         searchBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                alertDialogBuilder.setTitle("Search");
-
-                LinearLayout lp = new LinearLayout(context);
-                lp.setOrientation(LinearLayout.VERTICAL);
-                lp.setPadding(30, 30, 30, 60);
-
-                final EditText searchField = new EditText(context);
-
-                lp.addView(searchField);
-                alertDialogBuilder.setView(lp);
-
-                alertDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        SearchItems.getInstance().getSearchItems().clear();
-
-                        for (int j = 0; j < PodcastItems.getInstance().getItems().size(); j++) {
-
-                            if (PodcastItems.getInstance().getItems().get(j).title.toLowerCase().contains(searchField.getText().toString().toLowerCase())
-                                    || PodcastItems.getInstance().getItems().get(j).description.toLowerCase().contains(searchField.getText().toString().toLowerCase())
-                                    || PodcastItems.getInstance().getItems().get(j).tags.toLowerCase().contains(searchField.getText().toString().toLowerCase())
-                                    || PodcastItems.getInstance().getItems().get(j).category.toLowerCase().contains(searchField.getText().toString().toLowerCase())
-                                    || PodcastItems.getInstance().getItems().get(j).collectionName.toLowerCase().contains(searchField.getText().toString().toLowerCase())) {
-
-                                SearchItems.getInstance().addSearchItem(PodcastItems.getInstance().getItems().get(j));
-                                //System.out.println("Added to list: " + PodcastItems.getInstance().getItems().get(j).title);
-
-                            }
-                        }
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, searchFragment).commit();
-                    }
-                });
-                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-
-                alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                search.searchDialog(context, collectionFragment);
             }
         });
 
@@ -187,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         title.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, sf).addToBackStack("sf").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, frontPageFragment).addToBackStack("frontPageFragment").commit();
             }
         });
 
@@ -231,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
            openPlayer();
         } else {
 
-            ft.replace(R.id.frag_container, sf);
+            ft.replace(R.id.frag_container, frontPageFragment);
 
             ft.add(R.id.player_frag_container, spf);
             ft.commit();
@@ -332,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setFragment(Fragment frag){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frag_container, frag).addToBackStack("ef").commit();
+        transaction.replace(R.id.frag_container, frag).addToBackStack("collectionFragment").commit();
     }
 
 

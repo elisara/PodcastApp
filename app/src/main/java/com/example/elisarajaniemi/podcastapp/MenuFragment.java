@@ -1,9 +1,6 @@
 package com.example.elisarajaniemi.podcastapp;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -29,14 +26,13 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     private TextView playList, favorite, queue, history, continuePlay, signIn, usernameView;
     private PlaylistsFragment plf;
     private LinearLayout userLayout;
-    private SinglePlaylistFragment splf;
     private MenuFragment mf;
     private RegisterAndLogin rali;
     private String password_, password2_, username_, email_, token;
     private AlertDialog alertDialog;
-    private SerieFragment sf;
+    private FrontPageFragment frontPageFragment;
     private FavoritesFragment favoritesFragment;
-    private EpisodesFragment ef;
+    private CollectionFragment collectionFragment;
     private String user;
 
 
@@ -68,10 +64,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         signIn.setOnClickListener(this);
 
         plf = new PlaylistsFragment();
-        splf = new SinglePlaylistFragment();
         mf = new MenuFragment();
         rali = new RegisterAndLogin();
-        sf = new SerieFragment();
+        frontPageFragment = new FrontPageFragment();
         favoritesFragment = new FavoritesFragment();
         usernameView.setText(user);
 
@@ -111,24 +106,18 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 System.out.println("QUEUE");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
                 break;
 
             case R.id.history:
                 System.out.println("HISTORY");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
                 break;
 
             case R.id.continuePlaying:
                 System.out.println("CONTINUE");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
                 break;
 
             case R.id.favorites:
@@ -142,12 +131,12 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 System.out.println("FAVS");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
-                ef = new EpisodesFragment();
+                collectionFragment = new CollectionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("fromFavorites", true);
-                ef.setArguments(bundle);
+                collectionFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favoritesFragment")
-                        .replace(R.id.frag_container, ef).commit();
+                        .replace(R.id.frag_container, collectionFragment).commit();
                 break;
 
             case R.id.signIn:

@@ -1,31 +1,17 @@
 package com.example.elisarajaniemi.podcastapp;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,10 +19,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -44,9 +27,7 @@ import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import javax.crypto.BadPaddingException;
@@ -57,11 +38,10 @@ import javax.crypto.NoSuchPaddingException;
  * Created by Elisa Rajaniemi on 31.10.2016.
  */
 
-public class EpisodesFragment extends Fragment {
+public class CollectionFragment extends Fragment {
 
     private ListView listView;
-    private EpisodeListArrayAdapter adapter;
-    private HttpGetHelper httpGetHelper;
+    private GetMetropoliaPodcastHelper getMetropoliaPodcastHelper;
     private String message;
     private ArrayList<PodcastItem> list;
     private PodcastItem pi;
@@ -72,13 +52,14 @@ public class EpisodesFragment extends Fragment {
     public PodcastItems podcastItems = PodcastItems.getInstance();
     public PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
-    FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
+    public FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
+    public SearchItems searchItems = SearchItems.getInstance();
     private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
-    private CustomAdapter listAdapter;
+    private ExpandableListViewAdapter listAdapter;
     private FavoritesFragment favoritesFragment;
-    private boolean fromFavorites;
+    private boolean fromFavorites, fromSearch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -86,8 +67,11 @@ public class EpisodesFragment extends Fragment {
         pi = (PodcastItem) getArguments().getSerializable("message");
         playlistID = getArguments().getInt("playlistID");
         fromFavorites = getArguments().getBoolean("fromFavorites");
+        fromSearch = getArguments().getBoolean("fromSearch");
 
-        System.out.println("From Favorites: " + fromFavorites);
+        System.out.println("FromSearch value: " + fromSearch);
+        System.out.println("FromFavorites value: " + fromFavorites);
+        System.out.println("PlaylistID value: " + playlistID);
         favoritesFragment = new FavoritesFragment();
 
 
@@ -165,7 +149,7 @@ public class EpisodesFragment extends Fragment {
                 System.out.println("FromYLE: " + pi.fromYLE);
                 if (pi.fromYLE == true){
                     try {
-                        new DecodeURL().execute(pi).get();
+                        new DecodeYleURL().execute(pi).get();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
@@ -271,25 +255,28 @@ public class EpisodesFragment extends Fragment {
         if (list.size() != 0){
             list.clear();
         }
-        if(list.size() == 0 && playlistID == 0 && fromFavorites == false) {
+        if(list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch) {
+            System.out.println("From episodes");
             for (int i = 0; i < listAll.size(); i++) {
                 if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
                     list.add(listAll.get(i));
                 }
             }
-        } else if(list.size() == 0 && playlistID != 0 && fromFavorites == false){
+        } else if(list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch){
             System.out.println("PlaylistPodcastItems size: " + playlistPodcastItems.getItems().size());
             list = playlistPodcastItems.getItems();
 
-        } else if(list.size() == 0 && fromFavorites == true){
+        } else if(list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch){
             System.out.println("FavoritePodcastItems array size: " + favoritePodcastItems.getItems().size());
             list = favoritePodcastItems.getItems();
+        } else if(list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites){
+            System.out.println("From Search: " + fromSearch + ", search size: " + list.size());
+            list = searchItems.getSearchItems();
         }
 
-        //adapter = new EpisodeListArrayAdapter(getContext(), list);
         //listView.setAdapter(adapter);
 
-        listAdapter = new CustomAdapter(getContext(), list);
+        listAdapter = new ExpandableListViewAdapter(getContext(), list);
         simpleExpandableListView.setAdapter(listAdapter);
 
     }
@@ -298,7 +285,7 @@ public class EpisodesFragment extends Fragment {
 
 }
 
-class DecodeURL extends AsyncTask<PodcastItem, String, String> {
+class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
     //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
     String decryptedURL;
     String resultURL;

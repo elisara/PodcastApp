@@ -25,7 +25,7 @@ public class PodcastItems {
         }
     }
     public void addAll(ArrayList<PodcastItem> lista){
-        items = lista;
+        items.addAll(lista);
     }
 
     public ArrayList<PodcastItem> getItems(){

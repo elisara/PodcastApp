@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
  * Created by Elisa Rajaniemi on 30.11.2016.
  */
 
-public class CustomAdapter extends BaseExpandableListAdapter {
+public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private ArrayList<PodcastItem> groupList;
@@ -30,7 +30,7 @@ public class CustomAdapter extends BaseExpandableListAdapter {
     private FavoritesFragment favoritesFragment;
 
 
-    public CustomAdapter(Context context, ArrayList<PodcastItem> groupList) {
+    public ExpandableListViewAdapter(Context context, ArrayList<PodcastItem> groupList) {
         this.context = context;
         this.groupList = groupList;
     }
@@ -93,7 +93,7 @@ public class CustomAdapter extends BaseExpandableListAdapter {
                 System.out.println("FromYLE: " + podcastItem.fromYLE);
                 if (podcastItem.fromYLE == true){
                     try {
-                        new DecodeURL().execute(podcastItem).get();
+                        new DecodeYleURL().execute(podcastItem).get();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {

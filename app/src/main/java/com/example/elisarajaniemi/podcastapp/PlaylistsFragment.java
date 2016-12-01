@@ -90,12 +90,12 @@ public class PlaylistsFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                EpisodesFragment episodesFragment = new EpisodesFragment();
+                CollectionFragment collectionFragment = new CollectionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt("playlistID", value.id);
-                episodesFragment.setArguments(bundle);
+                collectionFragment.setArguments(bundle);
                  getActivity().getSupportFragmentManager().beginTransaction()
-                         .replace(R.id.frag_container, episodesFragment).addToBackStack( "playlistFragment" ).commit();
+                         .replace(R.id.frag_container, collectionFragment).addToBackStack( "playlistFragment" ).commit();
             }
 
         });
