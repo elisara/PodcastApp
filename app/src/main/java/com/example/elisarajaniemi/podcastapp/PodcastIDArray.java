@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class PodcastIDArray {
 
-    private ArrayList<String> items;
+    private ArrayList<PodcastItem> items;
 
     private static PodcastIDArray ourInstance = new PodcastIDArray();
 
@@ -19,13 +19,13 @@ public class PodcastIDArray {
         this.items = new ArrayList<>();
     }
 
-    public void addPodcastID(String item){
+    public void addPodcastID(PodcastItem item){
         if(!items.contains(item)){
             items.add(item);
         }
     }
 
-    public ArrayList<String> getItems(){
+    public ArrayList<PodcastItem> getItems(){
         return items;
     }
 

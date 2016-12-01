@@ -20,6 +20,7 @@ public class PodcastItem implements Serializable {
     public String tags;
     public String collectionName;
     public int collectionID;
+    public String id;
     public String imageURL;
     public boolean fromYLE;
     public String programID;
@@ -28,6 +29,11 @@ public class PodcastItem implements Serializable {
 
     public PodcastItem(){
 
+    }
+
+    public PodcastItem(String id, String programID){
+        this.id = id;
+        this.programID = programID;
     }
 
     public PodcastItem alterPodcastItem(String title, String url, String description, String collectionName,String imageURL, String programID, String mediaID, ArrayList<String> categorys, int length){

@@ -34,7 +34,6 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     private RegisterAndLogin rali;
     private String password_, password2_, username_, email_, token;
     private AlertDialog alertDialog;
-    CurrentUser currentUser =  CurrentUser.getInstance();
     private SerieFragment sf;
     private FavoritesFragment favoritesFragment;
     private EpisodesFragment ef;

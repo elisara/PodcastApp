@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -76,6 +77,7 @@ public class EpisodesFragment extends Fragment {
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
     private CustomAdapter listAdapter;
+    private FavoritesFragment favoritesFragment;
     private boolean fromFavorites;
 
     @Override
@@ -86,6 +88,7 @@ public class EpisodesFragment extends Fragment {
         fromFavorites = getArguments().getBoolean("fromFavorites");
 
         System.out.println("From Favorites: " + fromFavorites);
+        favoritesFragment = new FavoritesFragment();
 
 
         if(playlistID != 0 && fromFavorites == false) {
@@ -131,6 +134,25 @@ public class EpisodesFragment extends Fragment {
                 return true;
             }
         });
+
+        if (fromFavorites == true){
+            simpleExpandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    try {
+                        favoritesFragment.deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(position).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
+                        favoritePodcastItems.deletePodcast(position);
+                        listAdapter.notifyDataSetChanged();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    return false;
+                }
+            });
+        }
 
         /**
 
@@ -246,6 +268,9 @@ public class EpisodesFragment extends Fragment {
 
     public void fillList(){
         list = new ArrayList<>();
+        if (list.size() != 0){
+            list.clear();
+        }
         if(list.size() == 0 && playlistID == 0 && fromFavorites == false) {
             for (int i = 0; i < listAll.size(); i++) {
                 if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
@@ -257,6 +282,7 @@ public class EpisodesFragment extends Fragment {
             list = playlistPodcastItems.getItems();
 
         } else if(list.size() == 0 && fromFavorites == true){
+            System.out.println("FavoritePodcastItems array size: " + favoritePodcastItems.getItems().size());
             list = favoritePodcastItems.getItems();
         }
 

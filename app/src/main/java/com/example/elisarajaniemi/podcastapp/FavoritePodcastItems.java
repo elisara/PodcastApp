@@ -34,4 +34,8 @@ public class FavoritePodcastItems {
     public void clearList(){
         this.items.clear();
     }
+
+    public void deletePodcast(int position){
+        this.items.remove(position);
+    }
 }

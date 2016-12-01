@@ -3,6 +3,7 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -27,7 +28,6 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
     PlaylistItem playlistItem;
     PlaylistsFragment playlistsFragment;
     FavoritesFragment favoritesFragment;
-    CurrentUser currentUser = CurrentUser.getInstance();
     boolean addToPlaylist = false;
 
     public EpisodeListArrayAdapter(Context context, ArrayList<PodcastItem> list) {
@@ -108,10 +108,9 @@ public class EpisodeListArrayAdapter extends ArrayAdapter<PodcastItem> {
 
                 toFavorites.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        System.out.println("Clicked on: " + value.programID + ", CurrentUser: " + currentUser.getCurrentUser().get(0).id);
                         try {
-                            favoritesFragment.addToFavorites(value.programID.replace("-", ""), currentUser.getCurrentUser().get(0).id,
-                                    "http://media.mw.metropolia.fi/arsu/favourites?token=", currentUser.getCurrentUser().get(0).token);
+                            favoritesFragment.addToFavorites(value.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0),
+                                    "http://media.mw.metropolia.fi/arsu/favourites?token=", PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
