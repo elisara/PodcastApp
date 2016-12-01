@@ -1,9 +1,11 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -257,6 +259,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                     //LOGOUT
                     rali.logout(getContext());
                     dismiss();
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favoritesFragment")
+                            .replace(R.id.frag_container, frontPageFragment).commit();
+                    getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }
 
                 break;
