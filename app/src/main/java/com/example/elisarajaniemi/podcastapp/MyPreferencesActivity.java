@@ -3,7 +3,6 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -15,8 +14,6 @@ import android.widget.Button;
  */
 
 public class MyPreferencesActivity extends PreferenceActivity {
-
-    CheckBoxPreference allBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +35,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
         boolean all;
         boolean allChecked, someChecked;
         private SharedPreferences.OnSharedPreferenceChangeListener listener;
-        CheckBoxPreference allBox, humorBox, historyBox, natureBox, entBox, politicsBox, musicBox, healthBox, ecoBox, techBox;
+        CheckBoxPreference allBox, viihdeBox, musiikkiBox, draamaBox, asiaBox, kulttuuriBox, historiaBox, luontoBox, hartaudetBox, lapsetBox, ajankohtBox, uutisetBox, urheiluBox, metroBox;
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
@@ -48,15 +45,20 @@ public class MyPreferencesActivity extends PreferenceActivity {
             PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, false);
 
             allBox = (CheckBoxPreference) findPreference("all");
-            humorBox = (CheckBoxPreference) findPreference("humor");
-            historyBox = (CheckBoxPreference) findPreference("history");
-            natureBox = (CheckBoxPreference) findPreference("nature");
-            entBox = (CheckBoxPreference) findPreference("entertainment");
-            politicsBox = (CheckBoxPreference) findPreference("politics");
-            musicBox = (CheckBoxPreference) findPreference("music");
-            healthBox = (CheckBoxPreference) findPreference("health");
-            ecoBox = (CheckBoxPreference) findPreference("economy");
-            techBox = (CheckBoxPreference) findPreference("technology");
+            viihdeBox = (CheckBoxPreference) findPreference("viihde");
+            musiikkiBox = (CheckBoxPreference) findPreference("musiikki");
+            draamaBox = (CheckBoxPreference) findPreference("draama");
+            asiaBox = (CheckBoxPreference) findPreference("asia");
+            kulttuuriBox = (CheckBoxPreference) findPreference("kulttuuri");
+            historiaBox = (CheckBoxPreference) findPreference("historia");
+            luontoBox = (CheckBoxPreference) findPreference("luonto");
+            hartaudetBox = (CheckBoxPreference) findPreference("hartaudet");
+            lapsetBox = (CheckBoxPreference) findPreference("lapset");
+            ajankohtBox = (CheckBoxPreference) findPreference("ajankohtaisohjelmat");
+            uutisetBox = (CheckBoxPreference) findPreference("uutiset");
+            urheiluBox = (CheckBoxPreference) findPreference("urheilu");
+            metroBox = (CheckBoxPreference) findPreference("metropolia");
+
 
             sp.edit().putBoolean("all", true);
             selectCheckboxes();
@@ -75,31 +77,39 @@ public class MyPreferencesActivity extends PreferenceActivity {
 
         public void selectCheckboxes(){
             if(allBox.isChecked() && allChecked == false && someChecked == false) {
-                humorBox.setChecked(true);
-                historyBox.setChecked(true);
-                humorBox.setChecked(true);
-                natureBox.setChecked(true);
-                ecoBox.setChecked(true);
-                entBox.setChecked(true);
-                politicsBox.setChecked(true);
-                musicBox.setChecked(true);
-                healthBox.setChecked(true);
-                techBox.setChecked(true);
+                viihdeBox.setChecked(true);
+                musiikkiBox.setChecked(true);
+                viihdeBox.setChecked(true);
+                draamaBox.setChecked(true);
+                hartaudetBox.setChecked(true);
+                asiaBox.setChecked(true);
+                kulttuuriBox.setChecked(true);
+                historiaBox.setChecked(true);
+                luontoBox.setChecked(true);
+                lapsetBox.setChecked(true);
+                ajankohtBox.setChecked(true);
+                uutisetBox.setChecked(true);
+                urheiluBox.setChecked(true);
+                metroBox.setChecked(true);
                 allChecked = true;
                 System.out.println("ALL in 1:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
             }
 
             else if(!allBox.isChecked() && allChecked == true){
-                humorBox.setChecked(false);
-                historyBox.setChecked(false);
-                humorBox.setChecked(false);
-                natureBox.setChecked(false);
-                ecoBox.setChecked(false);
-                entBox.setChecked(false);
-                politicsBox.setChecked(false);
-                musicBox.setChecked(false);
-                healthBox.setChecked(false);
-                techBox.setChecked(false);
+                viihdeBox.setChecked(false);
+                musiikkiBox.setChecked(false);
+                viihdeBox.setChecked(false);
+                draamaBox.setChecked(false);
+                hartaudetBox.setChecked(false);
+                asiaBox.setChecked(false);
+                kulttuuriBox.setChecked(false);
+                historiaBox.setChecked(false);
+                luontoBox.setChecked(false);
+                lapsetBox.setChecked(false);
+                ajankohtBox.setChecked(false);
+                uutisetBox.setChecked(false);
+                urheiluBox.setChecked(false);
+                metroBox.setChecked(false);
                 allChecked = false;
                 someChecked = false;
                 System.out.println("ALL in 2:" + allBox.isChecked() + " AllChecked: "+ allChecked + " someChecked: "+someChecked);
