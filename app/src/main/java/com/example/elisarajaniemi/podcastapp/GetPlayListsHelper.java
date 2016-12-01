@@ -26,6 +26,7 @@ public class GetPlayListsHelper extends AsyncTask<String, String, String> {
 
     protected void onPreExecute() {
         super.onPreExecute();
+        playlists.clearPlaylists();
     }
 
     @Override

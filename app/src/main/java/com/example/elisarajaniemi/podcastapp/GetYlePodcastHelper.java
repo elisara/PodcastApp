@@ -60,6 +60,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 }
             } else if (params[2].equalsIgnoreCase("fromplaylist")) {
                 System.out.println("From Playlists");
+
                 playlistPodcastItems.clearList();
                 for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
                     result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
