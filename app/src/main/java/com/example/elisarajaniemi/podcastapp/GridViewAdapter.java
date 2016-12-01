@@ -86,7 +86,7 @@ public class GridViewAdapter extends BaseAdapter {
         }
 
         textView = (TextView) myView.findViewById(R.id.grid_item_label);
-        textView.setText(list.get(position).collectionName);
+        textView.setText(list.get(position).title);
 
         return myView;
     }

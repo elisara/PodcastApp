@@ -82,6 +82,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
             history.setVisibility(View.GONE);
             continuePlay.setVisibility(View.GONE);
         }
+        if(user.length() > 0){
+            signIn.setText("Sign out");
+        }
 
         return view;
     }
@@ -262,6 +265,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                 }
                 else{
+                    //LOGOUT
                     rali.logout(getContext());
                     dismiss();
                 }
