@@ -32,12 +32,4 @@
         android:layout_height="wrap_content">
     </ExpandableListView>
 
-    <ListView
-        android:id="@+id/single_playlist_list"
-        android:layout_width="match_parent"
-        android:divider="@color/colorAccent"
-        android:dividerHeight="100.0px"
-        android:layout_height="wrap_content">
-    </ListView>
-
 </LinearLayout>
