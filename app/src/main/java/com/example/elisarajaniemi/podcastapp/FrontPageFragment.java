@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import java.io.Serializable;
@@ -24,13 +23,13 @@ import java.util.Comparator;
  * Created by Elisa Rajaniemi on 27.10.2016.
  */
 
-public class SerieFragment extends Fragment implements AdapterView.OnItemSelectedListener, Serializable {
+public class FrontPageFragment extends Fragment implements AdapterView.OnItemSelectedListener, Serializable {
 
     private GridViewAdapter adapter;
     private Spinner spinner;
     private Button categoryBtn;
     private boolean all, viihde, musiikki, draama, asia, kulttuuri, historia, luonto, hartaudet, lapset, ajankohtaisohjelmat, uutiset, urheilu, metropolia;
-    private EpisodesFragment ef;
+    private CollectionFragment collectionFragment;
     private ArrayList<PodcastItem> categoryList;
     private ArrayList<Boolean> prefCategoryList;
     private String[] backendCategories;
@@ -66,12 +65,12 @@ public class SerieFragment extends Fragment implements AdapterView.OnItemSelecte
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 PodcastItem pi = categoryList.get(position);
-                ef = new EpisodesFragment();
+                collectionFragment = new CollectionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("message", pi);
-                ef.setArguments(bundle);
+                collectionFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("sf")
-                        .replace(R.id.frag_container, ef).commit();
+                        .replace(R.id.frag_container, collectionFragment).commit();
             }
         });
 

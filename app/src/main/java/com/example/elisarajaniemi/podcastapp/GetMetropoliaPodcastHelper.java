@@ -26,14 +26,14 @@ import java.util.concurrent.ExecutionException;
  * Created by jari on 28/10/2016.
  */
 
-public class HttpGetHelper extends AsyncTask<String, String, String> {
+public class GetMetropoliaPodcastHelper extends AsyncTask<String, String, String> {
     MainActivity mActivity;
 
     private String result = "";
     public PodcastItems podcastItems = PodcastItems.getInstance();
     public SerieItems serieItems = SerieItems.getInstance();
 
-    public HttpGetHelper(MainActivity mActivity){
+    public GetMetropoliaPodcastHelper(MainActivity mActivity){
         this.mActivity=mActivity;
 
     }

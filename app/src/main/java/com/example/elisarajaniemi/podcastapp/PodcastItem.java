@@ -71,7 +71,8 @@ public class PodcastItem implements Serializable {
         this.decryptedURL = url;
         this.programID = "";
         this.mediaID = "";
-        this.categorys = null;
+        this.categorys = new ArrayList<>();
+        this.categorys.add("Metropolia");
 
 
     }
