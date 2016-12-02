@@ -59,6 +59,8 @@ public class RegisterAndLogin{
                 t.start();
 
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", "").apply();
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", 0).apply();
                 loggedIn = true;
             } else {
                 System.out.println("Register: User existed");
@@ -108,6 +110,8 @@ public class RegisterAndLogin{
         loggedIn = false;
         exists = false;
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", "").apply();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", "").apply();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", 0).apply();
         return loggedIn;
     }
 

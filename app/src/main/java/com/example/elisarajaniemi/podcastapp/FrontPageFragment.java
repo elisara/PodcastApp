@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
     private String sortValue;
     private SharedPreferences prefs;
     private GridView gridView;
+    private PlaylistsFragment playlistsFragment;
 
 
     @Override
@@ -47,6 +49,8 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         categoryList = new ArrayList<>();
         prefCategoryList = new ArrayList<>();
         sortValue = "";
+
+        playlistsFragment = new PlaylistsFragment();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit().putBoolean("kulttuuri", true);
@@ -71,6 +75,14 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
                 collectionFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("sf")
                         .replace(R.id.frag_container, collectionFragment).commit();
+            }
+        });
+
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                PodcastItem pi = categoryList.get(position);
+                playlistsFragment.addToPlaylistDialog(pi,getContext());
+                return true;
             }
         });
 
