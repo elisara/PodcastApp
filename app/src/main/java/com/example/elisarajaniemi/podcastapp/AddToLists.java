@@ -20,16 +20,11 @@ public class AddToLists {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle("Add to");
 
+        String user = PreferenceManager.getDefaultSharedPreferences(context).getString("user", "");
+
         LinearLayout lp = new LinearLayout(context);
         lp.setOrientation(LinearLayout.VERTICAL);
         lp.setPadding(30,30,30,30);
-
-
-        final TextView toPlaylist = new TextView(context);
-        toPlaylist.setText("Playlist");
-        toPlaylist.setTextSize(20);
-        toPlaylist.setPadding(30, 20, 20, 20);
-        lp.addView(toPlaylist);
 
         final TextView toQueue = new TextView(context);
         toQueue.setText("Queue");
@@ -37,11 +32,25 @@ public class AddToLists {
         toQueue.setTextSize(20);
         lp.addView(toQueue);
 
-        final TextView toFavorites = new TextView(context);
-        toFavorites.setText("Favorites");
-        toFavorites.setPadding(30, 20, 20, 10);
-        toFavorites.setTextSize(20);
-        lp.addView(toFavorites);
+
+            final TextView toPlaylist = new TextView(context);
+            toPlaylist.setText("Playlist");
+            toPlaylist.setTextSize(20);
+            toPlaylist.setPadding(30, 20, 20, 20);
+            //lp.addView(toPlaylist);
+
+            final TextView toFavorites = new TextView(context);
+            toFavorites.setText("Favorites");
+            toFavorites.setPadding(30, 20, 20, 10);
+            toFavorites.setTextSize(20);
+            //lp.addView(toFavorites);
+
+
+        if(!user.equalsIgnoreCase("") ) {
+            lp.addView(toPlaylist);
+            lp.addView(toFavorites);
+
+        }
 
         alertDialogBuilder.setView(lp);
         final AlertDialog alertDialog = alertDialogBuilder.create();
@@ -52,6 +61,7 @@ public class AddToLists {
             }
         });
 
+
         toPlaylist.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //playlistsFragment = new PlaylistsFragment();
@@ -59,13 +69,6 @@ public class AddToLists {
                 //addToPlaylist = true;
                 //podcastItem = value;
                 playlistsFragment.addToPlaylistDialog(podcastItem, context);
-            }
-        });
-
-        toQueue.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                System.out.println("Clicked to queue");
-                alertDialog.cancel();
             }
         });
 
@@ -81,6 +84,13 @@ public class AddToLists {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                alertDialog.cancel();
+            }
+        });
+
+        toQueue.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.out.println("Clicked to queue");
                 alertDialog.cancel();
             }
         });

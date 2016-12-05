@@ -38,7 +38,8 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
     private SharedPreferences prefs;
     private GridView gridView;
     private PlaylistsFragment playlistsFragment;
-
+    private AddToLists addToLists;
+    private FavoritesFragment favoritesFragment;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,8 +50,9 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         categoryList = new ArrayList<>();
         prefCategoryList = new ArrayList<>();
         sortValue = "";
-
+        addToLists = new AddToLists();
         playlistsFragment = new PlaylistsFragment();
+        favoritesFragment = new FavoritesFragment();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit().putBoolean("kulttuuri", true);
@@ -81,7 +83,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 PodcastItem pi = categoryList.get(position);
-                playlistsFragment.addToPlaylistDialog(pi,getContext());
+                addToLists.addToListsDialog(getContext(), pi, playlistsFragment, favoritesFragment);
                 return true;
             }
         });
@@ -109,7 +111,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
 
             Collections.sort(categoryList, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
-                    return pod1.collectionName.compareToIgnoreCase(pod2.collectionName); // To compare string values
+                    return pod1.title.compareToIgnoreCase(pod2.title); // To compare string values
                 }
             });
             adapter = new GridViewAdapter(getContext(), categoryList);
@@ -206,7 +208,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
                         categoryList.add(0, PodcastItems.getInstance().getItems().get(i));
                         System.out.println("ADDED: " + PodcastItems.getInstance().getItems().get(i).title);
                         System.out.println("CATEGORY: " + PodcastItems.getInstance().getItems().get(i).categorys.get(u));
-                    }else if(PodcastItems.getInstance().getItems().get(i).collectionName.toLowerCase().contains(backendCategories[o]) && prefCategoryList.get(o) == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
+                    }else if(PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(backendCategories[o]) && prefCategoryList.get(o) == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
                         categoryList.add(0, PodcastItems.getInstance().getItems().get(i));
                        // System.out.println("ADDED: " + PodcastItems.getInstance().getItems().get(i).categorys.get(u));
                     }else if (all == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
@@ -219,7 +221,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
             if(sortValue.contains("NAME")){
                 Collections.sort(categoryList, new Comparator<PodcastItem>() {
                     public int compare(PodcastItem pod1, PodcastItem pod2) {
-                        return pod1.collectionName.compareToIgnoreCase(pod2.collectionName); // To compare string values
+                        return pod1.title.compareToIgnoreCase(pod2.title); // To compare string values
                     }
                 });
             }

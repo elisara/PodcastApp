@@ -90,6 +90,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.playlists:
+                /**
                 try {
                     new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0)
                     + "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0")).get();
@@ -98,6 +99,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
+                 */
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
                 getActivity().getSupportFragmentManager().beginTransaction()
@@ -231,13 +233,22 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                     password2_ = password2.getText().toString();
                                     email_ = email.getText().toString();
                                     rali.registerUser(username_, password_, password2_, email_, getContext());
+                                    user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
 
                                     if(user.length() > 0) {
                                         Toast.makeText(getContext(), "User " + username_ + " created", Toast.LENGTH_SHORT).show();
+                                        signIn.setText("Sign out");
+                                        usernameView.setText(user);
+                                        userLayout.setVisibility(View.VISIBLE);
+                                        playList.setVisibility(View.VISIBLE);
+                                        favorite.setVisibility(View.VISIBLE);
+                                        history.setVisibility(View.VISIBLE);
+                                        continuePlay.setVisibility(View.VISIBLE);
                                     }
                                     else {
                                         Toast.makeText(getContext(), "Registering failed", Toast.LENGTH_SHORT).show();
                                     }
+
                                     alertDialog.cancel();
 
                                 }

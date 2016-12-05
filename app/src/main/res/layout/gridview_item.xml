@@ -18,8 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="top|center"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_favorite_black_24dp" >
+            android:scaleType="fitXY">
         </ImageView>
 
         <LinearLayout
@@ -38,7 +37,7 @@
                 android:textAlignment="center"
                 android:gravity="center"
                 android:layout_weight="50"
-                android:text="date"
+                android:text="Uploaded:"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             </TextView>
@@ -48,7 +47,6 @@
                 android:gravity="center"
                 android:layout_weight="50"
                 android:text="title"
-                android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             </TextView>

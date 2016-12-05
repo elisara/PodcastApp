@@ -55,12 +55,18 @@ public class RegisterAndLogin{
                 this.encryptedPassword = myCrypt.doEncoding(password).toString();
                 this.encryptedEmail = myCrypt.doEncoding(email).toString();
 
-                t = new Thread(r);
-                t.start();
+                try {
+                    new Register().execute(encryptedUsername, encryptedPassword, encryptedEmail).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
 
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", "").apply();
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", 0).apply();
+                login(username, password ,context);
                 loggedIn = true;
             } else {
                 System.out.println("Register: User existed");
@@ -90,7 +96,6 @@ public class RegisterAndLogin{
             }
 
             loggedIn = true;
-
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", token).apply();
             PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", userID).apply();
@@ -136,58 +141,6 @@ public class RegisterAndLogin{
         return this.exists;
     }
 
-    Runnable r = new Runnable() {
-        public void run() {
-            try {
-                URL url = new URL("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-                        "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
-                        "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
-                        "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-
-                String input = "{\"username\":\"" + encryptedUsername + "\",\"password\":\"" + encryptedPassword + "\",\"email\":\"" + encryptedEmail + "\"}";
-                input = input.replace("\n", "");
-                //System.out.println(input);
-                //String input = "{\"username\":\"kana\",\"password\":\"\",\"email\":\"\"}";
-                System.out.println(input);
-
-                OutputStream os = conn.getOutputStream();
-                os.write(input.getBytes());
-                os.flush();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
-
-                String output;
-
-                while ((output = br.readLine()) != null) {
-                    try {
-                        JSONObject jObject = new JSONObject(output);
-                        String message = jObject.getString("message");
-                        System.out.println("Message: " + message);
-                    } catch (JSONException e) {
-                        System.out.println(e);
-                    }
-                }
-
-                conn.disconnect();
-            } catch (
-                    MalformedURLException e
-                    ) {
-                e.printStackTrace();
-
-            } catch (
-                    IOException e
-                    )
-
-            {
-                e.printStackTrace();
-            }
-        }
-    };
 }
 
 class GetToken extends AsyncTask<String, String, String> {
@@ -258,4 +211,77 @@ class GetToken extends AsyncTask<String, String, String> {
 
     }
 
+
+
+}
+
+class Register extends AsyncTask<String, String, String> {
+
+    //String token = "";
+
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
+
+    @Override
+    protected String doInBackground(String... params) {
+
+        try {
+            URL url = new URL("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+                    "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
+                    "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
+                    "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+
+            String input = "{\"username\":\"" + params[0] + "\",\"password\":\"" + params[1] + "\",\"email\":\"" + params[2] + "\"}";
+            input = input.replace("\n", "");
+            //System.out.println(input);
+            //String input = "{\"username\":\"kana\",\"password\":\"\",\"email\":\"\"}";
+            System.out.println(input);
+
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+
+            while ((output = br.readLine()) != null) {
+                try {
+                    JSONObject jObject = new JSONObject(output);
+                    String message = jObject.getString("message");
+                    System.out.println("Message: " + message);
+                } catch (JSONException e) {
+                    System.out.println(e);
+                }
+            }
+
+            conn.disconnect();
+        } catch (
+                MalformedURLException e
+                ) {
+            e.printStackTrace();
+
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
+
+
+    }
 }
