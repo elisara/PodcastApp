@@ -58,7 +58,7 @@ public class GridViewAdapter extends BaseAdapter {
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.ic_add_black_24dp)
-                .showImageForEmptyUri(R.drawable.ic_add_black_24dp)
+                //.showImageForEmptyUri(R.drawable.ic_add_black_24dp)
                 .showImageOnFail(R.drawable.ic_add_black_24dp)
                 .cacheOnDisc(true)
                 .build();
