@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,14 +19,15 @@ import java.util.concurrent.ExecutionException;
 public class AddToLists {
 
     public void addToListsDialog(final Context context, final PodcastItem podcastItem, final PlaylistsFragment playlistsFragment, final FavoritesFragment favoritesFragment){
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
+        //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
         alertDialogBuilder.setTitle("Add to");
 
         String user = PreferenceManager.getDefaultSharedPreferences(context).getString("user", "");
 
         LinearLayout lp = new LinearLayout(context);
         lp.setOrientation(LinearLayout.VERTICAL);
-        lp.setPadding(30,30,30,30);
+        lp.setPadding(30,0,30,30);
 
 
         final TextView toQueue = new TextView(context);
@@ -60,7 +62,7 @@ public class AddToLists {
         alertDialogBuilder.setView(lp);
         final AlertDialog alertDialog = alertDialogBuilder.create();
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }

@@ -111,7 +111,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
 
             Collections.sort(categoryList, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
-                    return pod1.title.compareToIgnoreCase(pod2.title); // To compare string values
+                    return pod1.title.compareToIgnoreCase(pod2.collectionName); // To compare string values
                 }
             });
             adapter = new GridViewAdapter(getContext(), categoryList);

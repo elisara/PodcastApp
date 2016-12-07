@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -151,7 +152,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
             case R.id.signIn:
 
                 if(user.length() <1) {
-                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
                     alertDialogBuilder.setTitle("Login");
 
                     LinearLayout lp = new LinearLayout(getContext());
@@ -205,7 +206,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                     //REGISTER
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Register", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
                             alertDialogBuilder.setTitle("Register");
 
                             //editText in dialog

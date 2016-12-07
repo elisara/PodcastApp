@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -21,7 +22,7 @@ public class Search {
 
         AlertDialog alertDialog;
 
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         alertDialogBuilder.setTitle("Search");
 
         LinearLayout lp = new LinearLayout(context);

@@ -67,7 +67,6 @@ public class CollectionFragment extends Fragment {
     private ExpandableListView simpleExpandableListView;
     private ExpandableListViewAdapter listAdapter;
     private FavoritesFragment favoritesFragment;
-    private boolean fromFavorites, fromSearch;
     private ImageView imageView;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
     private TextView textView;
