@@ -3,8 +3,10 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,6 +18,17 @@ import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Kade on 28.10.2016.
@@ -36,6 +49,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
 
         this.mActivity = (MainActivity) getActivity();
         mActivity.pServ.setCallbacks(PlayerFragment.this);
@@ -64,6 +78,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 podcastPic.setImageBitmap(loadedImage);
             }
         });
+
+        try {
+            new CreateHistory().execute("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""), piFromClick.programID.replace("-", "")).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
         playBtn = (ImageView) view.findViewById(R.id.playBtn);
@@ -282,6 +305,64 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration();
         updateProgressBar();
+    }
+}
+
+class CreateHistory extends AsyncTask<Object, String, String> {
+    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
+
+    String message;
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        //this method will be running on UI thread
+        //pdLoading.setMessage("\tLoading...");
+        //pdLoading.show();
+    }
+
+    @Override
+    protected String doInBackground(Object... params) {
+
+        try {
+            URL url = new URL((String) params[0]);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            String input = "{\"podcast_id\":\"" + params[1] + "\"}";
+            //input = input.replace("\n", "");
+            System.out.println(input);
+
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+
+            while ((output = br.readLine()) != null) {
+                try {
+                    JSONObject jObject = new JSONObject(output);
+                    message = jObject.getString("message");
+                    System.out.println("Database message: " + message);
+                } catch (JSONException e) {
+                    System.out.println(e);
+                }
+            }
+
+            conn.disconnect();
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 

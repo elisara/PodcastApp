@@ -32,6 +32,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
     public PodcastItems podcastItems = PodcastItems.getInstance();
     PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
     FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
+    HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
 
     public GetYlePodcastHelper(MainActivity mActivity) {
@@ -79,6 +80,18 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
                     try {
                         favoritePodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
+                    } catch (JSONException e) {
+                        Log.e("JSONException", "Error: " + e.toString());
+                    }
+                }
+            } else if (params[2].equalsIgnoreCase("fromHistory")){
+                System.out.println("From Favorites");
+                historyPodcastItems.clearList();
+                for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
+                    System.out.println("PodCastIDArray value: " + podcastIDArray.getItems().get(i));
+                    result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
+                    try {
+                        historyPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                     } catch (JSONException e) {
                         Log.e("JSONException", "Error: " + e.toString());
                     }

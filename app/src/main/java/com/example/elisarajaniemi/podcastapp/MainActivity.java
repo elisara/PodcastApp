@@ -21,6 +21,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
 
 import java.util.concurrent.ExecutionException;
 
@@ -133,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, frontPageFragment).addToBackStack("frontPageFragment").commit();
             }
         });
-
+        checkForUpdates();
 
     }
 
@@ -236,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         System.out.println("----------Main OnPause");
+        unregisterManagers();
 
     }
 
@@ -243,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         System.out.println("----------Main OnResume");
+        checkForCrashes();
 
     }
 
@@ -252,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("----------Main OnDestroy");
         doUnbindService();
         pServ.onDestroy();
+        unregisterManagers();
 
 
 
@@ -277,6 +282,20 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frag_container, frag).addToBackStack("collectionFragment").commit();
     }
+
+    private void checkForCrashes() {
+        CrashManager.register(this);
+    }
+
+    private void checkForUpdates() {
+        // Remove this for store builds!
+        UpdateManager.register(this);
+    }
+
+    private void unregisterManagers() {
+        UpdateManager.unregister();
+    }
+
 
 
 }
