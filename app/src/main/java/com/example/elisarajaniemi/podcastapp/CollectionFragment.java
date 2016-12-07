@@ -10,8 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,12 +67,18 @@ public class CollectionFragment extends Fragment {
     private ExpandableListView simpleExpandableListView;
     private ExpandableListViewAdapter listAdapter;
     private FavoritesFragment favoritesFragment;
+    private boolean fromFavorites, fromSearch;
+    private ImageView imageView;
+    protected ImageLoader imageLoader = ImageLoader.getInstance();
+    private TextView textView;
+    private LinearLayout header;
+
     private boolean fromFavorites, fromSearch, fromHistory;
     private History historyClass;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-
+        View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
         pi = (PodcastItem) getArguments().getSerializable("message");
         playlistID = getArguments().getInt("playlistID");
         fromFavorites = getArguments().getBoolean("fromFavorites");
@@ -78,6 +91,10 @@ public class CollectionFragment extends Fragment {
         System.out.println("FromFavorites value: " + fromFavorites);
         System.out.println("PlaylistID value: " + playlistID);
         favoritesFragment = new FavoritesFragment();
+
+        imageView = (ImageView) view.findViewById(R.id.collectionImage);
+        textView = (TextView) view.findViewById(R.id.title);
+        header = (LinearLayout) view.findViewById(R.id.headerBox);
 
 
         if(playlistID != 0 && fromFavorites == false && fromHistory == false) {
@@ -107,7 +124,7 @@ public class CollectionFragment extends Fragment {
             }
         }
 
-        View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
+
 
         simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
         //listView = (ListView) view.findViewById(R.id.single_playlist_list);
@@ -150,77 +167,6 @@ public class CollectionFragment extends Fragment {
                 }
             });
         }
-
-        /**
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                PodcastItem pi = list.get(position);
-                pf = new PlayerFragment();
-                Bundle bundle2 = new Bundle();
-                System.out.println("FromYLE: " + pi.fromYLE);
-                if (pi.fromYLE == true){
-                    try {
-                        new DecodeYleURL().execute(pi).get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-                bundle2.putSerializable("episode", pi);
-                pf.setArguments(bundle2);
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                fm.beginTransaction().addToBackStack("pf")
-                        .replace(R.id.frag_container, pf, "pf").commit();
-
-            }
-
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> av, View v, final int position, long rowId) {
-
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                alertDialogBuilder.setTitle("Description");
-
-                LinearLayout lp = new LinearLayout(getContext());
-                lp.setOrientation(LinearLayout.VERTICAL);
-                lp.setPadding(30, 30, 30, 60);
-
-                final TextView description = new TextView(getActivity());
-                final Button shareBtn = new Button(getActivity());
-                shareBtn.setText("share");
-                shareBtn.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent sendIntent = new Intent();
-                        Object obj = list.get(position);
-                        PodcastItem podcastItem = (PodcastItem) obj;
-                        sendIntent.setAction(Intent.ACTION_SEND);
-
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, podcastItem.title + " " + podcastItem.decryptedURL);
-                        sendIntent.setType("text/plain");
-                        startActivity(sendIntent);
-                    }
-                });
-                String[] splits = list.get(position).description.split("<a>");
-                description.setText(splits[0].replaceAll("<br>", "\n\n"));
-                description.setMovementMethod(new ScrollingMovementMethod());
-                lp.addView(description);
-                lp.addView(shareBtn);
-
-                alertDialogBuilder.setView(lp);
-
-                alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-
-                return true;
-            }
-        });
-         */
 
         return view;
     }
@@ -291,6 +237,55 @@ public class CollectionFragment extends Fragment {
         }
 
         //listView.setAdapter(adapter);
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = (getResources().getDisplayMetrics().heightPixels)/3;
+        //imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_"+width+",h_"+height+",c_fill/" + list.get(0).imageURL + ".jpg", imageView);
+        //imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_1000,h_650,c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
+                .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
+                .threadPoolSize(3) // default
+                .threadPriority(Thread.NORM_PRIORITY - 1) // default
+                .denyCacheImageMultipleSizesInMemory()
+                .memoryCacheSize(2 * 1024 * 1024)
+                .memoryCacheSizePercentage(13) // default
+                .discCacheSize(50 * 1024 * 1024)
+                .discCacheFileCount(100)
+                .imageDownloader(new BaseImageDownloader(getContext())) // default
+                .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
+                .build();
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                //.showStubImage(R.drawable.ic_add_black_24dp)
+                //.showImageForEmptyUri(R.drawable.ic_add_black_24dp)
+                //.showImageOnFail(R.drawable.ic_add_black_24dp)
+                .cacheOnDisc(true)
+                .build();
+
+        if(list != null && list.size() > 0) {
+            if (!list.get(0).collectionName.contains("Metropolia")) {
+                imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).imageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
+            } else {
+                //imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
+                textView.setText("Metropolia");
+                header.requestLayout();
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+                header.setLayoutParams(layoutParams);
+                //imageView.getLayoutParams().height = height;
+                //imageView.getLayoutParams().width = width;
+
+            }
+        }
+        else if(playlistID != 0){
+            //imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
+            textView.setText("Empty");
+            header.requestLayout();
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+            header.setLayoutParams(layoutParams);
+            //imageView.getLayoutParams().height = height;
+            //imageView.getLayoutParams().width = width;
+
+        }
 
         listAdapter = new ExpandableListViewAdapter(getContext(), list);
         simpleExpandableListView.setAdapter(listAdapter);

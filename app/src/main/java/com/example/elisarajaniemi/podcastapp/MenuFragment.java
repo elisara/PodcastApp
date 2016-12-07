@@ -24,11 +24,11 @@ import java.util.concurrent.ExecutionException;
 
 public class MenuFragment extends DialogFragment implements View.OnClickListener {
 
-    private MainActivity ma;
+    //private MainActivity ma;
     private TextView playList, favorite, queue, history, continuePlay, signIn, usernameView;
     private PlaylistsFragment plf;
     private LinearLayout userLayout;
-    private MenuFragment mf;
+    //private MenuFragment mf;
     private RegisterAndLogin rali;
     private String password_, password2_, username_, email_, token;
     private AlertDialog alertDialog;
@@ -67,7 +67,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         signIn.setOnClickListener(this);
 
         plf = new PlaylistsFragment();
-        mf = new MenuFragment();
+        //mf = new MenuFragment();
         rali = new RegisterAndLogin();
         frontPageFragment = new FrontPageFragment();
         favoritesFragment = new FavoritesFragment();
@@ -92,16 +92,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.playlists:
-                try {
-                    new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0)
-                    + "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0")).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .remove(this).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frag_container, plf).addToBackStack( "tag" ).commit();
                 break;
@@ -247,13 +238,22 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                     password2_ = password2.getText().toString();
                                     email_ = email.getText().toString();
                                     rali.registerUser(username_, password_, password2_, email_, getContext());
+                                    user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
 
                                     if(user.length() > 0) {
                                         Toast.makeText(getContext(), "User " + username_ + " created", Toast.LENGTH_SHORT).show();
+                                        signIn.setText("Sign out");
+                                        usernameView.setText(user);
+                                        userLayout.setVisibility(View.VISIBLE);
+                                        playList.setVisibility(View.VISIBLE);
+                                        favorite.setVisibility(View.VISIBLE);
+                                        history.setVisibility(View.VISIBLE);
+                                        continuePlay.setVisibility(View.VISIBLE);
                                     }
                                     else {
                                         Toast.makeText(getContext(), "Registering failed", Toast.LENGTH_SHORT).show();
                                     }
+
                                     alertDialog.cancel();
 
                                 }
