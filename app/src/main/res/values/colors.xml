@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#AA00FF</color>
     <color name="black">#000000</color>
-    <color name="availableIcon">#000000</color>
-    <color name="unAvailableIcon">#7A7A7A</color>
+    <color name="availableIcon">#FFFFFF</color>
+    <color name="unAvailableIcon">#EEEEEE</color>
     <color name="primaryText">#FFFFFF</color>
     <color name="secondaryText">#060001</color>
 

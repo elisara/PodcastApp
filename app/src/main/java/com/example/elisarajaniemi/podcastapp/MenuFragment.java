@@ -24,11 +24,11 @@ import java.util.concurrent.ExecutionException;
 
 public class MenuFragment extends DialogFragment implements View.OnClickListener {
 
-    private MainActivity ma;
+    //private MainActivity ma;
     private TextView playList, favorite, queue, history, continuePlay, signIn, usernameView;
     private PlaylistsFragment plf;
     private LinearLayout userLayout;
-    private MenuFragment mf;
+    //private MenuFragment mf;
     private RegisterAndLogin rali;
     private String password_, password2_, username_, email_, token;
     private AlertDialog alertDialog;
@@ -66,7 +66,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         signIn.setOnClickListener(this);
 
         plf = new PlaylistsFragment();
-        mf = new MenuFragment();
+        //mf = new MenuFragment();
         rali = new RegisterAndLogin();
         frontPageFragment = new FrontPageFragment();
         favoritesFragment = new FavoritesFragment();
@@ -90,18 +90,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.playlists:
-                /**
-                try {
-                    new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0)
-                    + "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0")).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                 */
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .remove(this).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frag_container, plf).addToBackStack( "tag" ).commit();
                 break;

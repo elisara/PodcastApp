@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +50,7 @@ public class RegisterAndLogin{
             testIfExists(username, password, context);
             System.out.println("Register: Password match");
 
-            if (this.exists == false) {
+            if (this.exists == false && !loggedIn) {
                 System.out.println("Register: User didn't exist");
                 this.encryptedUsername = myCrypt.doEncoding(username).toString();
                 this.encryptedPassword = myCrypt.doEncoding(password).toString();
@@ -68,7 +69,12 @@ public class RegisterAndLogin{
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", 0).apply();
                 login(username, password ,context);
                 loggedIn = true;
-            } else {
+            }else if(this.exists) {
+                Toast.makeText(context, "Username already in use", Toast.LENGTH_SHORT).show();
+            }
+
+                else
+             {
                 System.out.println("Register: User existed");
                 loggedIn = false;
             }
@@ -101,7 +107,7 @@ public class RegisterAndLogin{
             PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", userID).apply();
 
         } else {
-            System.out.println("Login: User doesn't exist");
+            System.out.println("Login: User doesn't exist or user is already logged in.");
             loggedIn = false;
         }
 
@@ -109,7 +115,7 @@ public class RegisterAndLogin{
 
     }
 
-    public boolean logout(Context context) {
+    public void logout(Context context) {
 
         token = null;
         loggedIn = false;
@@ -117,7 +123,7 @@ public class RegisterAndLogin{
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", "").apply();
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", "").apply();
         PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", 0).apply();
-        return loggedIn;
+
     }
 
     public boolean testIfExists(String username, String email, Context context) {
@@ -178,9 +184,6 @@ class GetToken extends AsyncTask<String, String, String> {
                     JSONObject jObject = new JSONObject(output);
                     System.out.println("Login Output: " + jObject);
                     token = jObject.getString("token");
-                    System.out.println("Token: " + token);
-                    //currentUser.replaceCurrentUser(user);
-                    //new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ currentUser.getCurrentUser().get(0).id + "?token=" + currentUser.getCurrentUser().get(0).token);
                 } catch (JSONException e) {
                     System.out.println(e);
                 }

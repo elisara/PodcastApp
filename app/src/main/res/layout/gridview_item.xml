@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
+    android:layout_height="240dp"
     android:background="@color/black"
     android:orientation="vertical"
     android:padding="5dp" >
@@ -27,7 +27,6 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:minHeight="100dp"
-            android:weightSum="100"
             android:paddingBottom="5dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
@@ -35,20 +34,19 @@
             <TextView
                 android:id="@+id/grid_item_date"
                 android:textAlignment="center"
-                android:gravity="center"
-                android:layout_weight="50"
+                android:paddingTop="5dp"
                 android:text="Uploaded:"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
             </TextView>
             <TextView
                 android:id="@+id/grid_item_label"
                 android:textAlignment="center"
-                android:gravity="center"
-                android:layout_weight="50"
                 android:text="title"
+                android:layout_weight="5"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
             </TextView>
 
         </LinearLayout>

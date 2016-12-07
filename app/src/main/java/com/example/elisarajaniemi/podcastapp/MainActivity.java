@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -137,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         title.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, frontPageFragment).addToBackStack("frontPageFragment").commit();
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
 

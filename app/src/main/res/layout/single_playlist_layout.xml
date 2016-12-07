@@ -29,7 +29,6 @@
     <ExpandableListView
         android:id="@+id/expandable_listview"
         android:layout_width="match_parent"
-        android:divider="@color/colorAccent"
         android:dividerHeight="1dp"
         android:groupIndicator="@null"
         android:childDivider="@color/colorAccent"

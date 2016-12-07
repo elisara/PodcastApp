@@ -2,6 +2,7 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -26,24 +27,28 @@ public class AddToLists {
         lp.setOrientation(LinearLayout.VERTICAL);
         lp.setPadding(30,30,30,30);
 
+
         final TextView toQueue = new TextView(context);
         toQueue.setText("Queue");
+        toQueue.setTextColor(Color.BLACK);
         toQueue.setPadding(30, 20, 20, 20);
         toQueue.setTextSize(20);
         lp.addView(toQueue);
 
 
-            final TextView toPlaylist = new TextView(context);
-            toPlaylist.setText("Playlist");
-            toPlaylist.setTextSize(20);
-            toPlaylist.setPadding(30, 20, 20, 20);
-            //lp.addView(toPlaylist);
+        final TextView toPlaylist = new TextView(context);
+        toPlaylist.setText("Playlist");
+        toPlaylist.setTextSize(20);
+        toPlaylist.setTextColor(Color.BLACK);
+        toPlaylist.setPadding(30, 20, 20, 20);
+        //lp.addView(toPlaylist);
 
-            final TextView toFavorites = new TextView(context);
-            toFavorites.setText("Favorites");
-            toFavorites.setPadding(30, 20, 20, 10);
-            toFavorites.setTextSize(20);
-            //lp.addView(toFavorites);
+        final TextView toFavorites = new TextView(context);
+        toFavorites.setText("Favorites");
+        toFavorites.setTextColor(Color.BLACK);
+        toFavorites.setPadding(30, 20, 20, 10);
+        toFavorites.setTextSize(20);
+        //lp.addView(toFavorites);
 
 
         if(!user.equalsIgnoreCase("") ) {

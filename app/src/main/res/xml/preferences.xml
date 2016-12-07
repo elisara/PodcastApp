@@ -7,6 +7,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="All"
+        android:layout="@layout/custom_all_checkbox"
         android:defaultValue="false"
         android:key="all" />
     <CheckBoxPreference
@@ -14,78 +15,91 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Viihde"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="viihde" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Musiikki"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="musiikki" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Draama"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="draama" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Asia"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="asia" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Kulttuuri"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="kulttuuri" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Historia"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="historia" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Luonto"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="luonto" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Hartaudet"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="hartaudet" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Lapset"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="lapset" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Ajankohtaisohjelmat"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="ajankohtaisohjelmat" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Uutiset"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="uutiset" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Urheilu"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="urheilu" />
     <CheckBoxPreference
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:title="Metropolia"
+        android:layout="@layout/custom_checkbox"
         android:defaultValue="false"
         android:key="metropolia" />
 </PreferenceScreen>
