@@ -61,6 +61,7 @@ public class CollectionFragment extends Fragment {
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
     public FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
     public SearchItems searchItems = SearchItems.getInstance();
+    public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
     private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
@@ -72,6 +73,8 @@ public class CollectionFragment extends Fragment {
     private TextView textView;
     private LinearLayout header;
 
+    private boolean fromFavorites, fromSearch, fromHistory;
+    private History historyClass;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +83,9 @@ public class CollectionFragment extends Fragment {
         playlistID = getArguments().getInt("playlistID");
         fromFavorites = getArguments().getBoolean("fromFavorites");
         fromSearch = getArguments().getBoolean("fromSearch");
+        fromHistory = getArguments().getBoolean("fromHistory");
+
+        historyClass = new History();
 
         System.out.println("FromSearch value: " + fromSearch);
         System.out.println("FromFavorites value: " + fromFavorites);
@@ -91,7 +97,7 @@ public class CollectionFragment extends Fragment {
         header = (LinearLayout) view.findViewById(R.id.headerBox);
 
 
-        if(playlistID != 0 && fromFavorites == false) {
+        if(playlistID != 0 && fromFavorites == false && fromHistory == false) {
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromplaylist").get();
             } catch (InterruptedException e) {
@@ -99,7 +105,7 @@ public class CollectionFragment extends Fragment {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-        } else if(playlistID == 0 && fromFavorites == true){
+        } else if(playlistID == 0 && fromFavorites == true && fromHistory == false){
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromfavorites").get();
             } catch (InterruptedException e) {
@@ -108,6 +114,14 @@ public class CollectionFragment extends Fragment {
                 e.printStackTrace();
             }
 
+        } else if(playlistID == 0 && fromHistory == true && fromFavorites == false){
+            try {
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromHistory").get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
 
@@ -200,23 +214,26 @@ public class CollectionFragment extends Fragment {
         if (list.size() != 0){
             list.clear();
         }
-        if(list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch) {
+        if(list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
             System.out.println("From episodes");
             for (int i = 0; i < listAll.size(); i++) {
                 if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
                     list.add(listAll.get(i));
                 }
             }
-        } else if(list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch){
+        } else if(list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory){
             System.out.println("PlaylistPodcastItems size: " + playlistPodcastItems.getItems().size());
             list = playlistPodcastItems.getItems();
 
-        } else if(list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch){
+        } else if(list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory){
             System.out.println("FavoritePodcastItems array size: " + favoritePodcastItems.getItems().size());
             list = favoritePodcastItems.getItems();
-        } else if(list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites){
+        } else if(list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory){
             System.out.println("From Search: " + fromSearch + ", search size: " + list.size());
             list = searchItems.getSearchItems();
+        } else if(list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory){
+            System.out.println("From History: " + fromHistory + ", History size: " + list.size());
+            list = historyPodcastItems.getItems();
         }
 
         //listView.setAdapter(adapter);
