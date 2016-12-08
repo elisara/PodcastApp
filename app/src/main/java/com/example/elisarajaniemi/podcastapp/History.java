@@ -14,30 +14,39 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 /**
- * Created by jari on 16/11/2016.
+ * Created by jari on 07/12/2016.
  */
 
-public class GetPlayListsHelper extends AsyncTask<String, String, String> {
+public class History {
+
+    public void getHistoryItems(String url, String token) throws ExecutionException, InterruptedException {
+        System.out.println("ASD");
+        new GetHistory().execute(url, token).get();
+    }
+}
+
+class GetHistory extends AsyncTask<Object, String, String> {
 
     private String result = "";
-    Playlists playlists = Playlists.getInstance();
+    private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
 
     protected void onPreExecute() {
         super.onPreExecute();
-        playlists.clearPlaylists();
+        podcastIDArray.clearList();
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected String doInBackground(Object... params) {
 
 
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
         try {
-            URL url = new URL(params[0]);
+            URL url = new URL((String) params[0] + params[1]);
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
@@ -54,26 +63,17 @@ public class GetPlayListsHelper extends AsyncTask<String, String, String> {
             }
             result = buffer.toString();
             try {
-                JSONArray jArray = new JSONArray(result);
-                for (int i = 0; i < jArray.length(); i++) {
+                JSONArray jsonArray  = new JSONArray(result);
 
-                    JSONObject jsonObject = jArray.getJSONObject(i);
-                    PlaylistItem playlistItem = new PlaylistItem(jsonObject.getInt("id"), jsonObject.getString("playlist_name"));
+                System.out.println("History juttuja: " + jsonArray);
 
-                    if (playlists.getPlaylists().size() == 0) playlists.addPlaylist(playlistItem);
-                    else {
-                        boolean idFound = false;
-                        for (int k = 0; k < playlists.getPlaylists().size(); k++) {
-                            if (playlists.getPlaylists().get(k).id == playlistItem.id)
-                                idFound = true;
-                        }
-                        if (idFound == false) playlists.addPlaylist(playlistItem);
-                    }
-                }// End Loop
-
-                System.out.println("Playlists: " + playlists.getPlaylists());
-
-                //System.out.println("SeriID array size: " + serieItems.getSerieItems().size());
+                //JSONArray jsonArray = new JSONArray(jObject.getString("content"));
+                for (int i = 0; i < jsonArray.length(); i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    PodcastItem podcastItem = new PodcastItem(jsonObject.getString("id"), jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
+                    //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
+                    podcastIDArray.addPodcastID(podcastItem);
+                }
 
             } catch (JSONException e) {
                 Log.e("JSONException", "Error: " + e.toString());
@@ -102,7 +102,6 @@ public class GetPlayListsHelper extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        //System.out.println("Users Array: " + result);
         super.onPostExecute(result);
     }
 

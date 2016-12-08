@@ -26,4 +26,8 @@ public class Playlists {
     public ArrayList<PlaylistItem> getPlaylists(){
         return this.playlists;
     }
+
+    public void clearPlaylists(){
+        this.playlists.clear();
+    }
 }

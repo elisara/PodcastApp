@@ -1,13 +1,13 @@
 package com.example.elisarajaniemi.podcastapp;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Point;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,19 +25,18 @@ import java.util.concurrent.ExecutionException;
 
 public class MenuFragment extends DialogFragment implements View.OnClickListener {
 
-    private MainActivity ma;
+    //private MainActivity ma;
     private TextView playList, favorite, queue, history, continuePlay, signIn, usernameView;
     private PlaylistsFragment plf;
     private LinearLayout userLayout;
-    private SinglePlaylistFragment splf;
-    private MenuFragment mf;
+    //private MenuFragment mf;
     private RegisterAndLogin rali;
     private String password_, password2_, username_, email_, token;
     private AlertDialog alertDialog;
-    CurrentUser currentUser =  CurrentUser.getInstance();
-    private SerieFragment sf;
+    private FrontPageFragment frontPageFragment;
     private FavoritesFragment favoritesFragment;
-    private EpisodesFragment ef;
+    private CollectionFragment collectionFragment;
+    private History historyClass;
     private String user;
 
 
@@ -69,11 +68,11 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         signIn.setOnClickListener(this);
 
         plf = new PlaylistsFragment();
-        splf = new SinglePlaylistFragment();
-        mf = new MenuFragment();
+        //mf = new MenuFragment();
         rali = new RegisterAndLogin();
-        sf = new SerieFragment();
+        frontPageFragment = new FrontPageFragment();
         favoritesFragment = new FavoritesFragment();
+        historyClass = new History();
         usernameView.setText(user);
 
         if(user.length() < 1){
@@ -83,6 +82,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
             history.setVisibility(View.GONE);
             continuePlay.setVisibility(View.GONE);
         }
+        if(user.length() > 0){
+            signIn.setText("Sign out");
+        }
 
         return view;
     }
@@ -91,16 +93,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.playlists:
-                try {
-                    new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0)
-                    + "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0")).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .remove(this).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frag_container, plf).addToBackStack( "tag" ).commit();
                 break;
@@ -109,24 +102,32 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 System.out.println("QUEUE");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
                 break;
 
             case R.id.history:
                 System.out.println("HISTORY");
+                try {
+                    historyClass.getHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=", PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
+                collectionFragment = new CollectionFragment();
+                Bundle historyBundle = new Bundle();
+                historyBundle.putBoolean("fromHistory", true);
+                collectionFragment.setArguments(historyBundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("history")
+                        .replace(R.id.frag_container, collectionFragment).commit();
+
                 break;
 
             case R.id.continuePlaying:
                 System.out.println("CONTINUE");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frag_container, splf).addToBackStack( "tag" ).commit();
                 break;
 
             case R.id.favorites:
@@ -140,18 +141,18 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 System.out.println("FAVS");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
-                ef = new EpisodesFragment();
+                collectionFragment = new CollectionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("fromFavorites", true);
-                ef.setArguments(bundle);
+                collectionFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favoritesFragment")
-                        .replace(R.id.frag_container, ef).commit();
+                        .replace(R.id.frag_container, collectionFragment).commit();
                 break;
 
             case R.id.signIn:
 
                 if(user.length() <1) {
-                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
                     alertDialogBuilder.setTitle("Login");
 
                     LinearLayout lp = new LinearLayout(getContext());
@@ -205,7 +206,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                     //REGISTER
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Register", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
                             alertDialogBuilder.setTitle("Register");
 
                             //editText in dialog
@@ -238,13 +239,22 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                     password2_ = password2.getText().toString();
                                     email_ = email.getText().toString();
                                     rali.registerUser(username_, password_, password2_, email_, getContext());
+                                    user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
 
                                     if(user.length() > 0) {
                                         Toast.makeText(getContext(), "User " + username_ + " created", Toast.LENGTH_SHORT).show();
+                                        signIn.setText("Sign out");
+                                        usernameView.setText(user);
+                                        userLayout.setVisibility(View.VISIBLE);
+                                        playList.setVisibility(View.VISIBLE);
+                                        favorite.setVisibility(View.VISIBLE);
+                                        history.setVisibility(View.VISIBLE);
+                                        continuePlay.setVisibility(View.VISIBLE);
                                     }
                                     else {
                                         Toast.makeText(getContext(), "Registering failed", Toast.LENGTH_SHORT).show();
                                     }
+
                                     alertDialog.cancel();
 
                                 }
@@ -263,8 +273,12 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                 }
                 else{
+                    //LOGOUT
                     rali.logout(getContext());
                     dismiss();
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favoritesFragment")
+                            .replace(R.id.frag_container, frontPageFragment).commit();
+                    getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }
 
                 break;

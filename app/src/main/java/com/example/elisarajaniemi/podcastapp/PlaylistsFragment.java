@@ -1,5 +1,6 @@
 package com.example.elisarajaniemi.podcastapp;
 
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -22,9 +24,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,15 +46,20 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
 
 /**
  * Created by Elisa Rajaniemi on 31.10.2016.
  */
 
+
 public class PlaylistsFragment extends Fragment {
+
+
 
 
     private Thread t;
@@ -59,8 +68,8 @@ public class PlaylistsFragment extends Fragment {
     private MenuFragment mf;
     private String playlistName, message;
     private ArrayList<PlaylistItem> list;
-    CurrentUser currentUser = CurrentUser.getInstance();
     Playlists playlists = Playlists.getInstance();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,8 +86,10 @@ public class PlaylistsFragment extends Fragment {
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PlaylistItem value = playlists.getPlaylists().get(position);
 
+
                 System.out.println("Playlistin nimi playlistsfragmentissa: " + value.name);
                 System.out.println("Playlistin ID playlistsfragmentissa: " + value.id);
+
 
                 //new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/1-3742971.json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "true");
 
@@ -91,15 +102,17 @@ public class PlaylistsFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                EpisodesFragment episodesFragment = new EpisodesFragment();
+
+                CollectionFragment collectionFragment = new CollectionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt("playlistID", value.id);
-                episodesFragment.setArguments(bundle);
-                 getActivity().getSupportFragmentManager().beginTransaction()
-                         .replace(R.id.frag_container, episodesFragment).addToBackStack( "playlistFragment" ).commit();
+                collectionFragment.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frag_container, collectionFragment).addToBackStack( "playlistFragment" ).commit();
             }
 
         });
+
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -112,10 +125,10 @@ public class PlaylistsFragment extends Fragment {
         return view;
     }
 
-    public void createNewPlaylist(Context context){
+
+    public void createNewPlaylist(final Context context){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
-        System.out.println("Current User Id: " + CurrentUser.getInstance().getCurrentUser().get(0).id);
         alertDialogBuilder.setTitle("Create new playlist");
         alertDialogBuilder.setMessage("Name of the playlist:");
 
@@ -126,11 +139,20 @@ public class PlaylistsFragment extends Fragment {
         input.setLayoutParams(lp);
         alertDialogBuilder.setView(input);
 
+
         alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
-                t = new Thread(r);
-                t.start();
+                String token = PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0");
+                int userID = PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0);
                 playlistName = input.getText().toString();
+                try {
+                    new CreateNewPlaylist().execute(token, playlistName, userID).get();
+                    new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ userID + "?token=" + token).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
             }
         })
@@ -143,16 +165,13 @@ public class PlaylistsFragment extends Fragment {
         alertDialog.show();
     }
 
+
     public void addToExcistingPlaylist(int playlistID, PodcastItem podcastItem){
 
         //lista.add(0,podcastItem);
         //System.out.println("LISTA: " + lista.get(0).title);
     }
 
-    public String getString(){
-        String koira = "koira";
-        return koira;
-    }
 
     public void addToPlaylistDialog(final PodcastItem podcastItem, final Context context){
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
@@ -162,18 +181,15 @@ public class PlaylistsFragment extends Fragment {
         lp.setOrientation(LinearLayout.VERTICAL);
         lp.setPadding(30,30,30,30);
 
-        final ListView toPlaylist = new ListView(context);
-        adapter = new PlaylistsArrayAdapter(context, playlists.getPlaylists());
-
-        toPlaylist.setAdapter(adapter);
-        //toPlaylist.setText(playlist.name);
-        //toPlaylist.setTextSize(20);
-        toPlaylist.setPadding(30, 20, 20, 20);
-        lp.addView(toPlaylist);
-
         final ImageButton addPlaylist = new ImageButton(context);
         addPlaylist.setImageResource(R.drawable.ic_add_black_24dp);
         lp.addView(addPlaylist);
+
+        final ListView toPlaylist = new ListView(context);
+        adapter = new PlaylistsArrayAdapter(context, playlists.getPlaylists());
+        toPlaylist.setAdapter(adapter);
+        toPlaylist.setPadding(30, 20, 20, 20);
+        lp.addView(toPlaylist);
 
         alertDialogBuilder.setView(lp);
         final AlertDialog alertDialog2 = alertDialogBuilder.create();
@@ -183,7 +199,6 @@ public class PlaylistsFragment extends Fragment {
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 alertDialog2.cancel();
                 PlaylistItem playlistItem = playlists.getPlaylists().get(position);
-                //addToExcistingPlaylist(playlist.list, podcastItem);
                 new PutPodcastToPlaylist().execute(podcastItem.programID.replace("-", ""), "http://media.mw.metropolia.fi/arsu/playlists/" + playlistItem.id + "?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
                         "eyJpZCI6MywidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUBleGFtcGxlLmNvbSIsImlzX2FkbWluIjpudWxs" +
                         "LCJkYXRlIjoiMjAxNi0xMS0xNVQxNjowMToyMy4wMDBaIiwiaWF0IjoxNDc5MjgxNDI5LCJleHAiOjE1MTA4MTc0Mjl9.5BTFGggjtGCSh7ssNjWokmM7CAHHR9omvcGCqYXLlso");
@@ -196,61 +211,87 @@ public class PlaylistsFragment extends Fragment {
                 createNewPlaylist(context);
                 alertDialog2.cancel();
 
+
             }
         });
         alertDialog2.show();
     }
+}
 
 
+class CreateNewPlaylist extends AsyncTask<Object, String, String> {
+    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
 
-    Runnable r = new Runnable() {
-        public void run() {
-            try {
-                URL url = new URL("http://media.mw.metropolia.fi/arsu/playlists?token=" + currentUser.getCurrentUser().get(0).token);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-                String input = "{\"playlist_name\":\"" + playlistName + "\",\"user_id\":\"" + currentUser.getCurrentUser().get(0).id + "\"}";
-                input = input.replace("\n", "");
-                System.out.println(input);
+    String message;
 
-                OutputStream os = conn.getOutputStream();
-                os.write(input.getBytes());
-                os.flush();
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
 
-                String output;
+        //this method will be running on UI thread
+        //pdLoading.setMessage("\tLoading...");
+        //pdLoading.show();
+    }
+    @Override
+    protected String doInBackground(Object... params) {
 
-                while ((output = br.readLine()) != null) {
-                    try {
-                        JSONObject jObject = new JSONObject(output);
-                        message = jObject.getString("message");
-                        System.out.println("Database message: " + message);
-                        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ currentUser.getCurrentUser().get(0).id + "?token=" + currentUser.getCurrentUser().get(0).token);
-                    } catch (JSONException e) {
-                        System.out.println(e);
-                    }
+
+        try {
+            URL url = new URL("http://media.mw.metropolia.fi/arsu/playlists?token=" + params[0]);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            String input = "{\"playlist_name\":\"" + params[1] + "\",\"user_id\":\"" + params[2] + "\"}";
+            input = input.replace("\n", "");
+            System.out.println(input);
+
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+
+
+            while ((output = br.readLine()) != null) {
+                try {
+                    JSONObject jObject = new JSONObject(output);
+                    message = jObject.getString("message");
+                    System.out.println("Database message: " + message);
+                    //new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0) + "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
+                } catch (JSONException e) {
+                    System.out.println(e);
                 }
-
-                conn.disconnect();
-            } catch (
-                    MalformedURLException e
-                    ) {
-                e.printStackTrace();
-
-            } catch (
-                    IOException e
-                    )
-
-            {
-                e.printStackTrace();
             }
-        }
-    };
 
+            conn.disconnect();
+        } catch (
+                MalformedURLException e
+                ) {
+            e.printStackTrace();
+
+
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
+        System.out.println("Result: " + result);
+    }
 }
 
 
@@ -270,6 +311,7 @@ class PutPodcastToPlaylist extends AsyncTask<Object, String, String> {
     @Override
     protected String doInBackground(Object... params) {
 
+
         try {
             URL url = new URL((String)params[1]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -280,15 +322,15 @@ class PutPodcastToPlaylist extends AsyncTask<Object, String, String> {
             //input = input.replace("\n", "");
             System.out.println(input);
 
+
             OutputStream os = conn.getOutputStream();
             os.write(input.getBytes());
             os.flush();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
+
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
             String output;
-
             while ((output = br.readLine()) != null) {
                 try {
                     JSONObject jObject = new JSONObject(output);
@@ -299,10 +341,12 @@ class PutPodcastToPlaylist extends AsyncTask<Object, String, String> {
                 }
             }
 
+
             conn.disconnect();
         } catch (
                 IOException e
                 )
+
 
         {
             e.printStackTrace();
@@ -310,33 +354,33 @@ class PutPodcastToPlaylist extends AsyncTask<Object, String, String> {
         return null;
     }
 
+
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-
         System.out.println("Result: " + result);
 
-        //this method will be running on UI thread
-
-        //pdLoading.dismiss();
     }
+
 
 }
 
+
 class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
+
 
     private String result = "";
     private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
+
 
     protected void onPreExecute() {
         super.onPreExecute();
         podcastIDArray.clearList();
     }
 
+
     @Override
     protected String doInBackground(String... params) {
-
-
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
@@ -345,13 +389,13 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
-
             InputStream stream = connection.getInputStream();
 
             reader = new BufferedReader(new InputStreamReader(stream));
 
             StringBuffer buffer = new StringBuffer();
             String line = "";
+
 
             while ((line = reader.readLine()) != null) {
                 buffer.append(line + "\n");
@@ -360,20 +404,22 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
             try {
                 JSONObject jObject = new JSONObject(result);
 
+
                 //System.out.println("Playlist juttuja: " + jObject);
+
 
                 JSONArray jsonArray = new JSONArray(jObject.getString("content"));
                 for (int i = 0; i < jsonArray.length(); i++){
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    String podcastID = jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length());
+                    PodcastItem podcastItem = new PodcastItem(jsonObject.getString("id"), jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
                     //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
-                    podcastIDArray.addPodcastID(podcastID);
+                    podcastIDArray.addPodcastID(podcastItem);
                 }
+
 
             } catch (JSONException e) {
                 Log.e("JSONException", "Error: " + e.toString());
             }
-
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -395,9 +441,15 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
         return result;
     }
 
+
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
     }
 
+
 }
+
+
+
+

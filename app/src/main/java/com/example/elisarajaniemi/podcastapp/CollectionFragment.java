@@ -1,30 +1,24 @@
 package com.example.elisarajaniemi.podcastapp;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,10 +26,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -43,9 +34,7 @@ import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import javax.crypto.BadPaddingException;
@@ -56,11 +45,10 @@ import javax.crypto.NoSuchPaddingException;
  * Created by Elisa Rajaniemi on 31.10.2016.
  */
 
-public class EpisodesFragment extends Fragment {
+public class CollectionFragment extends Fragment {
 
     private ListView listView;
-    private EpisodeListArrayAdapter adapter;
-    private HttpGetHelper httpGetHelper;
+    private GetMetropoliaPodcastHelper getMetropoliaPodcastHelper;
     private String message;
     private ArrayList<PodcastItem> list;
     private PodcastItem pi;
@@ -71,24 +59,44 @@ public class EpisodesFragment extends Fragment {
     public PodcastItems podcastItems = PodcastItems.getInstance();
     public PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
-    FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
+    public FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
+    public SearchItems searchItems = SearchItems.getInstance();
+    public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
     private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
-    private CustomAdapter listAdapter;
-    private boolean fromFavorites;
+    private ExpandableListViewAdapter listAdapter;
+    private FavoritesFragment favoritesFragment;
+    private ImageView imageView;
+    protected ImageLoader imageLoader = ImageLoader.getInstance();
+    private TextView textView;
+    private LinearLayout header;
+
+    private boolean fromFavorites, fromSearch, fromHistory;
+    private History historyClass;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-
+        View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
         pi = (PodcastItem) getArguments().getSerializable("message");
         playlistID = getArguments().getInt("playlistID");
         fromFavorites = getArguments().getBoolean("fromFavorites");
+        fromSearch = getArguments().getBoolean("fromSearch");
+        fromHistory = getArguments().getBoolean("fromHistory");
 
-        System.out.println("From Favorites: " + fromFavorites);
+        historyClass = new History();
+
+        System.out.println("FromSearch value: " + fromSearch);
+        System.out.println("FromFavorites value: " + fromFavorites);
+        System.out.println("PlaylistID value: " + playlistID);
+        favoritesFragment = new FavoritesFragment();
+
+        imageView = (ImageView) view.findViewById(R.id.collectionImage);
+        textView = (TextView) view.findViewById(R.id.title);
+        header = (LinearLayout) view.findViewById(R.id.headerBox);
 
 
-        if(playlistID != 0 && fromFavorites == false) {
+        if(playlistID != 0 && fromFavorites == false && fromHistory == false) {
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromplaylist").get();
             } catch (InterruptedException e) {
@@ -96,7 +104,7 @@ public class EpisodesFragment extends Fragment {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-        } else if(playlistID == 0 && fromFavorites == true){
+        } else if(playlistID == 0 && fromFavorites == true && fromHistory == false){
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromfavorites").get();
             } catch (InterruptedException e) {
@@ -105,9 +113,17 @@ public class EpisodesFragment extends Fragment {
                 e.printStackTrace();
             }
 
+        } else if(playlistID == 0 && fromHistory == true && fromFavorites == false){
+            try {
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromHistory").get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
+
 
         simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
         //listView = (ListView) view.findViewById(R.id.single_playlist_list);
@@ -132,76 +148,24 @@ public class EpisodesFragment extends Fragment {
             }
         });
 
-        /**
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
-                PodcastItem pi = list.get(position);
-                pf = new PlayerFragment();
-                Bundle bundle2 = new Bundle();
-                System.out.println("FromYLE: " + pi.fromYLE);
-                if (pi.fromYLE == true){
+        if (fromFavorites == true){
+            simpleExpandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                     try {
-                        new DecodeURL().execute(pi).get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        favoritesFragment.deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(position).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
+                        favoritePodcastItems.deletePodcast(position);
+                        listAdapter.notifyDataSetChanged();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
 
+                    return false;
                 }
-                bundle2.putSerializable("episode", pi);
-                pf.setArguments(bundle2);
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                fm.beginTransaction().addToBackStack("pf")
-                        .replace(R.id.frag_container, pf, "pf").commit();
-
-            }
-
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> av, View v, final int position, long rowId) {
-
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                alertDialogBuilder.setTitle("Description");
-
-                LinearLayout lp = new LinearLayout(getContext());
-                lp.setOrientation(LinearLayout.VERTICAL);
-                lp.setPadding(30, 30, 30, 60);
-
-                final TextView description = new TextView(getActivity());
-                final Button shareBtn = new Button(getActivity());
-                shareBtn.setText("share");
-                shareBtn.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent sendIntent = new Intent();
-                        Object obj = list.get(position);
-                        PodcastItem podcastItem = (PodcastItem) obj;
-                        sendIntent.setAction(Intent.ACTION_SEND);
-
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, podcastItem.title + " " + podcastItem.decryptedURL);
-                        sendIntent.setType("text/plain");
-                        startActivity(sendIntent);
-                    }
-                });
-                String[] splits = list.get(position).description.split("<a>");
-                description.setText(splits[0].replaceAll("<br>", "\n\n"));
-                description.setMovementMethod(new ScrollingMovementMethod());
-                lp.addView(description);
-                lp.addView(shareBtn);
-
-                alertDialogBuilder.setView(lp);
-
-                alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-
-                return true;
-            }
-        });
-         */
+            });
+        }
 
         return view;
     }
@@ -246,24 +210,83 @@ public class EpisodesFragment extends Fragment {
 
     public void fillList(){
         list = new ArrayList<>();
-        if(list.size() == 0 && playlistID == 0 && fromFavorites == false) {
+        if (list.size() != 0){
+            list.clear();
+        }
+        if(list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
+            System.out.println("From episodes");
             for (int i = 0; i < listAll.size(); i++) {
                 if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
                     list.add(listAll.get(i));
                 }
             }
-        } else if(list.size() == 0 && playlistID != 0 && fromFavorites == false){
+        } else if(list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory){
             System.out.println("PlaylistPodcastItems size: " + playlistPodcastItems.getItems().size());
             list = playlistPodcastItems.getItems();
 
-        } else if(list.size() == 0 && fromFavorites == true){
+        } else if(list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory){
+            System.out.println("FavoritePodcastItems array size: " + favoritePodcastItems.getItems().size());
             list = favoritePodcastItems.getItems();
+        } else if(list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory){
+            System.out.println("From Search: " + fromSearch + ", search size: " + list.size());
+            list = searchItems.getSearchItems();
+        } else if(list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory){
+            System.out.println("From History: " + fromHistory + ", History size: " + list.size());
+            list = historyPodcastItems.getItems();
         }
 
-        //adapter = new EpisodeListArrayAdapter(getContext(), list);
         //listView.setAdapter(adapter);
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = (getResources().getDisplayMetrics().heightPixels)/3;
+        //imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_"+width+",h_"+height+",c_fill/" + list.get(0).imageURL + ".jpg", imageView);
+        //imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_1000,h_650,c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
 
-        listAdapter = new CustomAdapter(getContext(), list);
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
+                .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
+                .threadPoolSize(3) // default
+                .threadPriority(Thread.NORM_PRIORITY - 1) // default
+                .denyCacheImageMultipleSizesInMemory()
+                .memoryCacheSize(2 * 1024 * 1024)
+                .memoryCacheSizePercentage(13) // default
+                .discCacheSize(50 * 1024 * 1024)
+                .discCacheFileCount(100)
+                .imageDownloader(new BaseImageDownloader(getContext())) // default
+                .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
+                .build();
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                //.showStubImage(R.drawable.ic_add_black_24dp)
+                //.showImageForEmptyUri(R.drawable.ic_add_black_24dp)
+                //.showImageOnFail(R.drawable.ic_add_black_24dp)
+                .cacheOnDisc(true)
+                .build();
+
+        if(list != null && list.size() > 0) {
+            if (!list.get(0).collectionName.contains("Metropolia")) {
+                imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).imageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
+            } else {
+                //imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
+                textView.setText("Metropolia");
+                header.requestLayout();
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+                header.setLayoutParams(layoutParams);
+                //imageView.getLayoutParams().height = height;
+                //imageView.getLayoutParams().width = width;
+
+            }
+        }
+        else if(playlistID != 0){
+            //imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
+            textView.setText("Empty");
+            header.requestLayout();
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+            header.setLayoutParams(layoutParams);
+            //imageView.getLayoutParams().height = height;
+            //imageView.getLayoutParams().width = width;
+
+        }
+
+        listAdapter = new ExpandableListViewAdapter(getContext(), list);
         simpleExpandableListView.setAdapter(listAdapter);
 
     }
@@ -272,7 +295,7 @@ public class EpisodesFragment extends Fragment {
 
 }
 
-class DecodeURL extends AsyncTask<PodcastItem, String, String> {
+class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
     //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
     String decryptedURL;
     String resultURL;

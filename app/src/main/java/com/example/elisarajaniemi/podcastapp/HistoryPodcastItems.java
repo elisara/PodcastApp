@@ -3,19 +3,18 @@ package com.example.elisarajaniemi.podcastapp;
 import java.util.ArrayList;
 
 /**
- * Created by jari on 02/11/2016.
+ * Created by jari on 07/12/2016.
  */
-public class PodcastItems {
-
+public class HistoryPodcastItems {
     private ArrayList<PodcastItem> items;
 
-    private static PodcastItems ourInstance = new PodcastItems();
+    private static HistoryPodcastItems ourInstance = new HistoryPodcastItems();
 
-    public static PodcastItems getInstance() {
+    public static HistoryPodcastItems getInstance() {
         return ourInstance;
     }
 
-    private PodcastItems() {
+    private HistoryPodcastItems() {
         this.items = new ArrayList<>();
     }
 
@@ -24,12 +23,14 @@ public class PodcastItems {
             items.add(item);
         }
     }
-    public void addAll(ArrayList<PodcastItem> lista){
-        items.addAll(lista);
+    public void addAll(ArrayList<PodcastItem> lista) {
+        items = lista;
     }
-
     public ArrayList<PodcastItem> getItems(){
         return items;
     }
 
+    public void clearList(){
+        this.items.clear();
+    }
 }

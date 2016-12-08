@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -58,7 +59,7 @@ public class GridViewAdapter extends BaseAdapter {
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.ic_add_black_24dp)
-                .showImageForEmptyUri(R.drawable.ic_add_black_24dp)
+                //.showImageForEmptyUri(R.drawable.ic_add_black_24dp)
                 .showImageOnFail(R.drawable.ic_add_black_24dp)
                 .cacheOnDisc(true)
                 .build();
@@ -75,18 +76,22 @@ public class GridViewAdapter extends BaseAdapter {
            myView = convertView;
         }
 
+        int width =  (context.getResources().getDisplayMetrics().widthPixels)/2;
+        int height = (context.getResources().getDisplayMetrics().heightPixels)/6;
+
         imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
-        imageView.setImageResource(R.drawable.ic_add_black_24dp);
         if(!list.get(position).collectionName.contains("Metropolia")) {
-            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_1000,h_650,c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
+            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_"+width+",h_"+height+",c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
             //w_705,h_520,c_fill,g_auto
         }
         else{
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+            imageView.setLayoutParams(layoutParams);
             imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
         }
 
         textView = (TextView) myView.findViewById(R.id.grid_item_label);
-        textView.setText(list.get(position).collectionName);
+        textView.setText(list.get(position).title);
 
         return myView;
     }

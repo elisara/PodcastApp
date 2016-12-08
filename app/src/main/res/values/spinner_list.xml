@@ -3,5 +3,7 @@
     <string-array name="sort_array">
         <item>NEW</item>
         <item>NAME</item>
+        <item>TOP</item>
+        <item>LENGTH</item>
     </string-array>
 </resources>
