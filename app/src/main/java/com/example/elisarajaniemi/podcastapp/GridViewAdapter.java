@@ -1,25 +1,18 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.ArrayList;
 
@@ -30,10 +23,8 @@ import java.util.ArrayList;
 public class GridViewAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<PodcastItem> list;
-    private TextView textView;
+    private TextView titleView, lengthView;
     private ImageView imageView;
-    private PodcastItem pi;
-    private MainActivity mActivity = new MainActivity();
     protected ImageLoader imageLoader = ImageLoader.getInstance();
 
 
@@ -43,7 +34,7 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        View myView = convertView;
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
                 .threadPoolSize(3) // default
@@ -65,33 +56,35 @@ public class GridViewAdapter extends BaseAdapter {
                 .build();
 
 
-        View myView = convertView;
-
         if (myView == null) {
             myView = LayoutInflater.from(context).inflate(R.layout.gridview_item, parent, false);
 
-
-
         } else {
-           myView = convertView;
+            myView = convertView;
         }
 
         int width =  (context.getResources().getDisplayMetrics().widthPixels)/2;
-        int height = (context.getResources().getDisplayMetrics().heightPixels)/6;
+        int height = (context.getResources().getDisplayMetrics().heightPixels)/7;
+
 
         imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
-        if(!list.get(position).collectionName.contains("Metropolia")) {
-            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_"+width+",h_"+height+",c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
-            //w_705,h_520,c_fill,g_auto
-        }
-        else{
+        if (!list.get(position).collectionName.contains("Metropolia")) {
+            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
+
+        } else {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
             imageView.setLayoutParams(layoutParams);
             imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
         }
 
-        textView = (TextView) myView.findViewById(R.id.grid_item_label);
-        textView.setText(list.get(position).title);
+
+        int length = (list.get(position).length) / 60;
+
+        lengthView = (TextView) myView.findViewById(R.id.grid_item_length);
+        lengthView.setText(length + "min");
+
+        titleView = (TextView) myView.findViewById(R.id.grid_item_label);
+        titleView.setText(list.get(position).title);
 
         return myView;
     }

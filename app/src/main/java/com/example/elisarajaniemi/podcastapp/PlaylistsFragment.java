@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +87,6 @@ public class PlaylistsFragment extends Fragment {
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PlaylistItem value = playlists.getPlaylists().get(position);
 
-
                 System.out.println("Playlistin nimi playlistsfragmentissa: " + value.name);
                 System.out.println("Playlistin ID playlistsfragmentissa: " + value.id);
 
@@ -127,7 +127,7 @@ public class PlaylistsFragment extends Fragment {
 
 
     public void createNewPlaylist(final Context context){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        AlertDialog.Builder alertDialogBuilder =  new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
 
         alertDialogBuilder.setTitle("Create new playlist");
         alertDialogBuilder.setMessage("Name of the playlist:");
@@ -140,7 +140,7 @@ public class PlaylistsFragment extends Fragment {
         alertDialogBuilder.setView(input);
 
 
-        alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
                 String token = PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0");
                 int userID = PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0);
@@ -156,7 +156,7 @@ public class PlaylistsFragment extends Fragment {
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
             }
         })
-                .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                .setNegativeButton("CANCEL",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -174,7 +174,7 @@ public class PlaylistsFragment extends Fragment {
 
 
     public void addToPlaylistDialog(final PodcastItem podcastItem, final Context context){
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         alertDialogBuilder.setTitle("Add to");
 
         LinearLayout lp = new LinearLayout(context);

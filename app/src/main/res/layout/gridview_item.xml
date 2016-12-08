@@ -32,10 +32,10 @@
             android:paddingRight="5dp"
             android:layout_height="match_parent">
             <TextView
-                android:id="@+id/grid_item_date"
+                android:id="@+id/grid_item_length"
                 android:textAlignment="center"
                 android:paddingTop="5dp"
-                android:text="Uploaded:"
+                android:text="Length:"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

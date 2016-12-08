@@ -27,7 +27,7 @@ public class PlaylistsArrayAdapter extends ArrayAdapter<PlaylistItem> {
 
         value = getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.episode_list_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.playlist_item, parent, false);
         }
 
         TextView title = (TextView) convertView.findViewById(R.id.episodeName);
