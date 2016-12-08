@@ -126,14 +126,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         seekbar.setOnSeekBarChangeListener(this);
         utils = new Utilities();
         if (mActivity.pServ.getStatus() < 2) {
-
+            System.out.println("if playerfagment 1");
             mActivity.pServ.setPodcastObject(piFromClick);
             mActivity.pServ.setAudioPath();
             mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
 
 
-        } else if (!piFromClick.decryptedURL.equals(piFromService.decryptedURL)) {
-
+        } else if (!piFromClick.programID.equals(piFromService.programID)) {
+            System.out.println("if playerfagment 2");
                 mediaFileLengthInMilliseconds = 0;
                 mActivity.pServ.stopMusic();
                 mActivity.pServ.initPlayer();
@@ -142,7 +142,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
 
             }else if (mActivity.pServ.getStatus() == 3) {
-
+            System.out.println("if playerfagment 3");
             serviceCallbackMethod();
         }
         return view;
