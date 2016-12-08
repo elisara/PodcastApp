@@ -54,6 +54,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         try {
             if (params[2].equalsIgnoreCase("fromepisodes")) {
                 result = makeConnection(params[0] + params[1]);
+                System.out.println("Koko lista: " +params[0] + params[1]);
                 try {
                     podcastItems.addAll(makePodcastItem(result));
                 } catch (JSONException e) {
@@ -117,10 +118,12 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         JSONArray jsonArray = jsonObject.getJSONArray("data");
         for (int i = 0; i < jsonArray.length(); i++) {
             PodcastItem podcastItem = new PodcastItem();
+            System.out.print(i + ". ");
             podcastItem = getSinglePodcast(jsonArray.getJSONObject(i));
 
+
             if (podcastItem.programID != null) {
-                if (tempPodcastList.size() == 0)
+                if (tempPodcastList.size() == 0 )//&& podcastItem.length < 600
                     tempPodcastList.add(podcastItem);
                 else {
                     boolean titleFound = false;
@@ -129,15 +132,15 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                             titleFound = true;
                         }
                     }
-                    if (titleFound == false) {
+                    if (titleFound == false ) { //&& podcastItem.length < 600
                         tempPodcastList.add(0, podcastItem);
                     }
                 }
             }
         }
 
-    return tempPodcastList;
-}
+        return tempPodcastList;
+    }
 
     public String makeConnection(String urli) throws IOException {
         HttpURLConnection connection = null;
@@ -213,18 +216,27 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         for (int i2 = 0; i2 < categoryArray.length(); i2++) {
             JSONObject categoryObject = categoryArray.getJSONObject(i2);
 
-
-            categorys.add(categoryObject.getJSONObject("title").getString("fi"));
+        if(categoryObject.getJSONObject("title").has("fi"))categorys.add(categoryObject.getJSONObject("title").getString("fi"));
 
         }
+
+
         String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaID + "&" + YLE_APP_KEY;
-        if (jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi")) {
-            System.out.println(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi") + ": https://external.api.yle.fi/v1/programs/items.json?id=" + jObject.getString("id") + "&" + YLE_APP_KEY);
 
-            podcastItem.alterPodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"),
-                    jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"), jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaID, categorys, podcastLength(jObject.getString("duration").substring(2)));
+            //System.out.println(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi") + ": https://external.api.yle.fi/v1/programs/items.json?id=" + jObject.getString("id") + "&" + YLE_APP_KEY);
+            if (jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi")) podcastItem.setTitle(jObject.getJSONObject("title").getString("fi"));
+            podcastItem.setURL(encryptedURL);
+            if (jObject.getJSONObject("description").has("fi"))podcastItem.setDescription(jObject.getJSONObject("description").getString("fi"));
+            if (jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi"))podcastItem.setCollectionName(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));
+            if(jObject.getJSONObject("image").has("id"))podcastItem.setImageURL(jObject.getJSONObject("image").getString("id"));
+            if(jObject.has("id"))podcastItem.setProgramID(jObject.getString("id"));
+            podcastItem.setMediaID(mediaID);
+            podcastItem.setCategorys(categorys);
+            podcastItem.setLength(podcastLength(jObject.getString("duration").substring(2)));
 
-        }
+            //podcastItem.alterPodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"), jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"), jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaID, categorys, podcastLength(jObject.getString("duration").substring(2)));
+
+
 
         return podcastItem;
     }
