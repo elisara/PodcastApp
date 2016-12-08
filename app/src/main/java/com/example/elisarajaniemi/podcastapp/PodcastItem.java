@@ -28,6 +28,20 @@ public class PodcastItem implements Serializable {
     public ArrayList<String> categorys;
 
     public PodcastItem(){
+        this.title = "";
+        this.url = "";
+        this.description = "";
+        this.length = 0;
+        this.category = "";
+        this.tags = "";
+        this.collectionName = "";
+        this.collectionID = 0;
+        this.fromYLE = true;
+        this.decryptedURL = "";
+        this.imageURL = "";
+        this.programID = "";
+        this.mediaID = "";
+
 
     }
 
@@ -80,5 +94,20 @@ public class PodcastItem implements Serializable {
     public void setURL(String url){
         this.decryptedURL = url;
     }
+    public void setTitle(String title){this.title = title;}
+    public void setUrl(String url){this.url = url;}
+    public void setDecryptedURL(String decryptedURL){this.decryptedURL = decryptedURL;}
+    public void setDescription(String description){this.description = description;}
+    public void setCategory(){}
+    public void setTags(){}
+    public void setCollectionName(String collectionName){this.collectionName = collectionName;}
+    public void setId(){}
+    public void setImageURL(String imageURL){this.imageURL = imageURL;}
+    public void setFromYLE(boolean fromYLE){this.fromYLE = fromYLE;}
+    public void setMediaID(String mediaID){this.mediaID = mediaID;}
+    public void setCategorys(ArrayList<String> categorys){this.categorys = categorys;}
+    public void setCollectionID(int collectionID){this.collectionID = collectionID;}
+    public void setLength(int length){this.length = length;}
+    public void setProgramID(String programID){this.programID = programID;}
 
 }
