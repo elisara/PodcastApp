@@ -5,13 +5,21 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.view.View;
 import android.widget.RemoteViews;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import static com.example.elisarajaniemi.podcastapp.R.id.podcastPic;
 
 /**
  * Created by Kade on 31.10.2016.
@@ -30,6 +38,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     public static final String ACTION_PAUSE = "action_pause";
     public static final String ACTION_PLAY = "action_play";
     public static final String START_SERVICE = "start_service";
+    ImageLoader imageLoader;
 
 
     public PlayService() {
@@ -51,6 +60,9 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     public void onCreate() {
         super.onCreate();
         initPlayer();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
+        imageLoader = ImageLoader.getInstance();
         System.out.println("---------Setvice OnCreate");
 
     }
@@ -89,7 +101,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     public void createNotification() {
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        RemoteViews notificationView = new RemoteViews(getPackageName(), R.layout.notification);
+        final RemoteViews notificationView = new RemoteViews(getPackageName(), R.layout.notification);
 
         //the intent that is started when the notification is clicked (works)
         Intent playerIntent = new Intent(this, MainActivity.class);
@@ -100,6 +112,20 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp).setTicker("joku teksti").setContent(notificationView);
         //notificationView.setImageViewBitmap(R.id.notifiationImage, pi.picture);
+        imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_0.1,h_0.1/" + pi.imageURL + ".jpg", new SimpleImageLoadingListener() {
+            ///w_500,h_500,c_fit
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                //podcastPic.setImageBitmap(loadedImage);
+                notificationView.setImageViewBitmap(R.id.notifiationImage,loadedImage);
+            }
+        });
+        notificationView.setInt(R.id.notifiationImage, "setBackgroundColor", R.color.colorPrimary);
+        notificationView.setInt(R.id.notifiationText1, "setBackgroundColor", R.color.colorPrimary);
+        notificationView.setInt(R.id.notifiationText2, "setBackgroundColor", R.color.colorPrimary);
+        notificationView.setInt(R.id.notificationPlayBtn, "setBackgroundColor", R.color.colorPrimary);
+
+        notificationView.setInt(R.id.notificationSkipBtn, "setBackgroundColor", R.color.colorPrimary);
         notificationView.setTextViewText(R.id.notifiationText1, pi.title);
         notificationView.setTextViewText(R.id.notifiationText2, pi.collectionName);
 

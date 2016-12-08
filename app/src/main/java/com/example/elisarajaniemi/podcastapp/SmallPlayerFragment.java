@@ -1,5 +1,6 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
 /**
  * Created by Keni on 2016-11-16.
  */
@@ -21,6 +24,7 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
     private ProgressBar bar;
     private final Handler handler = new Handler();
     MainActivity mActivity;
+    Boolean picLoaded = false;
 
 
     @Override
@@ -34,6 +38,7 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
         text2 = (TextView) view.findViewById(R.id.smallPlayerText2);
         button1 = (ImageView) view.findViewById(R.id.smallPlayerPlayBtn);
         button2 = (ImageView) view.findViewById(R.id.smallPlayerSkipBtn);
+
 
         //podcastImage.setImageResource(R.drawable.podcast_headphones);
 
@@ -98,8 +103,19 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
                     text1.setText(mActivity.pServ.getPodcastObject().collectionName);
                     text2.setText(mActivity.pServ.getPodcastObject().title);
                 }
+
+                if(mActivity.pServ.getStatus()==3&&picLoaded==false) {
+                    mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_0.1,h_0.1/" + mActivity.pServ.getPodcastObject().imageURL + ".jpg", new SimpleImageLoadingListener() {
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+                            podcastImage.setImageBitmap(loadedImage);
+                        }
+                    });
+                    picLoaded = true;
+                }
                 // Running this thread after 100 milliseconds
-                handler.postDelayed(this, 100);
+                handler.postDelayed(this, 1000);
 
             }
         }

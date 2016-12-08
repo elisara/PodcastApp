@@ -23,7 +23,7 @@
     <TextView
         android:id="@+id/notifiationText1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_weight="1"
         android:textColor="@color/primaryText"
@@ -31,7 +31,7 @@
     <TextView
         android:id="@+id/notifiationText2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_weight="1"
         android:textColor="@color/primaryText"
@@ -43,8 +43,8 @@
         android:layout_width="0dp"
         android:layout_weight="15"
         android:layout_height="match_parent"
-        android:tint="@color/availableIcon"
-        android:background="@color/colorAccent"/>
+        android:tint="@color/colorAccent"
+        android:background="@color/colorPrimary"/>
     <ImageView
         android:id="@+id/notificationSkipBtn"
         android:layout_width="0dp"
