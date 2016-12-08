@@ -37,7 +37,7 @@ import java.util.concurrent.ExecutionException;
 public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, OnBufferingUpdateListener, SeekBar.OnSeekBarChangeListener, ServiceCallbacks {
     private ImageView sleepBtn, replayBtn, playBtn, forwardBtn, speedBtn, previousBtn, nextBtn, queueBtn, playlistBtn, favoriteBtn, shareBtn, podcastPic;
     private SeekBar seekbar;
-    private TextView currentTime, fullTime;
+    private TextView currentTime, fullTime, title;
     private int mediaFileLengthInMilliseconds;
     private final Handler handler = new Handler();
     private Utilities utils;
@@ -58,11 +58,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         View view = inflater.inflate(R.layout.play_screen, container, false);
         piFromService = mActivity.pServ.getPodcastObject();
         if (getArguments() == null){
-            System.out.println("if1");
+
             piFromClick = piFromService;
         }
         else {
-            System.out.println("if2");
+
             piFromClick = (PodcastItem) getArguments().getSerializable("episode");
             pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
             if (pi2 != null) {
@@ -110,6 +110,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         playlistBtn.setOnClickListener(this);
         favoriteBtn.setOnClickListener(this);
         shareBtn.setOnClickListener(this);
+
+        title = (TextView) view.findViewById(R.id.playerTitle);
 
         seekbar = (SeekBar) view.findViewById(R.id.seekBar);
         seekbar.setMax(99);
@@ -304,6 +306,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
 
         mediaFileLengthInMilliseconds = mActivity.pServ.mPlayer.getDuration();
+        title.setText(mActivity.pServ.getPodcastObject().collectionName +  ": " + mActivity.pServ.getPodcastObject().title);
         updateProgressBar();
     }
 }
