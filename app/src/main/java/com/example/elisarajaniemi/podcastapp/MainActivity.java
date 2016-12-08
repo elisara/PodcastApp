@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        System.out.println("listassa: " +podcastItems.getItems().size());
+        //System.out.println("listassa: " +podcastItems.getItems().size());
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

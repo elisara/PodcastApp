@@ -3,6 +3,7 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -111,6 +112,60 @@ public class PlaylistsFragment extends Fragment {
                         .replace(R.id.frag_container, collectionFragment).addToBackStack( "playlistFragment" ).commit();
             }
 
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
+                final PlaylistItem value = playlists.getPlaylists().get(position);
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
+                //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
+                alertDialogBuilder.setTitle("Delete Playlist");
+
+                System.out.println("PlaylistID: " + position);
+
+                String user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
+
+                LinearLayout lp = new LinearLayout(getContext());
+                lp.setOrientation(LinearLayout.VERTICAL);
+                lp.setPadding(30,0,30,30);
+
+
+                final TextView toQueue = new TextView(getContext());
+                toQueue.setText("Do you really want to delete this playlist?");
+                toQueue.setTextColor(Color.BLACK);
+                toQueue.setPadding(30, 20, 20, 20);
+                toQueue.setTextSize(20);
+                lp.addView(toQueue);
+
+                alertDialogBuilder.setView(lp);
+                final AlertDialog alertDialog = alertDialogBuilder.create();
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            new DeletePlaylist().execute("http://media.mw.metropolia.fi/arsu/playlists/", value.id , "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "")).get();
+                            playlists.deletePlaylist(position);
+                            adapter.notifyDataSetChanged();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+                alertDialog.show();
+
+                return true;
+            }
         });
 
 
@@ -449,6 +504,59 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
 
 
 }
+
+class DeletePlaylist extends AsyncTask<Object, String, String> {
+    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
+
+    String message;
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        //this method will be running on UI thread
+        //pdLoading.setMessage("\tLoading...");
+        //pdLoading.show();
+    }
+
+    @Override
+    protected String doInBackground(Object... params) {
+
+        try {
+            URL url = new URL((String) params[0] + params[1] + params[2]);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("Content-Type", "application/json");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+
+            while ((output = br.readLine()) != null) {
+                try {
+                    JSONObject jObject = new JSONObject(output);
+                    message = jObject.getString("message");
+                    System.out.println("Database message: " + message);
+                } catch (JSONException e) {
+                    System.out.println(e);
+                }
+            }
+
+            conn.disconnect();
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+
+
 
 
 
