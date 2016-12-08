@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private PodcastItem pi, pi2;
     private Context context = null;
     private Bitmap pic;
+    public PodcastItems podcastItems = PodcastItems.getInstance();
     PlayService pServ;
     ImageLoader imageLoader;
     android.support.v4.app.FragmentManager fragmentManager;
@@ -91,8 +92,12 @@ public class MainActivity extends AppCompatActivity {
 
         apiKey = "495i4orWwXCqiW5IuOQUzuAlGmfFeky7BzMPe-X19inh9MRm5RqGhQDUEh5avkZNFjC6mYT6w2xGXdQjm9XfakwHloH027i-tkLX77yFMZJlC3wGWqIjyHIXnvPzvHzW";
         try {
-            new HttpGetHelper((MainActivity) context).execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true").get();
-            new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.6h:desc&limit=50&type=radioprogram", "fromepisodes").get();
+            //new HttpGetHelper((MainActivity) context).execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true").get();
+            new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.24h:desc&limit=100&type=radioprogram", "fromepisodes").get();
+            new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.24h:desc&limit=100&type=radioprogram&offset=100", "fromepisodes").get();
+            new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.24h:desc&limit=100&type=radioprogram&offset=200", "fromepisodes").get();
+
+
         }
         catch (ExecutionException e){
                 e.printStackTrace();
@@ -100,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
         catch (InterruptedException e){
                 e.printStackTrace();
         }
+        int kpl = 0;
 
+        System.out.println("listassa: " +podcastItems.getItems().size());
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
