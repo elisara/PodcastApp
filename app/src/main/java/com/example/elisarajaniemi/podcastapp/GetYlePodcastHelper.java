@@ -58,7 +58,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 try {
                     podcastItems.addAll(makePodcastItem(result));
                 } catch (JSONException e) {
-                    Log.e("JSONException", "Error: " + e.toString());
+                    Log.e("JSONException1", "Error: " + e.toString());
                 }
             } else if (params[2].equalsIgnoreCase("fromplaylist")) {
                 System.out.println("From Playlists");
@@ -69,7 +69,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     try {
                         playlistPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                     } catch (JSONException e) {
-                        Log.e("JSONException", "Error: " + e.toString());
+                        Log.e("JSONException2", "Error: " + e.toString());
                     }
                 }
 
@@ -82,7 +82,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     try {
                         favoritePodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                     } catch (JSONException e) {
-                        Log.e("JSONException", "Error: " + e.toString());
+                        Log.e("JSONException3", "Error: " + e.toString());
                     }
                 }
             } else if (params[2].equalsIgnoreCase("fromHistory")){
@@ -94,7 +94,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     try {
                         historyPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                     } catch (JSONException e) {
-                        Log.e("JSONException", "Error: " + e.toString());
+                        Log.e("JSONException4", "Error: " + e.toString());
                     }
                 }
             }
@@ -224,7 +224,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         String encryptedURL = "https://external.api.yle.fi/v1/media/playouts.json?program_id=" + jObject.getString("id") + "&protocol=PMD&media_id=" + mediaID + "&" + YLE_APP_KEY;
 
             //System.out.println(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi") + ": https://external.api.yle.fi/v1/programs/items.json?id=" + jObject.getString("id") + "&" + YLE_APP_KEY);
-            if (jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi")) podcastItem.setTitle(jObject.getJSONObject("title").getString("fi"));
+            if (jObject.getJSONObject("itemTitle").has("fi")) podcastItem.setTitle(jObject.getJSONObject("itemTitle").getString("fi"));
             podcastItem.setURL(encryptedURL);
             if (jObject.getJSONObject("description").has("fi"))podcastItem.setDescription(jObject.getJSONObject("description").getString("fi"));
             if (jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi"))podcastItem.setCollectionName(jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"));

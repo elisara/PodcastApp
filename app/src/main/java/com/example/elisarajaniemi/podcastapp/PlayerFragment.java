@@ -132,7 +132,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
 
 
-        } else if (!piFromClick.url.equals(piFromService.url)) {
+        } else if (!piFromClick.decryptedURL.equals(piFromService.decryptedURL)) {
 
                 mediaFileLengthInMilliseconds = 0;
                 mActivity.pServ.stopMusic();
