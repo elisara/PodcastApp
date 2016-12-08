@@ -49,7 +49,7 @@ public class FavoritesFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getContext(), ((TextView) v.findViewById(R.id.grid_item_label)).getText(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), ((TextView) v.findViewById(R.id.grid_item_title)).getText(), Toast.LENGTH_SHORT).show();
             }
         });
 

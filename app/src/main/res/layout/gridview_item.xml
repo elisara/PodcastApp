@@ -33,9 +33,19 @@
             android:paddingLeft="5dp"
             android:padding="5dp">
             <TextView
-                android:id="@+id/grid_item_label"
+                android:id="@+id/grid_item_collection"
                 android:textAlignment="center"
                 android:text="title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
+                android:id="@+id/grid_item_title"
+                android:textAlignment="center"
+                android:text="title"
+                android:textSize="12dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/unAvailableIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </TextView>
