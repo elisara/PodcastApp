@@ -30,4 +30,8 @@ public class Playlists {
     public void clearPlaylists(){
         this.playlists.clear();
     }
+
+    public void deletePlaylist(int id){
+        playlists.remove(id);
+    }
 }
