@@ -32,7 +32,8 @@
                 android:id="@+id/smallPlayerImage"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="15" />
+                android:layout_weight="15"
+                android:background="@color/colorPrimary"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -46,7 +47,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textColor="@color/primaryText" />
+                    android:textColor="@color/primaryText"
+                    android:background="@color/colorPrimary"/>
 
                 <TextView
                     android:id="@+id/smallPlayerText2"
@@ -54,7 +56,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textColor="@color/primaryText" />
+                    android:textColor="@color/primaryText"
+                    android:background="@color/colorPrimary"/>
             </LinearLayout>
 
             <ImageView
@@ -62,14 +65,16 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="15"
-                android:tint="@color/availableIcon" />
+                android:tint="@color/colorAccent"
+                android:background="@color/colorPrimary"/>
 
             <ImageView
                 android:id="@+id/smallPlayerSkipBtn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="15"
-                android:tint="@color/unAvailableIcon" />
+                android:tint="@color/unAvailableIcon"
+                android:background="@color/colorPrimary"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

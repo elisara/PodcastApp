@@ -6,7 +6,7 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:weightSum="100"
-    android:background="@android:color/background_light"
+    android:background="@color/colorPrimary"
     >
 
     <ImageView
@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="15"
-        />
+        android:background="@color/colorPrimary"/>
 <LinearLayout
     android:layout_width="0dp"
     android:layout_height="match_parent"
@@ -27,14 +27,15 @@
         android:gravity="center"
         android:layout_weight="1"
         android:textColor="@color/primaryText"
-        />
+        android:background="@color/colorPrimary"/>
     <TextView
         android:id="@+id/notifiationText2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_weight="1"
-        android:textColor="@color/primaryText"/>
+        android:textColor="@color/primaryText"
+        android:background="@color/colorPrimary"/>
 </LinearLayout>
 
     <ImageView
@@ -42,11 +43,13 @@
         android:layout_width="0dp"
         android:layout_weight="15"
         android:layout_height="match_parent"
-        android:tint="@color/availableIcon"/>
+        android:tint="@color/availableIcon"
+        android:background="@color/colorAccent"/>
     <ImageView
         android:id="@+id/notificationSkipBtn"
         android:layout_width="0dp"
         android:layout_weight="15"
         android:layout_height="match_parent"
-        android:tint="@color/unAvailableIcon"/>
+        android:tint="@color/unAvailableIcon"
+        android:background="@color/colorPrimary"/>
     </LinearLayout>

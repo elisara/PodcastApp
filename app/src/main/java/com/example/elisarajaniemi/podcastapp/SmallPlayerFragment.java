@@ -95,8 +95,8 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
                 if (mActivity.pServ.getStatus() == 3) {
                     //podcastImage.setImageBitmap(mActivity.pServ.getPodcastObject().picture);
                     bar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mActivity.pServ.mPlayer.getDuration()) * 100));
-                    text1.setText(mActivity.pServ.getPodcastObject().title);
-                    //text2.setText(mActivity.pServ.getPodcastObject().collectionName);
+                    text1.setText(mActivity.pServ.getPodcastObject().collectionName);
+                    text2.setText(mActivity.pServ.getPodcastObject().title);
                 }
                 // Running this thread after 100 milliseconds
                 handler.postDelayed(this, 100);
