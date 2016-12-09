@@ -88,6 +88,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
         final PodcastItem podcastItem = (PodcastItem) getGroup(groupPosition);
         tv.setText(podcastItem.title);
+        playBtn.setId(groupPosition);
         playBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 playerFragment = new PlayerFragment();
