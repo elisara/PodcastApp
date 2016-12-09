@@ -25,6 +25,7 @@ public class PodcastItem implements Serializable {
     public boolean fromYLE;
     public String programID;
     public String mediaID;
+    public String serieID;
     public ArrayList<String> categorys;
 
     public PodcastItem(){
@@ -41,6 +42,7 @@ public class PodcastItem implements Serializable {
         this.imageURL = "";
         this.programID = "";
         this.mediaID = "";
+        this.serieID = "";
 
 
     }
@@ -87,6 +89,7 @@ public class PodcastItem implements Serializable {
         this.mediaID = "";
         this.categorys = new ArrayList<>();
         this.categorys.add("Metropolia");
+        this.serieID = "";
 
 
     }
@@ -106,7 +109,7 @@ public class PodcastItem implements Serializable {
     public void setFromYLE(boolean fromYLE){this.fromYLE = fromYLE;}
     public void setMediaID(String mediaID){this.mediaID = mediaID;}
     public void setCategorys(ArrayList<String> categorys){this.categorys = categorys;}
-    public void setCollectionID(int collectionID){this.collectionID = collectionID;}
+    public void setSerieID(String serieID){this.serieID = serieID;}
     public void setLength(int length){this.length = length;}
     public void setProgramID(String programID){this.programID = programID;}
 
