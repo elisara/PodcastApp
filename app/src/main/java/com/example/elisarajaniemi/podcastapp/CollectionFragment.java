@@ -214,7 +214,6 @@ public class CollectionFragment extends Fragment {
             for (int i = 0; i < podcastItems.getItems().size(); i++) {
                 if (podcastItems.getItems().get(i).collectionName.equals(pi.collectionName) && !list.contains(podcastItems.getItems().get(i))) {
                     list.add(podcastItems.getItems().get(i));
-                    System.out.println("-------------LISTASSA ENNEN SORTTAUSTA: "+podcastItems.getItems().get(i).title);
                 }
             }
 
@@ -285,9 +284,7 @@ public class CollectionFragment extends Fragment {
         }
 
         for(int i = 0; i < list.size(); i++){
-            System.out.println("-------------LISTASSA: "+list.get(i).title);
         }
-        System.out.println("Listan koko: " + list.size());
         listAdapter = new ExpandableListViewAdapter(getContext(), list);
         listAdapter.notifyDataSetChanged();
         simpleExpandableListView.deferNotifyDataSetChanged();
