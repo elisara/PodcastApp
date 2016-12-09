@@ -63,6 +63,7 @@ public class CollectionFragment extends Fragment {
     private PlayerFragment pf;
     public PodcastItems podcastItems = PodcastItems.getInstance();
     public PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
+    public SerieItems serieItems = SerieItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
     public FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
     public SearchItems searchItems = SearchItems.getInstance();
@@ -249,11 +250,12 @@ public class CollectionFragment extends Fragment {
         }
 
         if (list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
-            for (int i = 0; i < podcastItems.getItems().size(); i++) {
+            /**for (int i = 0; i < podcastItems.getItems().size(); i++) {
                 if (podcastItems.getItems().get(i).collectionName.equals(pi.collectionName) && !list.contains(podcastItems.getItems().get(i))) {
                     list.add(podcastItems.getItems().get(i));
                 }
-            }
+            }*/
+        list = serieItems.getSerieItems();
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory) {
             list = playlistPodcastItems.getItems();
