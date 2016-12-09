@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,8 +23,16 @@ import java.util.concurrent.ExecutionException;
 
 public class History {
 
-    public void getHistoryItems(String url, String token) throws ExecutionException, InterruptedException {
-        new GetHistory().execute(url, token).get();
+    public void getHistoryItems(String url) throws ExecutionException, InterruptedException {
+        new GetHistory().execute(url).get();
+    }
+
+    public void createHistoryItems(String url, String programID) throws ExecutionException, InterruptedException {
+        new CreateHistory().execute(url, programID).get();
+    }
+
+    public void deleteHistoryItems(String url, String id, String token) throws ExecutionException, InterruptedException {
+        new DeleteHistory().execute(url, id, token).get();
     }
 }
 
@@ -45,7 +54,7 @@ class GetHistory extends AsyncTask<Object, String, String> {
         BufferedReader reader = null;
 
         try {
-            URL url = new URL((String) params[0] + params[1]);
+            URL url = new URL((String) params[0]);
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
@@ -102,4 +111,112 @@ class GetHistory extends AsyncTask<Object, String, String> {
         super.onPostExecute(result);
     }
 
+}
+class CreateHistory extends AsyncTask<Object, String, String> {
+    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
+
+    String message;
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        //this method will be running on UI thread
+        //pdLoading.setMessage("\tLoading...");
+        //pdLoading.show();
+    }
+
+    @Override
+    protected String doInBackground(Object... params) {
+
+        try {
+            URL url = new URL((String) params[0]);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            String input = "{\"podcast_id\":\"" + params[1] + "\"}";
+            //input = input.replace("\n", "");
+            System.out.println(input);
+
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+
+            while ((output = br.readLine()) != null) {
+                try {
+                    JSONObject jObject = new JSONObject(output);
+                    message = jObject.getString("message");
+                    System.out.println("Database message: " + message);
+                } catch (JSONException e) {
+                    System.out.println(e);
+                }
+            }
+
+            conn.disconnect();
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+
+class DeleteHistory extends AsyncTask<Object, String, String> {
+    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
+
+    String message;
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        //this method will be running on UI thread
+        //pdLoading.setMessage("\tLoading...");
+        //pdLoading.show();
+    }
+
+    @Override
+    protected String doInBackground(Object... params) {
+
+        try {
+            URL url = new URL((String) params[0] + params[1] + params[2]);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("Content-Type", "application/json");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+
+            while ((output = br.readLine()) != null) {
+                try {
+                    JSONObject jObject = new JSONObject(output);
+                    message = jObject.getString("message");
+                    System.out.println("Database message: " + message);
+                } catch (JSONException e) {
+                    System.out.println(e);
+                }
+            }
+
+            conn.disconnect();
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

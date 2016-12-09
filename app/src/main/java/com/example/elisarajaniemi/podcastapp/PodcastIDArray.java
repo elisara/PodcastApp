@@ -21,12 +21,16 @@ public class PodcastIDArray {
 
     public void addPodcastID(PodcastItem item){
         if(!items.contains(item)){
-            items.add(item);
+            items.add(0, item);
         }
     }
 
     public ArrayList<PodcastItem> getItems(){
         return items;
+    }
+
+    public void deletePodcast(int position){
+        items.remove(position);
     }
 
     public void clearList(){
