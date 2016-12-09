@@ -1,6 +1,7 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 public class GridViewAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<PodcastItem> list;
-    private TextView titleView, lengthView;
+    private TextView titleView,collectionVIew, lengthView;
     private ImageView imageView;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -78,13 +79,18 @@ public class GridViewAdapter extends BaseAdapter {
         }
 
 
-        int length = (list.get(position).length) / 60;
+        String length = DateUtils.formatElapsedTime(list.get(position).length); //(list.get(position).length) / 60;
+
+        collectionVIew = (TextView) myView.findViewById(R.id.grid_item_collection);
+        collectionVIew.setText(list.get(position).collectionName);
+
+        titleView = (TextView) myView.findViewById(R.id.grid_item_title);
+        titleView.setText(list.get(position).title);
+
+        DateUtils.formatElapsedTime(list.get(position).length);
 
         lengthView = (TextView) myView.findViewById(R.id.grid_item_length);
-        lengthView.setText(length + "min");
-
-        titleView = (TextView) myView.findViewById(R.id.grid_item_label);
-        titleView.setText(list.get(position).title);
+        lengthView.setText(length);
 
         return myView;
     }

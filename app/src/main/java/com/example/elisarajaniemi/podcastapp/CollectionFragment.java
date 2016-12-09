@@ -38,6 +38,8 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.ExecutionException;
 
 import javax.crypto.BadPaddingException;
@@ -65,7 +67,7 @@ public class CollectionFragment extends Fragment {
     public FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
     public SearchItems searchItems = SearchItems.getInstance();
     public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
-    private ArrayList<PodcastItem> listAll = podcastItems.getItems();
+    //private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
     private ExpandableListViewAdapter listAdapter;
@@ -129,17 +131,10 @@ public class CollectionFragment extends Fragment {
 
 
         simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
-        //listView = (ListView) view.findViewById(R.id.single_playlist_list);
-        fillList();
-
-        //expandAll();
-
-        // setOnGroupClickListener listener for group heading click
         simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 PodcastItem podcastItem = list.get(groupPosition);
-                System.out.println("PodcastItem info: " + podcastItem.programID + ", groupPosition: " + groupPosition);
                 return false;
             }
         });
@@ -147,7 +142,7 @@ public class CollectionFragment extends Fragment {
         simpleExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                collapseAll();
+                //collapseAll();
                 return true;
             }
         });
@@ -236,30 +231,28 @@ public class CollectionFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fillList();
+        simpleExpandableListView.deferNotifyDataSetChanged();
+        listAdapter.getGroupCount();
+        listAdapter.notifyDataSetChanged();
 
 
 
-    }
-
-    public URL createUrl(String urli) throws IOException {
-        URL url = new URL(urli);
-        return url;
     }
 
 
     public void fillList(){
         list = new ArrayList<>();
-        if (list.size() != 0){
-            list.clear();
-        }
+        list.clear();
+
         if(list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
-            System.out.println("From episodes");
-            for (int i = 0; i < listAll.size(); i++) {
-                if (listAll.get(i).collectionName.equals(pi.collectionName) && !list.contains(listAll.get(i))) {
-                    list.add(listAll.get(i));
+            System.out.println("From frontpage");
+            for (int i = 0; i < podcastItems.getItems().size(); i++) {
+                if (podcastItems.getItems().get(i).collectionName.equals(pi.collectionName) && !list.contains(podcastItems.getItems().get(i))) {
+                    list.add(podcastItems.getItems().get(i));
+                    System.out.println("-------------LISTASSA ENNEN SORTTAUSTA: "+podcastItems.getItems().get(i).title);
                 }
             }
-            System.out.println("List size: " + list.size());
+
         } else if(list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory){
             System.out.println("PlaylistPodcastItems size: " + playlistPodcastItems.getItems().size());
             list = playlistPodcastItems.getItems();
@@ -275,11 +268,8 @@ public class CollectionFragment extends Fragment {
             list = historyPodcastItems.getItems();
         }
 
-        //listView.setAdapter(adapter);
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = (getResources().getDisplayMetrics().heightPixels)/3;
-        //imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_"+width+",h_"+height+",c_fill/" + list.get(0).imageURL + ".jpg", imageView);
-        //imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_1000,h_650,c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
@@ -305,33 +295,40 @@ public class CollectionFragment extends Fragment {
             if (!list.get(0).collectionName.contains("Metropolia")) {
                 imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).imageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
             } else {
-                //imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
                 textView.setText("Metropolia");
                 header.requestLayout();
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
                 header.setLayoutParams(layoutParams);
-                //imageView.getLayoutParams().height = height;
-                //imageView.getLayoutParams().width = width;
 
             }
         }
         else if(playlistID != 0){
-            //imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
             textView.setText("Empty");
             header.requestLayout();
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
             header.setLayoutParams(layoutParams);
-            //imageView.getLayoutParams().height = height;
-            //imageView.getLayoutParams().width = width;
 
         }
 
+        if(!list.get(0).collectionName.toLowerCase().contains("metropolia")) {
+            Collections.sort(list, new Comparator<PodcastItem>() {
+                public int compare(PodcastItem pod1, PodcastItem pod2) {
+                    return pod1.programID.compareToIgnoreCase(pod2.programID); // To compare string values
+
+                }
+            });
+        }
+
+        for(int i = 0; i < list.size(); i++){
+            System.out.println("-------------LISTASSA: "+list.get(i).title);
+        }
+        System.out.println("Listan koko: " + list.size());
         listAdapter = new ExpandableListViewAdapter(getContext(), list);
+        listAdapter.notifyDataSetChanged();
+        simpleExpandableListView.deferNotifyDataSetChanged();
         simpleExpandableListView.setAdapter(listAdapter);
 
     }
-
-
 
 }
 

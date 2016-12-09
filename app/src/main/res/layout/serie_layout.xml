@@ -29,7 +29,6 @@
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/episodeGridview"
         android:numColumns="2"
-        android:gravity="center"
         android:verticalSpacing="0dp"
         android:horizontalSpacing="0dp"
         android:stretchMode="columnWidth"

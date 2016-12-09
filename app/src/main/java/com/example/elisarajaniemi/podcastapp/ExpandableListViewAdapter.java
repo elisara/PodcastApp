@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +25,12 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private ArrayList<PodcastItem> groupList;
-    private PodcastItem podcastItem;
     private PlayerFragment playerFragment;
     private AddToLists addToLists;
     private FavoritesFragment favoritesFragment;
     private PlaylistsFragment playlistsFragment;
+    private ImageButton playBtn;
+    private TextView tv;
 
 
     public ExpandableListViewAdapter(Context context, ArrayList<PodcastItem> groupList) {
@@ -74,19 +76,18 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        podcastItem = (PodcastItem) getGroup(groupPosition);
         View myView = convertView;
+
         if (myView == null) {
             LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             myView = inf.inflate(R.layout.episode_list_item, parent, false);
+            tv = (TextView) myView.findViewById(R.id.episodeName);
+            playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
+
         }
 
-        TextView tv = (TextView) myView.findViewById(R.id.episodeName);
+        final PodcastItem podcastItem = (PodcastItem) getGroup(groupPosition);
         tv.setText(podcastItem.title);
-
-        ImageView iv = (ImageView) myView.findViewById(R.id.episodeIcon);
-
-        final ImageButton playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
         playBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 playerFragment = new PlayerFragment();
@@ -102,7 +103,6 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                     }
                 }
                 bundle2.putSerializable("episode", podcastItem);
-                System.out.println("podcastitem info: " + podcastItem.title);
                 playerFragment.setArguments(bundle2);
                 ((MainActivity) context).setFragment(playerFragment);
 
