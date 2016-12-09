@@ -97,7 +97,7 @@ class CreateFavorites extends AsyncTask<Object, String, String> {
             conn.setRequestProperty("Content-Type", "application/json");
             String input = "{\"podcast_id\":\"" + params[0] + "\",\"user_id\":\"" + params[1] + "\"}";
             //input = input.replace("\n", "");
-            System.out.println(input);
+            //System.out.println(input);
 
             OutputStream os = conn.getOutputStream();
             os.write(input.getBytes());
@@ -112,7 +112,7 @@ class CreateFavorites extends AsyncTask<Object, String, String> {
                 try {
                     JSONObject jObject = new JSONObject(output);
                     message = jObject.getString("message");
-                    System.out.println("Database message: " + message);
+                    //System.out.println("Database message: " + message);
                 } catch (JSONException e) {
                     System.out.println(e);
                 }
@@ -167,7 +167,7 @@ class GetFavorites extends AsyncTask<Object, String, String> {
             try {
                 JSONArray jsonArray  = new JSONArray(result);
 
-                System.out.println("Favorites juttuja: " + jsonArray);
+                //System.out.println("Favorites juttuja: " + jsonArray);
 
                 //JSONArray jsonArray = new JSONArray(jObject.getString("content"));
                 for (int i = 0; i < jsonArray.length(); i++){
@@ -242,7 +242,7 @@ class DeleteFavorites extends AsyncTask<Object, String, String> {
                 try {
                     JSONObject jObject = new JSONObject(output);
                     message = jObject.getString("message");
-                    System.out.println("Database message: " + message);
+                    //System.out.println("Database message: " + message);
                 } catch (JSONException e) {
                     System.out.println(e);
                 }

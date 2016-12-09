@@ -43,7 +43,6 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
 
     protected void onPreExecute() {
         super.onPreExecute();
-        System.out.println("onPreExecute");
         playlistPodcastItems.clearList();
 
     }
@@ -169,36 +168,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
 
     }
 
-    public ArrayList<PodcastItem> makePodcastItem(String result) throws JSONException {
-        tempPodcastList = new ArrayList<PodcastItem>();
 
-        JSONObject jsonObject = new JSONObject(result);
-        JSONArray jsonArray = jsonObject.getJSONArray("data");
-        for (int i = 0; i < jsonArray.length(); i++) {
-            PodcastItem podcastItem = new PodcastItem();
-            //System.out.print(i + ". ");
-            podcastItem = getSinglePodcast(jsonArray.getJSONObject(i));
-
-
-            if (podcastItem.programID != null) {
-                if (tempPodcastList.size() == 0)//&& podcastItem.length < 600
-                    tempPodcastList.add(podcastItem);
-                else {
-                    boolean titleFound = false;
-                    for (int k = 0; k < tempPodcastList.size(); k++) {
-                        if (tempPodcastList.get(k).programID.equalsIgnoreCase(podcastItem.programID)) {
-                            titleFound = true;
-                        }
-                    }
-                    if (titleFound == false) { //&& podcastItem.length < 600
-                        tempPodcastList.add(0, podcastItem);
-                    }
-                }
-            }
-        }
-
-        return tempPodcastList;
-    }
 
     public String makeConnection(String urli) throws IOException {
         HttpURLConnection connection = null;
@@ -255,6 +225,37 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         return pituusInt;
     }
 
+    public ArrayList<PodcastItem> makePodcastItem(String result) throws JSONException {
+        tempPodcastList = new ArrayList<PodcastItem>();
+
+        JSONObject jsonObject = new JSONObject(result);
+        JSONArray jsonArray = jsonObject.getJSONArray("data");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            PodcastItem podcastItem = new PodcastItem();
+            //System.out.print(i + ". ");
+            podcastItem = getSinglePodcast(jsonArray.getJSONObject(i));
+
+
+            if (podcastItem.programID != null) {
+                if (tempPodcastList.size() == 0)//&& podcastItem.length < 600
+                    tempPodcastList.add(podcastItem);
+                else {
+                    boolean titleFound = false;
+                    for (int k = 0; k < tempPodcastList.size(); k++) {
+                        if (tempPodcastList.get(k).programID.equalsIgnoreCase(podcastItem.programID)) {
+                            titleFound = true;
+                        }
+                    }
+                    if (titleFound == false) { //&& podcastItem.length < 600
+                        tempPodcastList.add(0, podcastItem);
+                    }
+                }
+            }
+        }
+
+        return tempPodcastList;
+    }
+
     public PodcastItem getSinglePodcast(JSONObject jObject) throws JSONException {
 
         PodcastItem podcastItem = new PodcastItem();
@@ -302,6 +303,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         podcastItem.setSerieImageURL(jObject.getJSONObject("partOfSeries").getJSONObject("image").getString("id"));
         //podcastItem.alterPodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"), jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"), jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaID, categorys, podcastLength(jObject.getString("duration").substring(2)));
 
+        if(!jObject.getJSONObject("itemTitle").has("fi")||!jObject.getJSONObject("description").has("fi")||!jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi")) podcastItem.setProgramID(null);
 
         return podcastItem;
     }

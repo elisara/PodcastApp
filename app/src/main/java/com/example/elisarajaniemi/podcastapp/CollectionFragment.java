@@ -294,7 +294,7 @@ public class CollectionFragment extends Fragment {
 
         if(list != null && list.size() > 0) {
             if (!list.get(0).collectionName.contains("Metropolia") && playlistID == 0) {
-                imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).imageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
+                imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).serieImageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
             } else if(!list.get(0).collectionName.contains("Metropolia") && playlistID != 0){
                 for (int i = 0; i < playlists.getPlaylists().size(); i++){
                     if (playlists.getPlaylists().get(i).id == playlistID){

@@ -97,7 +97,7 @@ public class AddToLists {
 
         toQueue.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("Clicked to queue");
+                //System.out.println("Clicked to queue");
                 alertDialog.cancel();
             }
         });

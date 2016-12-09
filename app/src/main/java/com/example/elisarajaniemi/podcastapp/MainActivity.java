@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        System.out.println("---------CREATE--------------");
+        System.out.println("---------- MainActivity OnCreate --------------");
 
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void openPlayer(){
-        System.out.println("-----open player");
+        System.out.println("-----Open playerFagment");
         FragmentTransaction ft = fragmentManager.beginTransaction();
         boolean fragmentPopped = fragmentManager.popBackStackImmediate("pf", 0);
         if (!fragmentPopped) {
@@ -246,20 +246,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        System.out.println("---------START--------------");
+        System.out.println("--------- MainActivity START --------------");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        System.out.println("---------STOP--------------");
+        System.out.println("--------- MainActivity STOP --------------");
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        System.out.println("----------Main OnPause");
+        System.out.println("---------- MainActivity OnPause --------------");
         unregisterManagers();
 
     }
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("----------Main OnResume");
+        System.out.println("---------- MainActivity OnResume --------------");
         checkForCrashes();
 
     }
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.println("----------Main OnDestroy");
+        System.out.println("---------- MainActivity OnDestroy --------------");
         doUnbindService();
         pServ.onDestroy();
         unregisterManagers();
@@ -288,13 +288,13 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count == 0) {
-            System.out.println("----------COUNT 0----------");
+            //System.out.println("----------COUNT 0----------");
             moveTaskToBack(true);
             //super.onBackPressed();
 
 
         } else {
-            System.out.println("FManager----- " + getSupportFragmentManager().toString());
+            //System.out.println("FManager----- " + getSupportFragmentManager().toString());
             getSupportFragmentManager().popBackStackImmediate();
         }
 

@@ -71,14 +71,12 @@ public class GetPlayListsHelper extends AsyncTask<String, String, String> {
                     }
                 }// End Loop
 
-                System.out.println("Playlists: " + playlists.getPlaylists());
-
+                //System.out.println("Playlists: " + playlists.getPlaylists());
                 //System.out.println("SeriID array size: " + serieItems.getSerieItems().size());
 
             } catch (JSONException e) {
                 Log.e("JSONException", "Error: " + e.toString());
             }
-
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

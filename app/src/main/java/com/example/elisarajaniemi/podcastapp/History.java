@@ -137,7 +137,7 @@ class CreateHistory extends AsyncTask<Object, String, String> {
             conn.setRequestProperty("Content-Type", "application/json");
             String input = "{\"podcast_id\":\"" + params[1] + "\"}";
             //input = input.replace("\n", "");
-            System.out.println(input);
+            //System.out.println(input);
 
             OutputStream os = conn.getOutputStream();
             os.write(input.getBytes());
@@ -152,7 +152,7 @@ class CreateHistory extends AsyncTask<Object, String, String> {
                 try {
                     JSONObject jObject = new JSONObject(output);
                     message = jObject.getString("message");
-                    System.out.println("Database message: " + message);
+                    //System.out.println("Database message: " + message);
                 } catch (JSONException e) {
                     System.out.println(e);
                 }
@@ -203,7 +203,7 @@ class DeleteHistory extends AsyncTask<Object, String, String> {
                 try {
                     JSONObject jObject = new JSONObject(output);
                     message = jObject.getString("message");
-                    System.out.println("Database message: " + message);
+                    //System.out.println("Database message: " + message);
                 } catch (JSONException e) {
                     System.out.println(e);
                 }
