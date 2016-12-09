@@ -299,7 +299,7 @@ public class CollectionFragment extends Fragment {
 
         }
 
-        if(!list.get(0).collectionName.toLowerCase().contains("metropolia")) {
+        if(!list.get(0).collectionName.toLowerCase().contains("metropolia") && pi != null) {
             Collections.sort(list, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return pod1.programID.compareToIgnoreCase(pod2.programID); // To compare string values
