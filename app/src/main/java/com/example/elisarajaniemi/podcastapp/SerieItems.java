@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class SerieItems {
 
-    private ArrayList<PodcastItem> series;
+    private ArrayList<PodcastItem> seriePodcasts;
 
     private static SerieItems ourInstance = new SerieItems();
 
@@ -16,16 +16,23 @@ public class SerieItems {
     }
 
     private SerieItems() {
-        this.series = new ArrayList<>();
+        this.seriePodcasts = new ArrayList<>();
     }
 
     public void addSerieItem(PodcastItem item){
-        if(!series.contains(item)){
-            series.add(0, item);
+        if(!seriePodcasts.contains(item)){
+            seriePodcasts.add(0, item);
         }
+    }
+    public void addAll(ArrayList<PodcastItem> lista){
+        seriePodcasts.addAll(lista);
     }
 
     public ArrayList<PodcastItem> getSerieItems(){
-        return series;
+        return seriePodcasts;
+    }
+    public void clearList(){
+        this.seriePodcasts.clear();
     }
 }
+

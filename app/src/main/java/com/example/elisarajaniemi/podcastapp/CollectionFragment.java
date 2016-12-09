@@ -99,7 +99,7 @@ public class CollectionFragment extends Fragment {
         header = (LinearLayout) view.findViewById(R.id.headerBox);
 
 
-        if(playlistID != 0 && fromFavorites == false && fromHistory == false) {
+        if (playlistID != 0 && fromFavorites == false && fromHistory == false) {
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromplaylist").get();
             } catch (InterruptedException e) {
@@ -107,7 +107,7 @@ public class CollectionFragment extends Fragment {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-        } else if(playlistID == 0 && fromFavorites == true && fromHistory == false){
+        } else if (playlistID == 0 && fromFavorites == true && fromHistory == false) {
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromfavorites").get();
             } catch (InterruptedException e) {
@@ -116,9 +116,17 @@ public class CollectionFragment extends Fragment {
                 e.printStackTrace();
             }
 
-        } else if(playlistID == 0 && fromHistory == true && fromFavorites == false){
+        } else if (playlistID == 0 && fromHistory == true && fromFavorites == false) {
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromHistory").get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } else if (pi != null) {
+            try {
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28" + "&app_key=2acb02a2a89f0d366e569b228320619b&series=" + pi.serieID, "fromseries").get();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -144,7 +152,7 @@ public class CollectionFragment extends Fragment {
             }
         });
 
-        if (fromFavorites == true){
+        if (fromFavorites == true) {
             simpleExpandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -155,7 +163,7 @@ public class CollectionFragment extends Fragment {
 
                     LinearLayout lp = new LinearLayout(getContext());
                     lp.setOrientation(LinearLayout.VERTICAL);
-                    lp.setPadding(30,0,30,30);
+                    lp.setPadding(30, 0, 30, 30);
 
 
                     final TextView toQueue = new TextView(getContext());
@@ -202,7 +210,7 @@ public class CollectionFragment extends Fragment {
     //method to expand all groups
     private void expandAll() {
         int count = listAdapter.getGroupCount();
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             simpleExpandableListView.expandGroup(i);
         }
     }
@@ -210,7 +218,7 @@ public class CollectionFragment extends Fragment {
     //method to collapse all groups
     private void collapseAll() {
         int count = listAdapter.getGroupCount();
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             simpleExpandableListView.collapseGroup(i);
         }
     }
@@ -231,7 +239,6 @@ public class CollectionFragment extends Fragment {
         listAdapter.notifyDataSetChanged();
 
 
-
     }
 
 
@@ -241,26 +248,26 @@ public class CollectionFragment extends Fragment {
             list.clear();
         }
 
-        if(list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
+        if (list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
             for (int i = 0; i < podcastItems.getItems().size(); i++) {
                 if (podcastItems.getItems().get(i).collectionName.equals(pi.collectionName) && !list.contains(podcastItems.getItems().get(i))) {
                     list.add(podcastItems.getItems().get(i));
                 }
             }
 
-        } else if(list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory){
+        } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory) {
             list = playlistPodcastItems.getItems();
 
-        } else if(list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory){
+        } else if (list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory) {
             list = favoritePodcastItems.getItems();
-        } else if(list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory){
+        } else if (list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory) {
             list = searchItems.getSearchItems();
-        } else if(list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory){
+        } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory) {
             list = historyPodcastItems.getItems();
         }
 
         int width = getResources().getDisplayMetrics().widthPixels;
-        int height = (getResources().getDisplayMetrics().heightPixels)/3;
+        int height = (getResources().getDisplayMetrics().heightPixels) / 3;
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
@@ -282,7 +289,7 @@ public class CollectionFragment extends Fragment {
                 .cacheOnDisc(true)
                 .build();
 
-        if(list != null && list.size() > 0) {
+        if (list != null && list.size() > 0) {
             if (!list.get(0).collectionName.contains("Metropolia")) {
                 imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).imageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
             } else {
@@ -292,8 +299,7 @@ public class CollectionFragment extends Fragment {
                 header.setLayoutParams(layoutParams);
 
             }
-        }
-        else if(playlistID != 0){
+        } else if (playlistID != 0) {
             textView.setText("Empty");
             header.requestLayout();
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
@@ -310,7 +316,7 @@ public class CollectionFragment extends Fragment {
             });
         }
 
-        for(int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
         }
         listAdapter = new ExpandableListViewAdapter(getContext(), list);
         listAdapter.notifyDataSetChanged();
@@ -344,14 +350,14 @@ class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
             URLConnection conn = url.openConnection();
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
             conn.connect();
-            BufferedReader r  = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
+            BufferedReader r = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
             String output;
 
             while ((output = r.readLine()) != null) {
                 try {
                     JSONObject jObject = new JSONObject(output);
                     JSONArray jArray = jObject.getJSONArray("data");
-                    for (int i = 0; i < jArray.length(); i++){
+                    for (int i = 0; i < jArray.length(); i++) {
                         decryptedURL = jArray.getJSONObject(i).getString("url");
                     }
                     resultURL = myCrypt.decryptURL(decryptedURL);
