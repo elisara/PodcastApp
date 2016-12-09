@@ -84,6 +84,7 @@ public class CollectionFragment extends Fragment {
 
     private boolean fromFavorites, fromSearch, fromHistory;
     private History historyClass;
+    private int width, height;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -103,6 +104,13 @@ public class CollectionFragment extends Fragment {
         textView = (TextView) view.findViewById(R.id.title);
         header = (LinearLayout) view.findViewById(R.id.headerBox);
         collectionName = (TextView) view.findViewById(R.id.collectionName);
+
+        width = getResources().getDisplayMetrics().widthPixels;
+        height = (getResources().getDisplayMetrics().heightPixels) / 3;
+
+        header.requestLayout();
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+        header.setLayoutParams(layoutParams);
 
 
         if (playlistID != 0 && fromFavorites == false && fromHistory == false) {
@@ -224,7 +232,7 @@ public class CollectionFragment extends Fragment {
     private void expandOne(){
         int count = listAdapter.getGroupCount();
         for (int i = 0; i < count; i++) {
-             piFromAdapter = (PodcastItem) listAdapter.getGroup(i);
+            piFromAdapter = (PodcastItem) listAdapter.getGroup(i);
             if(piFromAdapter.title.equals(pi.title) && !pi.title.equals("")) {
                 simpleExpandableListView.expandGroup(i);
                 simpleExpandableListView.setSelection(i);
@@ -271,11 +279,11 @@ public class CollectionFragment extends Fragment {
 
         if (list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
             /**for (int i = 0; i < podcastItems.getItems().size(); i++) {
-                if (podcastItems.getItems().get(i).collectionName.equals(pi.collectionName) && !list.contains(podcastItems.getItems().get(i))) {
-                    list.add(podcastItems.getItems().get(i));
-                }
-            }*/
-        list = serieItems.getSerieItems();
+             if (podcastItems.getItems().get(i).collectionName.equals(pi.collectionName) && !list.contains(podcastItems.getItems().get(i))) {
+             list.add(podcastItems.getItems().get(i));
+             }
+             }*/
+            list = serieItems.getSerieItems();
             collectionName.setText(serieItems.getSerieItems().get(0).collectionName);
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory) {
@@ -289,8 +297,7 @@ public class CollectionFragment extends Fragment {
             list = historyPodcastItems.getItems();
         }
 
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = (getResources().getDisplayMetrics().heightPixels) / 3;
+
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
@@ -327,16 +334,9 @@ public class CollectionFragment extends Fragment {
             }
             else {
                 textView.setText("Metropolia");
-                header.requestLayout();
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-                header.setLayoutParams(layoutParams);
-
             }
         } else if (playlistID != 0) {
             textView.setText("Empty");
-            header.requestLayout();
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-            header.setLayoutParams(layoutParams);
 
         }
 
