@@ -45,6 +45,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private History history;
     public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
+    private FavoritesFragment favoritesFragment;
+    private PlaylistsFragment playlistsFragment;
 
 
     MainActivity mActivity;
@@ -55,6 +57,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
 
         history = new History();
+        favoritesFragment = new FavoritesFragment();
+        playlistsFragment = new PlaylistsFragment();
         this.mActivity = (MainActivity) getActivity();
         mActivity.pServ.setCallbacks(PlayerFragment.this);
         mActivity.hidePlayer();
@@ -191,10 +195,16 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
                 break;
             case R.id.playlistBtn:
-
+                playlistsFragment.addToPlaylistDialog(piFromClick, getContext());
                 break;
             case R.id.favoriteBtn:
-
+                try {
+                    favoritesFragment.addToFavorites(piFromClick.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0), "http://media.mw.metropolia.fi/arsu/favourites?token=",PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.shareBtn:
                 Intent sendIntent = new Intent();

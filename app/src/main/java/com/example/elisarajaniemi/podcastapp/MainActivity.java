@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             //new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.24h:desc&limit=100&type=radioprogram&offset=100", "fromepisodes").get();
             //new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.24h:desc&limit=100&type=radioprogram&offset=200", "fromepisodes").get();
 
-            if (!PreferenceManager.getDefaultSharedPreferences(context).getString("", "").equalsIgnoreCase("")) {
+            if (!PreferenceManager.getDefaultSharedPreferences(context).getString("user", "").equalsIgnoreCase("")) {
                 new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/" + PreferenceManager.getDefaultSharedPreferences(this).getInt("id", 0) + "?token=" + PreferenceManager.getDefaultSharedPreferences(this).getString("token", "0")).get();
             }
         }

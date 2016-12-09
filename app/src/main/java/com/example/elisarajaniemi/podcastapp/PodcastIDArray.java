@@ -21,7 +21,7 @@ public class PodcastIDArray {
 
     public void addPodcastID(PodcastItem item){
         if(!items.contains(item)){
-            items.add(0, item);
+            items.add(item);
         }
     }
 
