@@ -84,19 +84,19 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         });
 
 
-
-        try {
-            history.getHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
-            for (int i = 0; i < historyPodcastItems.getItems().size(); i++){
-                if (historyPodcastItems.getItems().get(i).programID.equalsIgnoreCase(piFromClick.programID)){
-                    history.deleteHistoryItems("http://media.mw.metropolia.fi/arsu/history/", podcastIDArray.getItems().get(i).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+        if(!PreferenceManager.getDefaultSharedPreferences(getContext()).getString("", "").equalsIgnoreCase("")) {
+            try {
+                history.getHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+                for (int i = 0; i < historyPodcastItems.getItems().size(); i++) {
+                    if (historyPodcastItems.getItems().get(i).programID.equalsIgnoreCase(piFromClick.programID)) {
+                        history.deleteHistoryItems("http://media.mw.metropolia.fi/arsu/history/", podcastIDArray.getItems().get(i).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+                    }
                 }
+                history.createHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""), piFromClick.programID.replace("-", ""));
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
-            history.createHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "") , piFromClick.programID.replace("-", ""));
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
         }
-
         sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
         playBtn = (ImageView) view.findViewById(R.id.playBtn);

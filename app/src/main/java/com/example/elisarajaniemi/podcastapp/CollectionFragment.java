@@ -68,6 +68,7 @@ public class CollectionFragment extends Fragment {
     public FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
     public SearchItems searchItems = SearchItems.getInstance();
     public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
+    public Playlists playlists = Playlists.getInstance();
     //private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
@@ -291,10 +292,20 @@ public class CollectionFragment extends Fragment {
                 .cacheOnDisc(true)
                 .build();
 
-        if (list != null && list.size() > 0) {
-            if (!list.get(0).collectionName.contains("Metropolia")) {
-                imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).serieImageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
-            } else {
+        if(list != null && list.size() > 0) {
+            if (!list.get(0).collectionName.contains("Metropolia") && playlistID == 0) {
+                imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).imageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
+            } else if(!list.get(0).collectionName.contains("Metropolia") && playlistID != 0){
+                for (int i = 0; i < playlists.getPlaylists().size(); i++){
+                    if (playlists.getPlaylists().get(i).id == playlistID){
+                        textView.setText(playlists.getPlaylists().get(i).name);
+                        header.requestLayout();
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+                        header.setLayoutParams(layoutParams);
+                    }
+                }
+            }
+            else {
                 textView.setText("Metropolia");
                 header.requestLayout();
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
