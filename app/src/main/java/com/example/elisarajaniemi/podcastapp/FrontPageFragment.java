@@ -206,9 +206,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
 
                     if (PodcastItems.getInstance().getItems().get(i).categorys.get(u).toLowerCase().contains(backendCategories[o]) && prefCategoryList.get(o) == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
                         categoryList.add(0, PodcastItems.getInstance().getItems().get(i));
-                        System.out.println("ADDED: " + PodcastItems.getInstance().getItems().get(i).title);
-                        System.out.println("CATEGORY: " + PodcastItems.getInstance().getItems().get(i).categorys.get(u));
-                    }else if(PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(backendCategories[o]) && prefCategoryList.get(o) == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
+                        }else if(PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(backendCategories[o]) && prefCategoryList.get(o) == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
                         categoryList.add(0, PodcastItems.getInstance().getItems().get(i));
                        // System.out.println("ADDED: " + PodcastItems.getInstance().getItems().get(i).categorys.get(u));
                     }else if (all == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {

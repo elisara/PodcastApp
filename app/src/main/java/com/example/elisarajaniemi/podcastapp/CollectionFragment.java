@@ -91,9 +91,6 @@ public class CollectionFragment extends Fragment {
 
         historyClass = new History();
 
-        System.out.println("FromSearch value: " + fromSearch);
-        System.out.println("FromFavorites value: " + fromFavorites);
-        System.out.println("PlaylistID value: " + playlistID);
         favoritesFragment = new FavoritesFragment();
 
         imageView = (ImageView) view.findViewById(R.id.collectionImage);
@@ -155,8 +152,6 @@ public class CollectionFragment extends Fragment {
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
                     //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
                     alertDialogBuilder.setTitle("Delete favorite");
-
-                    System.out.println("PlaylistID: " + position);
 
                     LinearLayout lp = new LinearLayout(getContext());
                     lp.setOrientation(LinearLayout.VERTICAL);
@@ -245,7 +240,6 @@ public class CollectionFragment extends Fragment {
         list.clear();
 
         if(list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
-            System.out.println("From frontpage");
             for (int i = 0; i < podcastItems.getItems().size(); i++) {
                 if (podcastItems.getItems().get(i).collectionName.equals(pi.collectionName) && !list.contains(podcastItems.getItems().get(i))) {
                     list.add(podcastItems.getItems().get(i));
@@ -253,17 +247,13 @@ public class CollectionFragment extends Fragment {
             }
 
         } else if(list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory){
-            System.out.println("PlaylistPodcastItems size: " + playlistPodcastItems.getItems().size());
             list = playlistPodcastItems.getItems();
 
         } else if(list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory){
-            System.out.println("FavoritePodcastItems array size: " + favoritePodcastItems.getItems().size());
             list = favoritePodcastItems.getItems();
         } else if(list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory){
-            System.out.println("From Search: " + fromSearch + ", search size: " + list.size());
             list = searchItems.getSearchItems();
         } else if(list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory){
-            System.out.println("From History: " + fromHistory + ", History size: " + list.size());
             list = historyPodcastItems.getItems();
         }
 
@@ -348,7 +338,6 @@ class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
     protected String doInBackground(PodcastItem... params) {
 
         try {
-            System.out.println("URL " + params[0].decryptedURL);
             URL url = new URL(params[0].decryptedURL);
             URLConnection conn = url.openConnection();
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");

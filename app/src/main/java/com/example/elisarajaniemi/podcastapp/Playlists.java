@@ -20,7 +20,6 @@ public class Playlists {
 
     public void addPlaylist(PlaylistItem playlist){
         this.playlists.add(playlist);
-        System.out.println("Added " + playlist.name);
     }
 
     public ArrayList<PlaylistItem> getPlaylists(){

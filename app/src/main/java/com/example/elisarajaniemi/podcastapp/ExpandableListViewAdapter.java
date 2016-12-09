@@ -107,7 +107,6 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
             public void onClick(View v) {
                 playerFragment = new PlayerFragment();
                 Bundle bundle2 = new Bundle();
-                System.out.println("FromYLE: " + podcastItem.fromYLE);
                 if (podcastItem.fromYLE == true){
                     try {
                         new DecodeYleURL().execute(podcastItem).get();

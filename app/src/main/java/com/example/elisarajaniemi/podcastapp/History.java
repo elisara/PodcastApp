@@ -64,8 +64,6 @@ class GetHistory extends AsyncTask<Object, String, String> {
             try {
                 JSONArray jsonArray  = new JSONArray(result);
 
-                System.out.println("History juttuja: " + jsonArray);
-
                 //JSONArray jsonArray = new JSONArray(jObject.getString("content"));
                 for (int i = 0; i < jsonArray.length(); i++){
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
