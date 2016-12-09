@@ -35,7 +35,7 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, OnBufferingUpdateListener, SeekBar.OnSeekBarChangeListener, ServiceCallbacks {
-    private ImageView sleepBtn, replayBtn, playBtn, forwardBtn, speedBtn, previousBtn, nextBtn, queueBtn, playlistBtn, favoriteBtn, shareBtn, podcastPic;
+    private ImageView replayBtn, playBtn, forwardBtn, previousBtn, nextBtn, queueBtn, playlistBtn, favoriteBtn, shareBtn, podcastPic;
     private SeekBar seekbar;
     private TextView currentTime, fullTime, title;
     private int mediaFileLengthInMilliseconds;
@@ -71,7 +71,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
             if (pi2 != null) {
                 piFromClick = pi2;
-                System.out.println("Podcast URL ELSE IF: " + piFromClick.decryptedURL);
+                //System.out.println("Podcast URL ELSE IF: " + piFromClick.decryptedURL);
             }
         }
         podcastPic = (ImageView) view.findViewById(R.id.podcastPic);
@@ -97,11 +97,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 e.printStackTrace();
             }
         }
-        sleepBtn = (ImageView) view.findViewById(R.id.sleepBtn);
+
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
         playBtn = (ImageView) view.findViewById(R.id.playBtn);
         forwardBtn = (ImageView) view.findViewById(R.id.forwardBtn);
-        speedBtn = (ImageView) view.findViewById(R.id.speedBtn);
+
         previousBtn = (ImageView) view.findViewById(R.id.previousBtn);
         nextBtn = (ImageView) view.findViewById(R.id.nextBtn);
         queueBtn = (ImageView) view.findViewById(R.id.queueBtn);
@@ -109,11 +109,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         favoriteBtn = (ImageView) view.findViewById(R.id.favoriteBtn);
         shareBtn = (ImageView) view.findViewById(R.id.shareBtn);
 
-        sleepBtn.setOnClickListener(this);
+
         replayBtn.setOnClickListener(this);
         playBtn.setOnClickListener(this);
         forwardBtn.setOnClickListener(this);
-        speedBtn.setOnClickListener(this);
+
         previousBtn.setOnClickListener(this);
         nextBtn.setOnClickListener(this);
         queueBtn.setOnClickListener(this);
@@ -164,9 +164,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.sleepBtn:
 
-                break;
             case R.id.replayBtn:
                 mActivity.pServ.setPosition(mActivity.pServ.mPlayer.getCurrentPosition() - 10000);
                 mActivity.pServ.mPlayer.seekTo(mActivity.pServ.mPlayer.getCurrentPosition() - 10000);
@@ -182,9 +180,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             case R.id.forwardBtn:
                 mActivity.pServ.setPosition(mActivity.pServ.mPlayer.getCurrentPosition() + 10000);
                 mActivity.pServ.mPlayer.seekTo(mActivity.pServ.mPlayer.getCurrentPosition() + 10000);
-                break;
-            case R.id.speedBtn:
-                //mActivity.pServ.setSpeed();
                 break;
             case R.id.previousBtn:
 
