@@ -76,7 +76,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 case "fromfavorites":
                     favoritePodcastItems.clearList();
                     for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
-                        System.out.println("PodCastIDArray value: " + podcastIDArray.getItems().get(i));
+                        //System.out.println("PodCastIDArray value: " + podcastIDArray.getItems().get(i));
                         result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
                         try {
                             favoritePodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
@@ -176,7 +176,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         JSONArray jsonArray = jsonObject.getJSONArray("data");
         for (int i = 0; i < jsonArray.length(); i++) {
             PodcastItem podcastItem = new PodcastItem();
-            System.out.print(i + ". ");
+            //System.out.print(i + ". ");
             podcastItem = getSinglePodcast(jsonArray.getJSONObject(i));
 
 
@@ -298,6 +298,8 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         podcastItem.setLength(podcastLength(jObject.getString("duration").substring(2)));
         if (jObject.getJSONObject("partOfSeries").has("id"))
         podcastItem.setSerieID(jObject.getJSONObject("partOfSeries").getString("id"));
+        if (jObject.getJSONObject("partOfSeries").getJSONObject("image").has("id"))
+        podcastItem.setSerieImageURL(jObject.getJSONObject("partOfSeries").getJSONObject("image").getString("id"));
         //podcastItem.alterPodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"), jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"), jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaID, categorys, podcastLength(jObject.getString("duration").substring(2)));
 
 

@@ -22,11 +22,14 @@ public class PodcastItem implements Serializable {
     public int collectionID;
     public String id;
     public String imageURL;
+    public String serieImageURL;
     public boolean fromYLE;
     public String programID;
     public String mediaID;
     public String serieID;
+
     public ArrayList<String> categorys;
+
 
     public PodcastItem(){
         this.title = "";
@@ -43,6 +46,7 @@ public class PodcastItem implements Serializable {
         this.programID = "";
         this.mediaID = "";
         this.serieID = "";
+        this.serieImageURL = "";
 
 
     }
@@ -52,25 +56,6 @@ public class PodcastItem implements Serializable {
         this.programID = programID;
     }
 
-    public PodcastItem alterPodcastItem(String title, String url, String description, String collectionName,String imageURL, String programID, String mediaID, ArrayList<String> categorys, int length){
-
-        this.title = title;
-        this.url = url;
-        this.description = description;
-        this.length = length;
-        this.category = "";
-        this.tags = "";
-        this.collectionName = collectionName;
-        this.collectionID = 0;
-        this.fromYLE = true;
-        this.decryptedURL = "";
-        this.imageURL = imageURL;
-        this.programID = programID;
-        this.mediaID = mediaID;
-        this.categorys = categorys;
-
-        return this;
-    }
 
     public PodcastItem(String title, String url, String description, int length, String category, String tags, String collectionName, int collectionID, String imageURL){
 
@@ -90,6 +75,7 @@ public class PodcastItem implements Serializable {
         this.categorys = new ArrayList<>();
         this.categorys.add("Metropolia");
         this.serieID = "";
+        this.serieImageURL = "";
 
 
     }
@@ -106,6 +92,7 @@ public class PodcastItem implements Serializable {
     public void setCollectionName(String collectionName){this.collectionName = collectionName;}
     public void setId(){}
     public void setImageURL(String imageURL){this.imageURL = imageURL;}
+    public void setSerieImageURL(String serieImageURL){this.serieImageURL = serieImageURL;}
     public void setFromYLE(boolean fromYLE){this.fromYLE = fromYLE;}
     public void setMediaID(String mediaID){this.mediaID = mediaID;}
     public void setCategorys(ArrayList<String> categorys){this.categorys = categorys;}
