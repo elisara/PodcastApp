@@ -11,7 +11,7 @@
     <ImageButton
         android:id="@+id/episodeIcon"
         android:paddingRight="16dp"
-        android:layout_weight="30"
+        android:layout_weight="20"
         android:src="@drawable/ic_play_arrow_black_50dp"
         android:layout_width="0dp"
         android:tint="@color/colorAccent"
@@ -22,7 +22,7 @@
         android:id="@+id/episodeName"
         android:layout_gravity="center"
         android:text="test"
-        android:layout_weight="65"
+        android:layout_weight="75"
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 

@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private PodcastItem pi, pi2;
     private Context context = null;
     private Bitmap pic;
+    private LinearLayout smallPlayerLayout;
     public PodcastItems podcastItems = PodcastItems.getInstance();
     PlayService pServ;
     ImageLoader imageLoader;
@@ -102,8 +104,10 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         title = (TextView) toolbar.findViewById(R.id.title);
+
+        smallPlayerLayout = (LinearLayout) findViewById(R.id.player_frag_container);
+        smallPlayerLayout.setVisibility(LinearLayout.GONE);
 
         menuOpen = false;
         categoryOpen = false;
@@ -215,10 +219,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void showPlayer() {
         if(pServ.getStatus()>1)fragmentManager.beginTransaction().show(spf).commit();
+        smallPlayerLayout.setVisibility(View.VISIBLE);
+
     }
 
     public void hidePlayer() {
         fragmentManager.beginTransaction().hide(spf).commit();
+        smallPlayerLayout.setVisibility(View.GONE);
+
+
     }
 
     void doBindService(Intent intent) {

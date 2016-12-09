@@ -115,7 +115,7 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
                     picLoaded = true;
                 }
                 // Running this thread after 100 milliseconds
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 100);
 
             }
         }

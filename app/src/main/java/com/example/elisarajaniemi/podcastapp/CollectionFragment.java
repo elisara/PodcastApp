@@ -90,6 +90,7 @@ public class CollectionFragment extends Fragment {
         fromHistory = getArguments().getBoolean("fromHistory");
 
         historyClass = new History();
+        list = new ArrayList<>();
 
         favoritesFragment = new FavoritesFragment();
 
@@ -139,7 +140,6 @@ public class CollectionFragment extends Fragment {
         simpleExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                //collapseAll();
                 return true;
             }
         });
@@ -236,8 +236,10 @@ public class CollectionFragment extends Fragment {
 
 
     public void fillList(){
-        list = new ArrayList<>();
-        list.clear();
+
+        if(list.size() != 0 || list != null) {
+            list.clear();
+        }
 
         if(list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
             for (int i = 0; i < podcastItems.getItems().size(); i++) {
