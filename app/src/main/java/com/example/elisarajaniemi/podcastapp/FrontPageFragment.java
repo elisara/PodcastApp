@@ -3,6 +3,7 @@ package com.example.elisarajaniemi.podcastapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -40,6 +41,8 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
     private PlaylistsFragment playlistsFragment;
     private AddToLists addToLists;
     private FavoritesFragment favoritesFragment;
+    private static final String LIST_STATE = "listState";
+    private Parcelable mListState = null;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,10 +114,10 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
 
             Collections.sort(categoryList, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
-                    return pod1.title.compareToIgnoreCase(pod2.collectionName); // To compare string values
+                    return pod1.title.compareToIgnoreCase(pod2.title); // To compare string values
                 }
             });
-            adapter = new GridViewAdapter(getContext(), categoryList);
+            //adapter = new GridViewAdapter(getContext(), categoryList);
 
 
         } else if (value.contains("TOP")) {
@@ -124,7 +127,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
                 }
             });
 
-            adapter = new GridViewAdapter(getContext(), categoryList);
+            //adapter = new GridViewAdapter(getContext(), categoryList);
 
         }
         else if (value.contains("NEW")) {
@@ -134,7 +137,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
                 }
             });
 
-            adapter = new GridViewAdapter(getContext(), categoryList);
+            //adapter = new GridViewAdapter(getContext(), categoryList);
 
         }
         else if (value.contains("LENGTH")) {
@@ -144,10 +147,10 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
                 }
             });
 
-            adapter = new GridViewAdapter(getContext(), categoryList);
+            //adapter = new GridViewAdapter(getContext(), categoryList);
 
         }
-
+        adapter = new GridViewAdapter(getContext(), categoryList);
         sortValue = value;
         adapter.notifyDataSetChanged();
         gridView.setAdapter(adapter);
@@ -159,6 +162,11 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         categoryList = getListByCategories();
         adapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
     }
 
     public ArrayList<PodcastItem> getListByCategories() {
@@ -206,9 +214,9 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
 
                     if (PodcastItems.getInstance().getItems().get(i).categorys.get(u).toLowerCase().contains(backendCategories[o]) && prefCategoryList.get(o) == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
                         categoryList.add(0, PodcastItems.getInstance().getItems().get(i));
-                        }else if(PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(backendCategories[o]) && prefCategoryList.get(o) == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
+                    }else if(PodcastItems.getInstance().getItems().get(i).tags.toLowerCase().contains(backendCategories[o]) && prefCategoryList.get(o) == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
                         categoryList.add(0, PodcastItems.getInstance().getItems().get(i));
-                       // System.out.println("ADDED: " + PodcastItems.getInstance().getItems().get(i).categorys.get(u));
+                        // System.out.println("ADDED: " + PodcastItems.getInstance().getItems().get(i).categorys.get(u));
                     }else if (all == true && !categoryList.contains(PodcastItems.getInstance().getItems().get(i))) {
                         categoryList.add(0, PodcastItems.getInstance().getItems().get(i));
                     }
@@ -216,28 +224,28 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
             }
         }
 
-            if(sortValue.contains("NAME")){
-                Collections.sort(categoryList, new Comparator<PodcastItem>() {
-                    public int compare(PodcastItem pod1, PodcastItem pod2) {
-                        return pod1.title.compareToIgnoreCase(pod2.title); // To compare string values
-                    }
-                });
-            }
-            else if(sortValue.contains("NEW")){
-                Collections.sort(categoryList, new Comparator<PodcastItem>() {
-                    public int compare(PodcastItem pod1, PodcastItem pod2) {
-                        return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
-                    }
-                });
-            }
-
-            adapter = new GridViewAdapter(getContext(), categoryList);
-            adapter.notifyDataSetChanged();
-            gridView.setAdapter(adapter);
-            return categoryList;
-
+        if(sortValue.contains("NAME")){
+            Collections.sort(categoryList, new Comparator<PodcastItem>() {
+                public int compare(PodcastItem pod1, PodcastItem pod2) {
+                    return pod1.title.compareToIgnoreCase(pod2.title); // To compare string values
+                }
+            });
+        }
+        else if(sortValue.contains("NEW")){
+            Collections.sort(categoryList, new Comparator<PodcastItem>() {
+                public int compare(PodcastItem pod1, PodcastItem pod2) {
+                    return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
+                }
+            });
         }
 
+        adapter = new GridViewAdapter(getContext(), categoryList);
+        adapter.notifyDataSetChanged();
+        gridView.setAdapter(adapter);
+        return categoryList;
+
     }
+
+}
 
 

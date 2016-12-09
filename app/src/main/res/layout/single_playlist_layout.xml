@@ -6,6 +6,19 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:gravity="top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/collectionName"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/headerBox"
         android:background="@color/colorAccent"
         android:layout_width="match_parent"
@@ -25,6 +38,8 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+
 
     <ExpandableListView
         android:id="@+id/expandable_listview"

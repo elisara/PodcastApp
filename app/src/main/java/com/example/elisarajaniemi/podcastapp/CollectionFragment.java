@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -77,7 +78,9 @@ public class CollectionFragment extends Fragment {
     private ImageView imageView;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
     private TextView textView;
+    private TextView collectionName;
     private LinearLayout header;
+    private PodcastItem piFromAdapter;
 
     private boolean fromFavorites, fromSearch, fromHistory;
     private History historyClass;
@@ -99,6 +102,7 @@ public class CollectionFragment extends Fragment {
         imageView = (ImageView) view.findViewById(R.id.collectionImage);
         textView = (TextView) view.findViewById(R.id.title);
         header = (LinearLayout) view.findViewById(R.id.headerBox);
+        collectionName = (TextView) view.findViewById(R.id.collectionName);
 
 
         if (playlistID != 0 && fromFavorites == false && fromHistory == false) {
@@ -217,6 +221,18 @@ public class CollectionFragment extends Fragment {
         }
     }
 
+    private void expandOne(){
+        int count = listAdapter.getGroupCount();
+        for (int i = 0; i < count; i++) {
+             piFromAdapter = (PodcastItem) listAdapter.getGroup(i);
+            if(piFromAdapter.title.equals(pi.title) && !pi.title.equals("")) {
+                simpleExpandableListView.expandGroup(i);
+                simpleExpandableListView.setSelection(i);
+            }
+        }
+
+    }
+
     //method to collapse all groups
     private void collapseAll() {
         int count = listAdapter.getGroupCount();
@@ -239,6 +255,9 @@ public class CollectionFragment extends Fragment {
         simpleExpandableListView.deferNotifyDataSetChanged();
         listAdapter.getGroupCount();
         listAdapter.notifyDataSetChanged();
+        if(pi!= null){
+            expandOne();
+        }
 
 
     }
@@ -257,6 +276,7 @@ public class CollectionFragment extends Fragment {
                 }
             }*/
         list = serieItems.getSerieItems();
+            collectionName.setText(serieItems.getSerieItems().get(0).collectionName);
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory) {
             list = playlistPodcastItems.getItems();
