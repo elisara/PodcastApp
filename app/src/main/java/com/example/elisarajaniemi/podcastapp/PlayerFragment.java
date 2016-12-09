@@ -42,6 +42,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private final Handler handler = new Handler();
     private Utilities utils;
     private PodcastItem piFromService, piFromClick, pi2;
+    private History history;
+    public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
+    public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
 
 
     MainActivity mActivity;
@@ -51,6 +54,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
+        history = new History();
         this.mActivity = (MainActivity) getActivity();
         mActivity.pServ.setCallbacks(PlayerFragment.this);
         mActivity.hidePlayer();
@@ -79,11 +83,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             }
         });
 
+
+
         try {
-            new CreateHistory().execute("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""), piFromClick.programID.replace("-", "")).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+            history.getHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+            for (int i = 0; i < historyPodcastItems.getItems().size(); i++){
+                if (historyPodcastItems.getItems().get(i).programID.equalsIgnoreCase(piFromClick.programID)){
+                    history.deleteHistoryItems("http://media.mw.metropolia.fi/arsu/history/", podcastIDArray.getItems().get(i).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+                }
+            }
+            history.createHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "") , piFromClick.programID.replace("-", ""));
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
@@ -311,62 +321,3 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         updateProgressBar();
     }
 }
-
-class CreateHistory extends AsyncTask<Object, String, String> {
-    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
-
-    String message;
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
-    }
-
-    @Override
-    protected String doInBackground(Object... params) {
-
-        try {
-            URL url = new URL((String) params[0]);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            String input = "{\"podcast_id\":\"" + params[1] + "\"}";
-            //input = input.replace("\n", "");
-            System.out.println(input);
-
-            OutputStream os = conn.getOutputStream();
-            os.write(input.getBytes());
-            os.flush();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            String output;
-
-            while ((output = br.readLine()) != null) {
-                try {
-                    JSONObject jObject = new JSONObject(output);
-                    message = jObject.getString("message");
-                    System.out.println("Database message: " + message);
-                } catch (JSONException e) {
-                    System.out.println(e);
-                }
-            }
-
-            conn.disconnect();
-        } catch (
-                IOException e
-                )
-
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-}
-

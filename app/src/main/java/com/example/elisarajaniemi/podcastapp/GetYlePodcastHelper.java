@@ -89,7 +89,6 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                 System.out.println("From Favorites");
                 historyPodcastItems.clearList();
                 for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
-                    System.out.println("PodCastIDArray value: " + podcastIDArray.getItems().get(i));
                     result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
                     try {
                         historyPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));

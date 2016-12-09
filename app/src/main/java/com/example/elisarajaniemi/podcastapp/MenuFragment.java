@@ -107,7 +107,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
             case R.id.history:
                 System.out.println("HISTORY");
                 try {
-                    historyClass.getHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=", PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
+                    historyClass.getHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
@@ -184,10 +184,6 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             }
                             Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
                             user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
-
-                            System.out.println("-------------PREF USER: " + user);
-                            System.out.println("-------------PREF TOKEN: " + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
-                            System.out.println("-------------PREF ID: " + PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0));
 
                             if(user.length() > 0) {
                                 System.out.println("--------User in list-------");

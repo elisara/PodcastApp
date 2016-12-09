@@ -35,6 +35,5 @@ public class PlaylistPodcastItems {
 
     public void clearList(){
         this.items.clear();
-        System.out.println("PlayListPodcastItems size: " + this.items.size());
     }
 }

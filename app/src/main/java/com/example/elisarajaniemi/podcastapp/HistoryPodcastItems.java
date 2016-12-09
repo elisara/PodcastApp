@@ -20,7 +20,7 @@ public class HistoryPodcastItems {
 
     public void addPodcastItem(PodcastItem item){
         if(!items.contains(item)){
-            items.add(item);
+            items.add(0, item);
         }
     }
     public void addAll(ArrayList<PodcastItem> lista) {
