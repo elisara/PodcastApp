@@ -23,7 +23,6 @@ import java.util.concurrent.ExecutionException;
 public class History {
 
     public void getHistoryItems(String url, String token) throws ExecutionException, InterruptedException {
-        System.out.println("ASD");
         new GetHistory().execute(url, token).get();
     }
 }

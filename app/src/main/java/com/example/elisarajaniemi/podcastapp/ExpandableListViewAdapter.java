@@ -102,6 +102,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                     }
                 }
                 bundle2.putSerializable("episode", podcastItem);
+                System.out.println("podcastitem info: " + podcastItem.title);
                 playerFragment.setArguments(bundle2);
                 ((MainActivity) context).setFragment(playerFragment);
 

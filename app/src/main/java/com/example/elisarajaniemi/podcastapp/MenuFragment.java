@@ -175,7 +175,13 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                         public void onClick(DialogInterface dialog, int id) {
                             username_ = username.getText().toString();
                             password_ = password.getText().toString();
-                            rali.login(username_, password_, getContext());
+                            try {
+                                rali.login(username_, password_, getContext());
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
                             user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
 
@@ -238,7 +244,13 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                     password_ = password.getText().toString();
                                     password2_ = password2.getText().toString();
                                     email_ = email.getText().toString();
-                                    rali.registerUser(username_, password_, password2_, email_, getContext());
+                                    try {
+                                        rali.registerUser(username_, password_, password2_, email_, getContext());
+                                    } catch (ExecutionException e) {
+                                        e.printStackTrace();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                     user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
 
                                     if(user.length() > 0) {

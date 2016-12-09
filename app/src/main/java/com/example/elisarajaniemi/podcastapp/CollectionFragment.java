@@ -1,10 +1,13 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,6 +139,7 @@ public class CollectionFragment extends Fragment {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 PodcastItem podcastItem = list.get(groupPosition);
+                System.out.println("PodcastItem info: " + podcastItem.programID + ", groupPosition: " + groupPosition);
                 return false;
             }
         });
@@ -152,17 +156,52 @@ public class CollectionFragment extends Fragment {
             simpleExpandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    try {
-                        favoritesFragment.deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(position).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
-                        favoritePodcastItems.deletePodcast(position);
-                        listAdapter.notifyDataSetChanged();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    final int favoriteID = position;
+                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
+                    //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
+                    alertDialogBuilder.setTitle("Delete favorite");
 
-                    return false;
+                    System.out.println("PlaylistID: " + position);
+
+                    LinearLayout lp = new LinearLayout(getContext());
+                    lp.setOrientation(LinearLayout.VERTICAL);
+                    lp.setPadding(30,0,30,30);
+
+
+                    final TextView toQueue = new TextView(getContext());
+                    toQueue.setText("Do you really want to delete this favorite?");
+                    toQueue.setTextColor(Color.BLACK);
+                    toQueue.setPadding(30, 20, 20, 20);
+                    toQueue.setTextSize(20);
+                    lp.addView(toQueue);
+
+                    alertDialogBuilder.setView(lp);
+                    final AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            try {
+                                favoritesFragment.deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(favoriteID).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
+                                favoritePodcastItems.deletePodcast(favoriteID);
+                                listAdapter.notifyDataSetChanged();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    alertDialog.show();
+
+                    return true;
                 }
             });
         }
@@ -220,6 +259,7 @@ public class CollectionFragment extends Fragment {
                     list.add(listAll.get(i));
                 }
             }
+            System.out.println("List size: " + list.size());
         } else if(list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory){
             System.out.println("PlaylistPodcastItems size: " + playlistPodcastItems.getItems().size());
             list = playlistPodcastItems.getItems();

@@ -41,7 +41,7 @@ public class RegisterAndLogin{
     SharedPreferences sharedpreferences;
 
 
-    public boolean registerUser(String username, String password, String password2, String email, Context context) {
+    public boolean registerUser(String username, String password, String password2, String email, Context context) throws ExecutionException, InterruptedException {
 
         exists = false;
         testIfExists(username, password, context);
@@ -85,7 +85,7 @@ public class RegisterAndLogin{
         return loggedIn;
     }
 
-    public String login(String username, String password, Context context) {
+    public String login(String username, String password, Context context) throws ExecutionException, InterruptedException {
         exists = false;
         testIfExists(username, password, context);
 
@@ -110,6 +110,9 @@ public class RegisterAndLogin{
             System.out.println("Login: User doesn't exist or user is already logged in.");
             loggedIn = false;
         }
+
+        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0) + "?token=" + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0")).get();
+
 
         return username;
 
