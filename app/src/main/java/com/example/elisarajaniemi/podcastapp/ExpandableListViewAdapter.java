@@ -71,22 +71,36 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
 
     @Override
+    public int getGroupTypeCount() {
+        return getGroupCount();
+    }
+
+/**
+    @Override
+    public int getViewType(int position) {
+
+        item
+        return position;
+    }*/
+
+    @SuppressWarnings("unchecked")
+    @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        View myView = convertView;
+        View myView = null;
+        convertView = null;
 
         if (myView == null) {
             LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             myView = inf.inflate(R.layout.episode_list_item, parent, false);
-            tv = (TextView) myView.findViewById(R.id.episodeName);
-            playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
-
         }
 
         final PodcastItem podcastItem = (PodcastItem) getGroup(groupPosition);
+        tv = (TextView) myView.findViewById(R.id.episodeName);
+        playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
         tv.setText(podcastItem.title);
         playBtn.setId(groupPosition);
         playBtn.setOnClickListener(new View.OnClickListener() {
