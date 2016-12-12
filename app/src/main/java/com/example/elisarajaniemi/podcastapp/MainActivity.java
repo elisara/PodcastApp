@@ -194,9 +194,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
             ft.replace(R.id.frag_container, frontPageFragment);
-
-            ft.add(R.id.player_frag_container, spf);
-            ft.commit();
+            ft.replace(R.id.player_frag_container, spf);
+            ft.commitAllowingStateLoss();
             hidePlayer();
             showPlayer();
 
@@ -205,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void openPlayer(){
-        System.out.println("-----Open playerFagment");
+        //System.out.println("-----Open playerFagment");
         FragmentTransaction ft = fragmentManager.beginTransaction();
         boolean fragmentPopped = fragmentManager.popBackStackImmediate("pf", 0);
         if (!fragmentPopped) {
@@ -219,13 +218,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showPlayer() {
-        if(pServ.getStatus()>1)fragmentManager.beginTransaction().show(spf).commit();
+        if(pServ.getStatus()>1)fragmentManager.beginTransaction().show(spf).commitAllowingStateLoss();
         smallPlayerLayout.setVisibility(View.VISIBLE);
 
     }
 
     public void hidePlayer() {
-        fragmentManager.beginTransaction().hide(spf).commit();
+        fragmentManager.beginTransaction().hide(spf).commitAllowingStateLoss();
         smallPlayerLayout.setVisibility(View.GONE);
 
 
