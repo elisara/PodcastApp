@@ -75,7 +75,7 @@ public class CollectionFragment extends Fragment {
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
     private ExpandableListViewAdapter listAdapter;
-    private FavoritesFragment favoritesFragment;
+    private Favorites favorites;
     private ImageView imageView;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
     private TextView textView;
@@ -83,14 +83,13 @@ public class CollectionFragment extends Fragment {
     private LinearLayout header;
     private PodcastItem piFromAdapter;
 
-
     private boolean fromFavorites, fromSearch, fromHistory, fromQueue;
     private History historyClass;
     private int width, height;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
+        View view = inflater.inflate(R.layout.collection_layout, container, false);
         pi = (PodcastItem) getArguments().getSerializable("message");
         playlistID = getArguments().getInt("playlistID");
         fromFavorites = getArguments().getBoolean("fromFavorites");
@@ -101,7 +100,7 @@ public class CollectionFragment extends Fragment {
         historyClass = new History();
         list = new ArrayList<>();
 
-        favoritesFragment = new FavoritesFragment();
+        favorites = new Favorites();
 
         imageView = (ImageView) view.findViewById(R.id.collectionImage);
         textView = (TextView) view.findViewById(R.id.title);
@@ -116,6 +115,7 @@ public class CollectionFragment extends Fragment {
         header.setLayoutParams(layoutParams);
 
 
+        //CHECK FROM WHICH FRAGMENT THE USER IS COMING AND WHAT LIST TO SHOW
         if (playlistID != 0 && fromFavorites == false && fromHistory == false) {
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromplaylist").get();
@@ -154,6 +154,12 @@ public class CollectionFragment extends Fragment {
 
 
         simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
+        fillList();
+        simpleExpandableListView.deferNotifyDataSetChanged();
+        listAdapter.notifyDataSetChanged();
+        if(pi!= null){
+            expandOne();
+        }
         simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -174,48 +180,7 @@ public class CollectionFragment extends Fragment {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                     final int favoriteID = position;
-                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
-                    //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
-                    alertDialogBuilder.setTitle("Delete favorite");
-
-                    LinearLayout lp = new LinearLayout(getContext());
-                    lp.setOrientation(LinearLayout.VERTICAL);
-                    lp.setPadding(30, 0, 30, 30);
-
-
-                    final TextView toQueue = new TextView(getContext());
-                    toQueue.setText("Do you really want to delete this favorite?");
-                    toQueue.setTextColor(Color.BLACK);
-                    toQueue.setPadding(30, 20, 20, 20);
-                    toQueue.setTextSize(20);
-                    lp.addView(toQueue);
-
-                    alertDialogBuilder.setView(lp);
-                    final AlertDialog alertDialog = alertDialogBuilder.create();
-
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            try {
-                                favoritesFragment.deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(favoriteID).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
-                                favoritePodcastItems.deletePodcast(favoriteID);
-                                listAdapter.notifyDataSetChanged();
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    });
-
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    alertDialog.show();
-
+                    favorites.deleteFavoritesDialog(getContext(), podcastIDArray, favoriteID, favoritePodcastItems, listAdapter);
                     return true;
                 }
             });
@@ -262,14 +227,6 @@ public class CollectionFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        fillList();
-        simpleExpandableListView.deferNotifyDataSetChanged();
-        listAdapter.getGroupCount();
-        listAdapter.notifyDataSetChanged();
-        if(pi!= null){
-            expandOne();
-        }
-
 
     }
 
@@ -327,18 +284,16 @@ public class CollectionFragment extends Fragment {
             } else if(!list.get(0).collectionName.contains("Metropolia") && playlistID != 0){
                 for (int i = 0; i < playlists.getPlaylists().size(); i++){
                     if (playlists.getPlaylists().get(i).id == playlistID){
-                        textView.setText(playlists.getPlaylists().get(i).name);
-                        header.requestLayout();
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-                        header.setLayoutParams(layoutParams);
+                        collectionName.setText(playlists.getPlaylists().get(i).name);
+
                     }
                 }
             }
             else {
-                textView.setText("Metropolia");
+                collectionName.setText("Metropolia");
             }
         } else if (playlistID != 0||fromQueue) {
-            textView.setText("Empty");
+            collectionName.setText("Empty playlist");
 
         }
 
@@ -373,10 +328,6 @@ class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
     }
     @Override
     protected String doInBackground(PodcastItem... params) {

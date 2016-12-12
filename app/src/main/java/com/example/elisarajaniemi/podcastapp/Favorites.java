@@ -1,14 +1,21 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,31 +39,11 @@ import java.util.concurrent.ExecutionException;
  * Created by Elisa Rajaniemi on 24.11.2016.
  */
 
-public class FavoritesFragment extends Fragment {
+public class Favorites {
 
-    GridView gridView;
     PodcastItems podcastItems = PodcastItems.getInstance();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.favorites_layout, container, false);
 
-        gridView = (GridView) view.findViewById(R.id.gridView1);
-
-        ArrayList<PodcastItem> list = podcastItems.getItems();
-
-        gridView.setAdapter(new GridViewAdapter(getContext(), list));
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(getContext(), ((TextView) v.findViewById(R.id.grid_item_title)).getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-
-        return view;
-    }
 
     public void addToFavorites(String programID, int userID, String url, String token) throws ExecutionException, InterruptedException {
         new CreateFavorites().execute(programID, userID, url, token).get();
@@ -68,6 +55,51 @@ public class FavoritesFragment extends Fragment {
 
     public void deleteFavorites(String url, String id, String token) throws ExecutionException, InterruptedException {
         new DeleteFavorites().execute(url, id, token).get();
+    }
+
+    public void deleteFavoritesDialog(final Context context, final PodcastIDArray podcastIDArray, final int favoriteID, final FavoritePodcastItems favoritePodcastItems, final ExpandableListViewAdapter listViewAdapter){
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
+        //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
+        alertDialogBuilder.setTitle("Delete favorite");
+
+        LinearLayout lp = new LinearLayout(context);
+        lp.setOrientation(LinearLayout.VERTICAL);
+        lp.setPadding(30, 0, 30, 30);
+
+
+        final TextView toQueue = new TextView(context);
+        toQueue.setText("Do you really want to delete this favorite?");
+        toQueue.setTextColor(Color.BLACK);
+        toQueue.setPadding(30, 20, 20, 20);
+        toQueue.setTextSize(20);
+        lp.addView(toQueue);
+
+        alertDialogBuilder.setView(lp);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                try {
+                    deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(favoriteID).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
+                    favoritePodcastItems.deletePodcast(favoriteID);
+                    listViewAdapter.notifyDataSetChanged();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        alertDialog.show();
+
     }
 
 }

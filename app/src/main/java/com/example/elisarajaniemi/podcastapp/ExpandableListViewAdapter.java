@@ -1,19 +1,13 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -28,7 +22,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     private ArrayList<PodcastItem> groupList;
     private PlayerFragment playerFragment;
     private AddToLists addToLists;
-    private FavoritesFragment favoritesFragment;
+    private Favorites favorites;
     private PlaylistsFragment playlistsFragment;
     public AutoplayItems autoplayItems = AutoplayItems.getInstance();
     public QueueItems queueItems =QueueItems.getInstance();
@@ -99,7 +93,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
         if (myView == null) {
             LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            myView = inf.inflate(R.layout.episode_list_item, parent, false);
+            myView = inf.inflate(R.layout.expandablelistview_item, parent, false);
         }
 
         final PodcastItem podcastItem = (PodcastItem) getGroup(groupPosition);
@@ -140,11 +134,11 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         ImageButton button = (ImageButton) myView.findViewById(R.id.itemMenu);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                favoritesFragment = new FavoritesFragment();
+                favorites = new Favorites();
                 playlistsFragment = new PlaylistsFragment();
                 addToLists = new AddToLists();
 
-                addToLists.addToListsDialog(context, podcastItem, playlistsFragment, favoritesFragment);
+                addToLists.addToListsDialog(context, podcastItem, playlistsFragment, favorites);
 
             }
         });
