@@ -6,21 +6,23 @@ import java.util.ArrayList;
  * Created by Kade on 12.12.2016.
  */
 
-public class AutoplayItems {
+public class QueueItems {
 
     private ArrayList<PodcastItem> items;
 
-    private static AutoplayItems ourInstance = new AutoplayItems();
+    private static QueueItems  ourInstance = new QueueItems ();
 
-    public static AutoplayItems getInstance() {
+    public static QueueItems  getInstance() {
         return ourInstance;
     }
 
-    private AutoplayItems() {
+    public AutoplayItems autoplayItems = AutoplayItems.getInstance();
+
+    private QueueItems() {
         this.items = new ArrayList<>();
     }
 
-    public void addAutoplayItems(PodcastItem item){
+    public void addQueueItems (PodcastItem item){
         if(!items.contains(item)){
             items.add(item);
         }
@@ -37,12 +39,12 @@ public class AutoplayItems {
         return items.get(0);
     }
 
-    public void addOne(PodcastItem item){
-        this.items.add(0, item);
-    }
-
     public void clearList(){
         this.items.clear();
+    }
+    public void addOne(PodcastItem item){
+        this.items.add(0, item);
+        autoplayItems.addOne(item);
     }
 
     public ArrayList<PodcastItem> getItems(){

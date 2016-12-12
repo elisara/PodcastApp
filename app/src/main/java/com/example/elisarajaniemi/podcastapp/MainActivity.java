@@ -254,6 +254,11 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         System.out.println("--------- MainActivity STOP --------------");
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.remove(spf);
+
+
+
 
     }
 
