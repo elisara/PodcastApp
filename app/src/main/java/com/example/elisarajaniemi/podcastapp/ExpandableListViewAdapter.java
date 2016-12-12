@@ -88,6 +88,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        final DecodeYleURL decodeYleURL = new DecodeYleURL(context);
         View myView = null;
         convertView = null;
 
@@ -111,7 +112,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 Bundle bundle2 = new Bundle();
                 if (podcastItem.fromYLE == true){
                     try {
-                        new DecodeYleURL().execute(podcastItem).get();
+                        //new DecodeYleURL(context).execute(podcastItem).get();
+                        decodeYleURL.execute(podcastItem).get();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
