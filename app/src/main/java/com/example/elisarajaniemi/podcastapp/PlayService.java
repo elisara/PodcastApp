@@ -42,6 +42,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     public static final String START_SERVICE = "start_service";
 
     public AutoplayItems autoplayItems = AutoplayItems.getInstance();
+    public QueueItems queueItems = QueueItems.getInstance();
     ImageLoader imageLoader;
 
 
@@ -319,6 +320,11 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         }
         playMusic();
         status = 3;
+        for (int i = 0; i < queueItems.getItems().size(); i++){
+            if (queueItems.getItems().get(i).programID == pi.programID){
+                queueItems.removeOne(i);
+            }
+        }
         for (int i = 0; i < autoplayItems.getItems().size(); i++){
             if (autoplayItems.getItems().get(i).programID == pi.programID){
                 autoplayItems.removeOne(i);
