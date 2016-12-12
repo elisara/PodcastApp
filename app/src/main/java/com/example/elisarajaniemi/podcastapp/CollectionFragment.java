@@ -1,11 +1,14 @@
 package com.example.elisarajaniemi.podcastapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -30,6 +33,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -150,7 +154,6 @@ public class CollectionFragment extends Fragment {
         }
 
 
-
         simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
         simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
@@ -230,11 +233,11 @@ public class CollectionFragment extends Fragment {
         }
     }
 
-    private void expandOne(){
+    private void expandOne() {
         int count = listAdapter.getGroupCount();
         for (int i = 0; i < count; i++) {
             piFromAdapter = (PodcastItem) listAdapter.getGroup(i);
-            if(piFromAdapter.title.equals(pi.title) && !pi.title.equals("")) {
+            if (piFromAdapter.title.equals(pi.title) && !pi.title.equals("")) {
                 simpleExpandableListView.expandGroup(i);
                 simpleExpandableListView.setSelection(i);
             }
@@ -264,7 +267,7 @@ public class CollectionFragment extends Fragment {
         simpleExpandableListView.deferNotifyDataSetChanged();
         listAdapter.getGroupCount();
         listAdapter.notifyDataSetChanged();
-        if(pi!= null){
+        if (pi != null) {
             expandOne();
         }
 
@@ -272,16 +275,16 @@ public class CollectionFragment extends Fragment {
     }
 
 
-    public void fillList(){
+    public void fillList() {
 
-        if(list.size() != 0 || list != null) {
+        if (list.size() != 0 || list != null) {
             list.clear();
         }
 
         if (list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
             list = serieItems.getSerieItems();
-            if(list!=null&&list.size()>0)
-            collectionName.setText(serieItems.getSerieItems().get(0).collectionName);
+            if (list != null && list.size() > 0)
+                collectionName.setText(serieItems.getSerieItems().get(0).collectionName);
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory) {
             list = playlistPodcastItems.getItems();
@@ -293,7 +296,6 @@ public class CollectionFragment extends Fragment {
         } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory) {
             list = historyPodcastItems.getItems();
         }
-
 
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
@@ -316,20 +318,19 @@ public class CollectionFragment extends Fragment {
                 .cacheOnDisc(true)
                 .build();
 
-        if(list != null && list.size() > 0) {
+        if (list != null && list.size() > 0) {
             if (!list.get(0).collectionName.contains("Metropolia") && playlistID == 0) {
                 imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).serieImageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
-            } else if(!list.get(0).collectionName.contains("Metropolia") && playlistID != 0){
-                for (int i = 0; i < playlists.getPlaylists().size(); i++){
-                    if (playlists.getPlaylists().get(i).id == playlistID){
+            } else if (!list.get(0).collectionName.contains("Metropolia") && playlistID != 0) {
+                for (int i = 0; i < playlists.getPlaylists().size(); i++) {
+                    if (playlists.getPlaylists().get(i).id == playlistID) {
                         textView.setText(playlists.getPlaylists().get(i).name);
                         header.requestLayout();
                         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
                         header.setLayoutParams(layoutParams);
                     }
                 }
-            }
-            else {
+            } else {
                 textView.setText("Metropolia");
             }
         } else if (playlistID != 0) {
@@ -337,7 +338,7 @@ public class CollectionFragment extends Fragment {
 
         }
 
-        if(!list.get(0).collectionName.toLowerCase().contains("metropolia") && pi != null && playlistID  == 0) {
+        if (!list.get(0).collectionName.toLowerCase().contains("metropolia") && pi != null && playlistID == 0) {
             Collections.sort(list, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return pod2.programID.compareToIgnoreCase(pod1.programID); // To compare string values
@@ -361,10 +362,20 @@ public class CollectionFragment extends Fragment {
 
 class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
     //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
+    Context context;
     String decryptedURL;
     String resultURL;
+    String responseCode;
     MyCrypt myCrypt = new MyCrypt();
     BufferedReader br;
+
+    public DecodeYleURL() {
+
+    }
+
+    public DecodeYleURL(Context context) {
+        this.context = context;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -374,43 +385,46 @@ class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
         //pdLoading.setMessage("\tLoading...");
         //pdLoading.show();
     }
+
     @Override
     protected String doInBackground(PodcastItem... params) {
 
         try {
             URL url = new URL(params[0].decryptedURL);
-            URLConnection conn = url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
             conn.connect();
-            BufferedReader r = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
-            String output;
+            responseCode = "" + conn.getResponseCode();
+            if (responseCode.equalsIgnoreCase("200")) {
+                BufferedReader r = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
+                String output;
 
-            while ((output = r.readLine()) != null) {
-                try {
-                    JSONObject jObject = new JSONObject(output);
-                    JSONArray jArray = jObject.getJSONArray("data");
-                    for (int i = 0; i < jArray.length(); i++) {
-                        decryptedURL = jArray.getJSONObject(i).getString("url");
+                while ((output = r.readLine()) != null) {
+                    try {
+                        JSONObject jObject = new JSONObject(output);
+                        JSONArray jArray = jObject.getJSONArray("data");
+                        for (int i = 0; i < jArray.length(); i++) {
+                            decryptedURL = jArray.getJSONObject(i).getString("url");
+                        }
+                        resultURL = myCrypt.decryptURL(decryptedURL);
+
+                    } catch (JSONException e) {
+                        System.out.println(e);
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeyException e) {
+                        e.printStackTrace();
+                    } catch (InvalidAlgorithmParameterException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchPaddingException e) {
+                        e.printStackTrace();
+                    } catch (BadPaddingException e) {
+                        e.printStackTrace();
+                    } catch (IllegalBlockSizeException e) {
+                        e.printStackTrace();
                     }
-                    resultURL = myCrypt.decryptURL(decryptedURL);
-
-                } catch (JSONException e) {
-                    System.out.println(e);
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (InvalidKeyException e) {
-                    e.printStackTrace();
-                } catch (InvalidAlgorithmParameterException e) {
-                    e.printStackTrace();
-                } catch (NoSuchPaddingException e) {
-                    e.printStackTrace();
-                } catch (BadPaddingException e) {
-                    e.printStackTrace();
-                } catch (IllegalBlockSizeException e) {
-                    e.printStackTrace();
                 }
             }
-
         } catch (
                 MalformedURLException e
                 ) {
@@ -427,13 +441,40 @@ class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
         }
 
         params[0].setURL(resultURL);
-        return null;
+        return responseCode;
     }
 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        System.out.println("RESPONSE CODE: " + result);
+        if (!result.equalsIgnoreCase("200")) {
+            System.out.println("CONTEXT" + context);
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
+            //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
+            alertDialogBuilder.setTitle("Error");
 
+            LinearLayout lp = new LinearLayout(context);
+            lp.setOrientation(LinearLayout.VERTICAL);
+            lp.setPadding(30, 0, 30, 30);
+
+            final TextView errorMessage = new TextView(context);
+            errorMessage.setText("Unfortunately this podcast cannot be played");
+            errorMessage.setTextColor(Color.BLACK);
+            errorMessage.setPadding(30, 20, 20, 20);
+            errorMessage.setTextSize(20);
+            lp.addView(errorMessage);
+
+            alertDialogBuilder.setView(lp);
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            alertDialog.show();
+        }
     }
 
 
