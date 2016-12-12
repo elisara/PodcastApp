@@ -84,7 +84,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
             continuePlay.setVisibility(View.GONE);
         }
         if(user.length() > 0){
-            signIn.setText("Sign out");
+            signIn.setText("Logout");
         }
 
         return view;
@@ -194,7 +194,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                             if(user.length() > 0) {
                                 System.out.println("--------User in list-------");
-                                signIn.setText("Sign out");
+                                signIn.setText("Logout");
                                 usernameView.setText(user);
                                 userLayout.setVisibility(View.VISIBLE);
                                 playList.setVisibility(View.VISIBLE);
@@ -258,7 +258,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                                     if(user.length() > 0) {
                                         Toast.makeText(getContext(), "User " + username_ + " created", Toast.LENGTH_SHORT).show();
-                                        signIn.setText("Sign out");
+                                        signIn.setText("Logout");
                                         usernameView.setText(user);
                                         userLayout.setVisibility(View.VISIBLE);
                                         playList.setVisibility(View.VISIBLE);
