@@ -14,12 +14,13 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import static com.example.elisarajaniemi.podcastapp.R.id.podcastPic;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Kade on 31.10.2016.
@@ -37,7 +38,10 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     private ServiceCallbacks serviceCallbacks;
     public static final String ACTION_PAUSE = "action_pause";
     public static final String ACTION_PLAY = "action_play";
+    public static final String ACTION_SKIP = "action_skip";
     public static final String START_SERVICE = "start_service";
+
+    public AutoplayItems autoplayItems = AutoplayItems.getInstance();
     ImageLoader imageLoader;
 
 
@@ -80,6 +84,30 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
             }
         });
     }
+    public void setPodcastObject(PodcastItem pi) {
+        this.pi = pi;
+        status = 2;
+        //createNotification();
+    }
+
+    public void setAudioPath() {
+        try {
+            if (mPlayer == null) initPlayer();
+
+            System.out.println("PlayService datasource: " + this.pi.decryptedURL);
+            mPlayer.setDataSource(""+this.pi.decryptedURL); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
+
+            mPlayer.prepareAsync();
+            createNotification();
+
+
+
+            // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -93,6 +121,8 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
         } else if (action.equalsIgnoreCase(ACTION_PLAY)) {
             playMusic();
+        }else if (action.equalsIgnoreCase(ACTION_SKIP)) {
+            playNext();
         }
 
         return START_STICKY;
@@ -124,7 +154,6 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         notificationView.setInt(R.id.notifiationText1, "setBackgroundColor", R.color.colorPrimary);
         notificationView.setInt(R.id.notifiationText2, "setBackgroundColor", R.color.colorPrimary);
         notificationView.setInt(R.id.notificationPlayBtn, "setBackgroundColor", R.color.colorPrimary);
-
         notificationView.setInt(R.id.notificationSkipBtn, "setBackgroundColor", R.color.colorPrimary);
         notificationView.setTextViewText(R.id.notifiationText1, pi.title);
         notificationView.setTextViewText(R.id.notifiationText2, pi.collectionName);
@@ -146,7 +175,13 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
             notificationView.setOnClickPendingIntent(R.id.notificationPlayBtn, pendingPlayIntent);
             mBuilder.setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp);
         }
+
+        Intent skipIntent = new Intent(this, PlayService.class);
+        skipIntent.setAction(ACTION_SKIP);
+        PendingIntent pendingSkipIntent = PendingIntent.getService(getApplicationContext(), 1, skipIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationView.setImageViewResource(R.id.notificationSkipBtn, R.drawable.ic_skip_next_black_50dp);
+        notificationView.setOnClickPendingIntent(R.id.notificationSkipBtn, pendingSkipIntent);
+
         mBuilder.setContentIntent(playerPendingIntent);
         mNotificationManager.notify(1, mBuilder.build());
     }
@@ -160,28 +195,6 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
         return this.started;
     }
 
-    public void setPodcastObject(PodcastItem pi) {
-        this.pi = pi;
-        status = 2;
-        //createNotification();
-    }
-
-    public void setAudioPath() {
-        try {
-            if (mPlayer == null) initPlayer();
-
-            System.out.println("PlayService datasource: " + this.pi.decryptedURL);
-            mPlayer.setDataSource(""+this.pi.decryptedURL); // setup song from https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
-
-            mPlayer.prepareAsync();
-            createNotification();
-
-
-            // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public PodcastItem getPodcastObject() {
@@ -220,6 +233,24 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
             mPlayer = null;
             status = 0;
         }
+    }
+    public void playNext(){
+        if(autoplayItems.getItems().size()>1) {
+            PodcastItem podcastItem = autoplayItems.getOne();
+            try {
+                new DecodeYleURL().execute(podcastItem).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            stopMusic();
+            initPlayer();
+            setPodcastObject(podcastItem);
+            setAudioPath();
+        }else Toast.makeText(getBaseContext(), "There is no next podcast", Toast.LENGTH_SHORT).show();
+
     }
 
     public void setPosition(int position) {
@@ -287,8 +318,12 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
             serviceCallbacks.serviceCallbackMethod();
         }
         playMusic();
-
         status = 3;
+        for (int i = 0; i < autoplayItems.getItems().size(); i++){
+            if (autoplayItems.getItems().get(i).programID == pi.programID){
+                autoplayItems.removeOne(i);
+            }
+        }
     }
 
     @Override

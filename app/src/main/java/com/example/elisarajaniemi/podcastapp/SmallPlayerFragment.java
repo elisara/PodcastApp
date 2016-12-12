@@ -81,7 +81,7 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
 
                 break;
             case R.id.smallPlayerSkipBtn:
-
+                mActivity.pServ.playNext();
                 break;
 
         }

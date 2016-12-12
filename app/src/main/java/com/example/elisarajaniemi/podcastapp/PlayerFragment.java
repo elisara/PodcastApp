@@ -44,6 +44,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private Utilities utils;
     private PodcastItem piFromService, piFromClick, pi2;
     private History history;
+    public AutoplayItems autoplayItems = AutoplayItems.getInstance();
     public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
     private FavoritesFragment favoritesFragment;
@@ -199,6 +200,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
                 break;
             case R.id.nextBtn:
+                mActivity.pServ.playNext();
+                mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
 
                 break;
             case R.id.queueBtn:
@@ -239,9 +242,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
      */
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
-
-            int millis = mActivity.pServ.mPlayer.getCurrentPosition();
-            int millisLeft = mActivity.pServ.mPlayer.getDuration() - mActivity.pServ.mPlayer.getCurrentPosition();
+            if(mActivity.pServ.getStatus() == 3) {
+                int millis = mActivity.pServ.mPlayer.getCurrentPosition();
+                int millisLeft = mActivity.pServ.mPlayer.getDuration() - mActivity.pServ.mPlayer.getCurrentPosition();
 
             // Displaying Total Duration time
             fullTime.setText("" + utils.milliSecondsToTimer(millisLeft));
@@ -250,7 +253,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
             // Updating progress bar
             seekbar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mediaFileLengthInMilliseconds) * 100)); // This math construction give a percentage of "was playing"/"song length"
-
+            }
             // Displaying play or pause icon
             if (mActivity.pServ.mPlayer.isPlaying())
                 playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);

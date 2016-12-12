@@ -30,6 +30,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     private AddToLists addToLists;
     private FavoritesFragment favoritesFragment;
     private PlaylistsFragment playlistsFragment;
+    public AutoplayItems autoplayItems = AutoplayItems.getInstance();
+
     private ImageButton playBtn;
     private TextView tv, tv2;
 
@@ -124,6 +126,10 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 bundle2.putSerializable("episode", podcastItem);
                 playerFragment.setArguments(bundle2);
                 ((MainActivity) context).setFragment(playerFragment);
+                autoplayItems.clearList();
+                autoplayItems.addAll(groupList);
+
+
 
             }
         });

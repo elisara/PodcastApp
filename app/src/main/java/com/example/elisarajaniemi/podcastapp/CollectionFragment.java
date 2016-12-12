@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -69,6 +68,7 @@ public class CollectionFragment extends Fragment {
     public FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
     public SearchItems searchItems = SearchItems.getInstance();
     public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
+    public AutoplayItems autoplayItems = AutoplayItems.getInstance();
     public Playlists playlists = Playlists.getInstance();
     //private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
@@ -82,7 +82,7 @@ public class CollectionFragment extends Fragment {
     private LinearLayout header;
     private PodcastItem piFromAdapter;
 
-    private boolean fromFavorites, fromSearch, fromHistory;
+    private boolean fromFavorites, fromSearch, fromHistory, fromQueue;
     private History historyClass;
     private int width, height;
 
@@ -94,6 +94,7 @@ public class CollectionFragment extends Fragment {
         fromFavorites = getArguments().getBoolean("fromFavorites");
         fromSearch = getArguments().getBoolean("fromSearch");
         fromHistory = getArguments().getBoolean("fromHistory");
+        fromQueue = getArguments().getBoolean("fromQueue");
 
         historyClass = new History();
         list = new ArrayList<>();
@@ -278,11 +279,6 @@ public class CollectionFragment extends Fragment {
         }
 
         if (list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
-            /**for (int i = 0; i < podcastItems.getItems().size(); i++) {
-             if (podcastItems.getItems().get(i).collectionName.equals(pi.collectionName) && !list.contains(podcastItems.getItems().get(i))) {
-             list.add(podcastItems.getItems().get(i));
-             }
-             }*/
             list = serieItems.getSerieItems();
             if(list!=null&&list.size()>0)
             collectionName.setText(serieItems.getSerieItems().get(0).collectionName);
@@ -352,6 +348,8 @@ public class CollectionFragment extends Fragment {
 
         for (int i = 0; i < list.size(); i++) {
         }
+        //autoplayItems.clearList();
+        //autoplayItems.addAll(list);
         listAdapter = new ExpandableListViewAdapter(getContext(), list);
         listAdapter.notifyDataSetChanged();
         simpleExpandableListView.deferNotifyDataSetChanged();

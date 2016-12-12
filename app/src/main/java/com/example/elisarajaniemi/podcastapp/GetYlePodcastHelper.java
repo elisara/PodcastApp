@@ -107,54 +107,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     break;
             }
 
-            /**if (params[2].equalsIgnoreCase("fromepisodes")) {
-                result = makeConnection(params[0] + params[1]);
-                System.out.println("Koko lista: " + params[0] + params[1]);
-                try {
-                    podcastItems.addAll(makePodcastItem(result));
-                } catch (JSONException e) {
-                    Log.e("JSONException1", "Error: " + e.toString());
-                }
-            } else if (params[2].equalsIgnoreCase("fromplaylist")) {
-                System.out.println("From Playlists");
 
-                playlistPodcastItems.clearList();
-                for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
-                    result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
-                    try {
-                        playlistPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
-                    } catch (JSONException e) {
-                        Log.e("JSONException2", "Error: " + e.toString());
-                    }
-                }
-
-            } else if (params[2].equalsIgnoreCase("fromfavorites")) {
-                System.out.println("From Favorites");
-                favoritePodcastItems.clearList();
-                for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
-                    System.out.println("PodCastIDArray value: " + podcastIDArray.getItems().get(i));
-                    result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
-                    try {
-                        favoritePodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
-                    } catch (JSONException e) {
-                        Log.e("JSONException3", "Error: " + e.toString());
-                    }
-                }
-            } else if (params[2].equalsIgnoreCase("fromHistory")) {
-                System.out.println("From Favorites");
-                historyPodcastItems.clearList();
-                for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
-                    result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
-                    try {
-                        historyPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
-                    } catch (JSONException e) {
-                        Log.e("JSONException4", "Error: " + e.toString());
-                    }
-                }
-            } else if (params[2].equalsIgnoreCase("fromSeries")) {
-                System.out.println("From Series");
-
-            }*/
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -102,6 +102,12 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 System.out.println("QUEUE");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
+                collectionFragment = new CollectionFragment();
+                Bundle queueBundle = new Bundle();
+                queueBundle.putBoolean("fromQueue", true);
+                collectionFragment.setArguments(queueBundle);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("queue")
+                        .replace(R.id.frag_container, collectionFragment).commit();
                 break;
 
             case R.id.history:
