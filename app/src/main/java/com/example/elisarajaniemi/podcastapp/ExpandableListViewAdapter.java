@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     private FavoritesFragment favoritesFragment;
     private PlaylistsFragment playlistsFragment;
     private ImageButton playBtn;
-    private TextView tv;
+    private TextView tv, tv2;
 
 
     public ExpandableListViewAdapter(Context context, ArrayList<PodcastItem> groupList) {
@@ -100,8 +101,12 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
         final PodcastItem podcastItem = (PodcastItem) getGroup(groupPosition);
         tv = (TextView) myView.findViewById(R.id.episodeName);
+        tv2 = (TextView) myView.findViewById(R.id.length);
         playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
+
+        String length = DateUtils.formatElapsedTime(podcastItem.length);
         tv.setText(podcastItem.title);
+        tv2.setText(length);
         playBtn.setId(groupPosition);
         playBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

@@ -1,40 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
+    android:orientation="horizontal"
     android:padding="10dp"
+    android:weightSum="100"
     android:background="@color/colorPrimary"
-    android:layout_height="72dp"
-    android:weightSum="100">
+    android:layout_height="72dp">
 
-    <ImageButton
-        android:id="@+id/episodeIcon"
-        android:paddingRight="16dp"
-        android:layout_weight="20"
-        android:src="@drawable/ic_play_arrow_black_50dp"
-        android:layout_width="0dp"
-        android:tint="@color/colorAccent"
-        android:background="@android:color/transparent"
-        android:layout_height="match_parent" />
-
-    <TextView
-        android:id="@+id/episodeName"
-        android:layout_gravity="center"
-        android:text="test"
-        android:layout_weight="75"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content" />
-
-    <ImageButton
-        android:id="@+id/itemMenu"
-        android:focusable="false"
+    <LinearLayout
         android:layout_weight="5"
-        android:tint="@color/availableIcon"
-        android:focusableInTouchMode="true"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_more_vert_black_24dp"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/episodeIcon"
+            android:paddingRight="16dp"
+            android:layout_weight="20"
+            android:src="@drawable/ic_play_arrow_black_50dp"
+            android:tint="@color/colorAccent"
+            android:background="@android:color/transparent"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="90"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/episodeName"
+            android:text="test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:paddingTop="2dp"
+            android:layout_gravity="right"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/ic_access_time_black_24dp"
+                android:layout_width="20dp"
+                android:tint="@color/unAvailableIcon"
+                android:layout_gravity="center"
+                android:paddingRight="5dp"
+                android:background="@android:color/transparent"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:id="@+id/length"
+                android:layout_gravity="center"
+                android:textSize="12dp"
+                android:textColor="@color/unAvailableIcon"
+                android:text="test"
+                android:paddingRight="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="10"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <ImageButton
+            android:id="@+id/itemMenu"
+            android:focusable="false"
+            android:layout_weight="5"
+            android:tint="@color/availableIcon"
+            android:focusableInTouchMode="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_more_vert_black_24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
 
 </LinearLayout>
