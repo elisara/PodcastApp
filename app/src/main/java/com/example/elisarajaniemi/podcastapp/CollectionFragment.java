@@ -284,6 +284,7 @@ public class CollectionFragment extends Fragment {
              }
              }*/
             list = serieItems.getSerieItems();
+            if(list!=null&&list.size()>0)
             collectionName.setText(serieItems.getSerieItems().get(0).collectionName);
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory) {
