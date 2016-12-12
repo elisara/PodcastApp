@@ -26,7 +26,7 @@ public class GridViewAdapter extends BaseAdapter {
     private ArrayList<PodcastItem> list;
     private TextView titleView,collectionVIew, lengthView;
     private ImageView imageView;
-    protected ImageLoader imageLoader = ImageLoader.getInstance();
+    protected ImageLoader imageLoader;
 
 
     public GridViewAdapter(Context context, ArrayList<PodcastItem> list) {
@@ -55,6 +55,8 @@ public class GridViewAdapter extends BaseAdapter {
                 .showImageOnFail(R.drawable.ic_add_black_24dp)
                 .cacheOnDisc(true)
                 .build();
+
+        imageLoader = ImageLoader.getInstance();
 
 
         if (myView == null) {

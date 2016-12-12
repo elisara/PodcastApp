@@ -18,11 +18,11 @@ import java.util.concurrent.ExecutionException;
 
 public class AddToLists {
 
-    public void addToListsDialog(final Context context, final PodcastItem podcastItem, final PlaylistsFragment playlistsFragment, final FavoritesFragment favoritesFragment){
+    public void addToListsDialog(final Context context, final PodcastItem podcastItem, final PlaylistsFragment playlistsFragment, final Favorites favorites){
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
         alertDialogBuilder.setTitle("Add to");
-
+        final QueueItems queueItems =QueueItems.getInstance();
         String user = PreferenceManager.getDefaultSharedPreferences(context).getString("user", "");
 
         LinearLayout lp = new LinearLayout(context);
@@ -81,10 +81,10 @@ public class AddToLists {
 
         toFavorites.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //favoritesFragment = new FavoritesFragment();
+                //favorites = new Favorites();
                 System.out.println("Clicked on: " + podcastItem.programID + ", CurrentUser: " + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
                 try {
-                    favoritesFragment.addToFavorites(podcastItem.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0),
+                    favorites.addToFavorites(podcastItem.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0),
                             "http://media.mw.metropolia.fi/arsu/favourites?token=", PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -98,6 +98,7 @@ public class AddToLists {
         toQueue.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //System.out.println("Clicked to queue");
+                queueItems.addOne(podcastItem);
                 alertDialog.cancel();
             }
         });

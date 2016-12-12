@@ -1,9 +1,7 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -18,17 +16,7 @@ import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -47,7 +35,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public AutoplayItems autoplayItems = AutoplayItems.getInstance();
     public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
-    private FavoritesFragment favoritesFragment;
+    private Favorites favorites;
     private PlaylistsFragment playlistsFragment;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -61,7 +49,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
 
         history = new History();
-        favoritesFragment = new FavoritesFragment();
+        favorites = new Favorites();
         playlistsFragment = new PlaylistsFragment();
         this.mActivity = (MainActivity) getActivity();
         mActivity.pServ.setCallbacks(PlayerFragment.this);
@@ -212,7 +200,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 break;
             case R.id.favoriteBtn:
                 try {
-                    favoritesFragment.addToFavorites(piFromClick.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0), "http://media.mw.metropolia.fi/arsu/favourites?token=",PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+                    favorites.addToFavorites(piFromClick.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0), "http://media.mw.metropolia.fi/arsu/favourites?token=",PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {

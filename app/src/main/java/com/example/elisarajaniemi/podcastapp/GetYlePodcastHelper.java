@@ -213,11 +213,13 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         PodcastItem podcastItem = new PodcastItem();
         JSONArray publicationEventArray = jObject.getJSONArray("publicationEvent");
         String mediaID = "";
+        Boolean foundMediaID = false;
 
         for (int i1 = 0; i1 < publicationEventArray.length(); i1++) {
             JSONObject publicationEventObject = publicationEventArray.getJSONObject(i1);
-            if (publicationEventObject.getJSONObject("media").length() > 0) {
+            if (publicationEventObject.getJSONObject("media").length() > 0 && publicationEventObject.getJSONObject("media").has("id")) {
                 mediaID = publicationEventObject.getJSONObject("media").getString("id");
+                foundMediaID = true;
             }
         }
 
@@ -253,9 +255,11 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         podcastItem.setSerieID(jObject.getJSONObject("partOfSeries").getString("id"));
         if (jObject.getJSONObject("partOfSeries").getJSONObject("image").has("id"))
         podcastItem.setSerieImageURL(jObject.getJSONObject("partOfSeries").getJSONObject("image").getString("id"));
-        //podcastItem.alterPodcastItem(jObject.getJSONObject("title").getString("fi"), encryptedURL, jObject.getJSONObject("description").getString("fi"), jObject.getJSONObject("partOfSeries").getJSONObject("title").getString("fi"), jObject.getJSONObject("image").getString("id"), jObject.getString("id"), mediaID, categorys, podcastLength(jObject.getString("duration").substring(2)));
 
-        if(!jObject.getJSONObject("itemTitle").has("fi")||!jObject.getJSONObject("description").has("fi")||!jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi")) podcastItem.setProgramID(null);
+        if(!jObject.getJSONObject("itemTitle").has("fi")||
+                !jObject.getJSONObject("description").has("fi")||
+                !jObject.getJSONObject("partOfSeries").getJSONObject("title").has("fi"))
+            podcastItem.setProgramID(null);
 
         return podcastItem;
     }

@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_alignParentLeft="true"
     android:gravity="left"
+    android:background="@color/colorPrimary"
     android:minWidth="200dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -27,6 +28,8 @@
                 android:layout_gravity="center"
                 android:id="@+id/profileIcon"
                 android:src="@drawable/ic_person_black_24dp"
+                android:tint="@color/availableIcon"
+
                 android:layout_width="80dp"
                 android:layout_height="80dp" />
 
@@ -34,7 +37,8 @@
                 android:layout_gravity="center"
                 android:id="@+id/username"
                 android:text="Username"
-                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textColor="@color/primaryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -108,7 +112,7 @@
     <View
         android:layout_width="250dp"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+        android:background="@color/colorAccent"/>
 
     <LinearLayout
         android:id="@+id/settings"
@@ -120,6 +124,7 @@
         <CheckBox
             android:id="@+id/autoplay"
             android:text="Autoplay"
+            android:textColor="@color/primaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

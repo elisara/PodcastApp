@@ -1,7 +1,6 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -34,10 +33,11 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     private String password_, password2_, username_, email_, token;
     private AlertDialog alertDialog;
     private FrontPageFragment frontPageFragment;
-    private FavoritesFragment favoritesFragment;
+    private Favorites favorites;
     private CollectionFragment collectionFragment;
     private History historyClass;
     private String user;
+    private MainActivity mainActivity;
 
 
     @Override
@@ -71,8 +71,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         //mf = new MenuFragment();
         rali = new RegisterAndLogin();
         frontPageFragment = new FrontPageFragment();
-        favoritesFragment = new FavoritesFragment();
+        favorites = new Favorites();
         historyClass = new History();
+        this.mainActivity = (MainActivity) getActivity();
         usernameView.setText(user);
 
         if(user.length() < 1){
@@ -83,7 +84,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
             continuePlay.setVisibility(View.GONE);
         }
         if(user.length() > 0){
-            signIn.setText("Sign out");
+            signIn.setText("Logout");
         }
 
         return view;
@@ -138,7 +139,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
             case R.id.favorites:
                 try {
-                    favoritesFragment.getFavorites("http://media.mw.metropolia.fi/arsu/favourites/?token=", PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
+                    favorites.getFavorites("http://media.mw.metropolia.fi/arsu/favourites/?token=", PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
@@ -151,7 +152,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("fromFavorites", true);
                 collectionFragment.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favoritesFragment")
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favorites")
                         .replace(R.id.frag_container, collectionFragment).commit();
                 break;
 
@@ -193,7 +194,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                             if(user.length() > 0) {
                                 System.out.println("--------User in list-------");
-                                signIn.setText("Sign out");
+                                signIn.setText("Logout");
                                 usernameView.setText(user);
                                 userLayout.setVisibility(View.VISIBLE);
                                 playList.setVisibility(View.VISIBLE);
@@ -257,7 +258,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                                     if(user.length() > 0) {
                                         Toast.makeText(getContext(), "User " + username_ + " created", Toast.LENGTH_SHORT).show();
-                                        signIn.setText("Sign out");
+                                        signIn.setText("Logout");
                                         usernameView.setText(user);
                                         userLayout.setVisibility(View.VISIBLE);
                                         playList.setVisibility(View.VISIBLE);
@@ -289,8 +290,11 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 else{
                     //LOGOUT
                     rali.logout(getContext());
+                    mainActivity.hidePlayer();
+                    mainActivity.pServ.stopMusic();
+                    mainActivity.pServ.cancelNotification();
                     dismiss();
-                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favoritesFragment")
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favorites")
                             .replace(R.id.frag_container, frontPageFragment).commit();
                     getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }
