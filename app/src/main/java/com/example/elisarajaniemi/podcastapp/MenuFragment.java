@@ -37,6 +37,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     private CollectionFragment collectionFragment;
     private History historyClass;
     private String user;
+    private MainActivity mainActivity;
 
 
     @Override
@@ -72,6 +73,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         frontPageFragment = new FrontPageFragment();
         favorites = new Favorites();
         historyClass = new History();
+        this.mainActivity = (MainActivity) getActivity();
         usernameView.setText(user);
 
         if(user.length() < 1){
@@ -288,6 +290,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 else{
                     //LOGOUT
                     rali.logout(getContext());
+                    mainActivity.hidePlayer();
+                    mainActivity.pServ.stopMusic();
+                    mainActivity.pServ.cancelNotification();
                     dismiss();
                     getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("favorites")
                             .replace(R.id.frag_container, frontPageFragment).commit();

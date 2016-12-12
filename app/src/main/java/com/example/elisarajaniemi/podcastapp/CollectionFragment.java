@@ -114,6 +114,7 @@ public class CollectionFragment extends Fragment {
         header.setLayoutParams(layoutParams);
 
 
+        //CHECK FROM WHICH FRAGMENT THE USER IS COMING AND WHAT LIST TO SHOW
         if (playlistID != 0 && fromFavorites == false && fromHistory == false) {
             try {
                 new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromplaylist").get();
@@ -150,7 +151,6 @@ public class CollectionFragment extends Fragment {
         }
 
 
-
         simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
         fillList();
         simpleExpandableListView.deferNotifyDataSetChanged();
@@ -178,48 +178,7 @@ public class CollectionFragment extends Fragment {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                     final int favoriteID = position;
-                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
-                    //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
-                    alertDialogBuilder.setTitle("Delete favorite");
-
-                    LinearLayout lp = new LinearLayout(getContext());
-                    lp.setOrientation(LinearLayout.VERTICAL);
-                    lp.setPadding(30, 0, 30, 30);
-
-
-                    final TextView toQueue = new TextView(getContext());
-                    toQueue.setText("Do you really want to delete this favorite?");
-                    toQueue.setTextColor(Color.BLACK);
-                    toQueue.setPadding(30, 20, 20, 20);
-                    toQueue.setTextSize(20);
-                    lp.addView(toQueue);
-
-                    alertDialogBuilder.setView(lp);
-                    final AlertDialog alertDialog = alertDialogBuilder.create();
-
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            try {
-                                favorites.deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(favoriteID).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
-                                favoritePodcastItems.deletePodcast(favoriteID);
-                                listAdapter.notifyDataSetChanged();
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    });
-
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    alertDialog.show();
-
+                    favorites.deleteFavoritesDialog(getContext(), podcastIDArray, favoriteID, favoritePodcastItems, listAdapter);
                     return true;
                 }
             });
@@ -267,8 +226,6 @@ public class CollectionFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-
-
     }
 
 
@@ -277,7 +234,6 @@ public class CollectionFragment extends Fragment {
         if(list.size() != 0 || list != null) {
             list.clear();
         }
-
         if (list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
             list = serieItems.getSerieItems();
             if(list!=null&&list.size()>0)
@@ -285,9 +241,6 @@ public class CollectionFragment extends Fragment {
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory) {
             list = playlistPodcastItems.getItems();
-            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).serieImageURL + ".jpg", imageView);
-
-
         } else if (list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory) {
             list = favoritePodcastItems.getItems();
         } else if (list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory) {
@@ -295,8 +248,6 @@ public class CollectionFragment extends Fragment {
         } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory) {
             list = historyPodcastItems.getItems();
         }
-
-
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
@@ -370,10 +321,6 @@ class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
     }
     @Override
     protected String doInBackground(PodcastItem... params) {
