@@ -38,4 +38,12 @@
         <item name="android:paddingTop">0dp</item>
     </style>
 
+    <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:layout_gravity">right</item>
+        <item name="android:textAlignment">textEnd</item>
+    </style>
+    <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+
+    </style>
+
 </resources>

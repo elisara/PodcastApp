@@ -101,8 +101,8 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
     }
 
     public void addItemsOnSpinner() {
-        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort_array, android.R.layout.simple_spinner_item);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort_array, R.layout.simple_spinner_item);
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
     }
 
@@ -110,56 +110,42 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String value = parent.getItemAtPosition(position).toString();
 
-        if (value.contains("NAME")) {
+        if (value.contains("TOP")) {
+            sortValue = value;
+            getListByCategories();
+            System.out.println("TOP");
+        }
 
+        else if (value.contains("NAME")) {
             Collections.sort(categoryList, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return pod1.title.compareToIgnoreCase(pod2.title); // To compare string values
                 }
             });
-            //adapter = new GridViewAdapter(getContext(), categoryList);
-
-
-        } else if (value.contains("TOP")) {
-            Collections.sort(categoryList, new Comparator<PodcastItem>() {
-                public int compare(PodcastItem pod1, PodcastItem pod2) {
-                    return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
-                }
-            });
-
-            //adapter = new GridViewAdapter(getContext(), categoryList);
 
         }
-        else if (value.contains("NEW")) {
-            Collections.sort(categoryList, new Comparator<PodcastItem>() {
-                public int compare(PodcastItem pod1, PodcastItem pod2) {
-                    return Integer.valueOf(pod2.collectionID).compareTo(pod1.collectionID);
-                }
-            });
 
-            //adapter = new GridViewAdapter(getContext(), categoryList);
-
-        }
         else if (value.contains("LENGTH")) {
             Collections.sort(categoryList, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return Integer.valueOf(pod1.length).compareTo(pod2.length);
+
                 }
             });
 
-            //adapter = new GridViewAdapter(getContext(), categoryList);
-
         }
-        adapter = new GridViewAdapter(getContext(), categoryList);
-        sortValue = value;
-        adapter.notifyDataSetChanged();
-        gridView.setAdapter(adapter);
+        if(!value.equals("TOP")) {
+            adapter = new GridViewAdapter(getContext(), categoryList);
+            sortValue = value;
+            adapter.notifyDataSetChanged();
+            gridView.setAdapter(adapter);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        categoryList = getListByCategories();
+        getListByCategories();
         adapter.notifyDataSetChanged();
 
     }
@@ -238,6 +224,10 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
                 }
             });
         }
+
+        /**else if(sortValue.contains("TOP")){
+           categoryList = categoryList;
+        }*/
 
         adapter = new GridViewAdapter(getContext(), categoryList);
         adapter.notifyDataSetChanged();

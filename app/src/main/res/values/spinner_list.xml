@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="sort_array">
-        <item>NEW</item>
-        <item>NAME</item>
         <item>TOP</item>
+        <item>NAME</item>
         <item>LENGTH</item>
     </string-array>
 </resources>

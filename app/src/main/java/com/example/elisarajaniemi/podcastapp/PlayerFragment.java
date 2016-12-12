@@ -17,6 +17,7 @@ import android.widget.SeekBar;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONException;
@@ -47,6 +48,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
     private FavoritesFragment favoritesFragment;
     private PlaylistsFragment playlistsFragment;
+    protected ImageLoader imageLoader = ImageLoader.getInstance();
+
 
 
     MainActivity mActivity;
@@ -79,7 +82,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             }
         }
         podcastPic = (ImageView) view.findViewById(R.id.podcastPic);
-        mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_500,h_500,c_fit/" + piFromClick.imageURL + ".jpg", new SimpleImageLoadingListener() {
+        if(!piFromClick.imageURL.equals("")) {
+            imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + piFromClick.imageURL + ".jpg", podcastPic);
+        }
+        else {
+            imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + piFromClick.serieImageURL + ".jpg", podcastPic);
+        }
+       /** mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_500,h_500,c_fit/" + piFromClick.imageURL + ".jpg", new SimpleImageLoadingListener() {
             ///w_500,h_500,c_fit
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
@@ -87,6 +96,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             }
         });
 
+            */
 
         if(!PreferenceManager.getDefaultSharedPreferences(getContext()).getString("", "").equalsIgnoreCase("")) {
             try {
