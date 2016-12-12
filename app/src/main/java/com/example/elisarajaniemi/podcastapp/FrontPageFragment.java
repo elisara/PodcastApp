@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,13 +39,13 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
     private GridView gridView;
     private PlaylistsFragment playlistsFragment;
     private AddToLists addToLists;
-    private FavoritesFragment favoritesFragment;
+    private Favorites favorites;
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.serie_layout, container, false);
+        View view = inflater.inflate(R.layout.frontpage_layout, container, false);
         spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         addItemsOnSpinner();
@@ -55,7 +54,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         sortValue = "";
         addToLists = new AddToLists();
         playlistsFragment = new PlaylistsFragment();
-        favoritesFragment = new FavoritesFragment();
+        favorites = new Favorites();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit().putBoolean("kulttuuri", true);
@@ -86,7 +85,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 PodcastItem pi = categoryList.get(position);
-                addToLists.addToListsDialog(getContext(), pi, playlistsFragment, favoritesFragment);
+                addToLists.addToListsDialog(getContext(), pi, playlistsFragment, favorites);
                 return true;
             }
         });
@@ -177,6 +176,18 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         urheilu = prefs.getBoolean("urheilu", true);
         metropolia = prefs.getBoolean("metropolia", true);
 
+        /**
+        if(metropolia == true){
+           String apiKey = "495i4orWwXCqiW5IuOQUzuAlGmfFeky7BzMPe-X19inh9MRm5RqGhQDUEh5avkZNFjC6mYT6w2xGXdQjm9XfakwHloH027i-tkLX77yFMZJlC3wGWqIjyHIXnvPzvHzW";
+            try {
+                new GetMetropoliaPodcastHelper((MainActivity) getContext()).execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true").get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }*/
+
         prefCategoryList.add(viihde);
         prefCategoryList.add(musiikki);
         prefCategoryList.add(asia);
@@ -224,10 +235,6 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
                 }
             });
         }
-
-        /**else if(sortValue.contains("TOP")){
-           categoryList = categoryList;
-        }*/
 
         adapter = new GridViewAdapter(getContext(), categoryList);
         adapter.notifyDataSetChanged();

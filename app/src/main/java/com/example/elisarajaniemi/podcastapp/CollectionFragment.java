@@ -74,7 +74,7 @@ public class CollectionFragment extends Fragment {
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
     private ExpandableListViewAdapter listAdapter;
-    private FavoritesFragment favoritesFragment;
+    private Favorites favorites;
     private ImageView imageView;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
     private TextView textView;
@@ -88,7 +88,7 @@ public class CollectionFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.single_playlist_layout, container, false);
+        View view = inflater.inflate(R.layout.collection_layout, container, false);
         pi = (PodcastItem) getArguments().getSerializable("message");
         playlistID = getArguments().getInt("playlistID");
         fromFavorites = getArguments().getBoolean("fromFavorites");
@@ -99,7 +99,7 @@ public class CollectionFragment extends Fragment {
         historyClass = new History();
         list = new ArrayList<>();
 
-        favoritesFragment = new FavoritesFragment();
+        favorites = new Favorites();
 
         imageView = (ImageView) view.findViewById(R.id.collectionImage);
         textView = (TextView) view.findViewById(R.id.title);
@@ -152,6 +152,12 @@ public class CollectionFragment extends Fragment {
 
 
         simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
+        fillList();
+        simpleExpandableListView.deferNotifyDataSetChanged();
+        listAdapter.notifyDataSetChanged();
+        if(pi!= null){
+            expandOne();
+        }
         simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -194,7 +200,7 @@ public class CollectionFragment extends Fragment {
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             try {
-                                favoritesFragment.deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(favoriteID).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
+                                favorites.deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(favoriteID).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
                                 favoritePodcastItems.deletePodcast(favoriteID);
                                 listAdapter.notifyDataSetChanged();
                             } catch (ExecutionException e) {
@@ -260,13 +266,7 @@ public class CollectionFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        fillList();
-        simpleExpandableListView.deferNotifyDataSetChanged();
-        listAdapter.getGroupCount();
-        listAdapter.notifyDataSetChanged();
-        if(pi!= null){
-            expandOne();
-        }
+
 
 
     }
@@ -285,6 +285,8 @@ public class CollectionFragment extends Fragment {
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory) {
             list = playlistPodcastItems.getItems();
+            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).serieImageURL + ".jpg", imageView);
+
 
         } else if (list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory) {
             list = favoritePodcastItems.getItems();
@@ -320,24 +322,23 @@ public class CollectionFragment extends Fragment {
             if (!list.get(0).collectionName.contains("Metropolia") && playlistID == 0) {
                 imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(0).serieImageURL + ".jpg", imageView, options);            //w_705,h_520,c_fill,g_auto
             } else if(!list.get(0).collectionName.contains("Metropolia") && playlistID != 0){
+
                 for (int i = 0; i < playlists.getPlaylists().size(); i++){
                     if (playlists.getPlaylists().get(i).id == playlistID){
-                        textView.setText(playlists.getPlaylists().get(i).name);
-                        header.requestLayout();
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-                        header.setLayoutParams(layoutParams);
+                        collectionName.setText(playlists.getPlaylists().get(i).name);
+
                     }
                 }
             }
             else {
-                textView.setText("Metropolia");
+                collectionName.setText("Metropolia");
             }
         } else if (playlistID != 0) {
-            textView.setText("Empty");
+            collectionName.setText("Empty playlist");
 
         }
 
-        if(!list.get(0).collectionName.toLowerCase().contains("metropolia") && pi != null && playlistID  == 0) {
+        if(list.size() >0 && !list.get(0).collectionName.toLowerCase().contains("metropolia") && pi != null && playlistID  == 0) {
             Collections.sort(list, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return pod2.programID.compareToIgnoreCase(pod1.programID); // To compare string values

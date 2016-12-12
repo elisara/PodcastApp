@@ -76,9 +76,11 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("---------- MainActivity OnCreate --------------");
 
         // Create global configuration and initialize ImageLoader with this config
+
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);
         imageLoader = ImageLoader.getInstance();
+
         fragmentManager = getSupportFragmentManager();
 
         apiKey = "495i4orWwXCqiW5IuOQUzuAlGmfFeky7BzMPe-X19inh9MRm5RqGhQDUEh5avkZNFjC6mYT6w2xGXdQjm9XfakwHloH027i-tkLX77yFMZJlC3wGWqIjyHIXnvPzvHzW";
@@ -118,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
         pServ = new PlayService("PodcastApp");
         collectionFragment = new CollectionFragment();
         pf = new PlayerFragment();
-        spf = new SmallPlayerFragment();
         search = new Search();
 
 
@@ -191,15 +192,16 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (reloadFragmentFromNotification) {
            openPlayer();
-        } else {
-
+        } else if (spf == null) {
+            spf = new SmallPlayerFragment();
             ft.replace(R.id.frag_container, frontPageFragment);
-            ft.replace(R.id.player_frag_container, spf);
+            ft.add(R.id.player_frag_container, spf);
             ft.commitAllowingStateLoss();
             hidePlayer();
             showPlayer();
-
-
+        }
+        else if(spf != null){
+            ft.replace(R.id.frag_container, pf);
 
         }
     }

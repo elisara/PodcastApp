@@ -32,31 +32,11 @@ import java.util.concurrent.ExecutionException;
  * Created by Elisa Rajaniemi on 24.11.2016.
  */
 
-public class FavoritesFragment extends Fragment {
+public class Favorites {
 
-    GridView gridView;
     PodcastItems podcastItems = PodcastItems.getInstance();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.favorites_layout, container, false);
 
-        gridView = (GridView) view.findViewById(R.id.gridView1);
-
-        ArrayList<PodcastItem> list = podcastItems.getItems();
-
-        gridView.setAdapter(new GridViewAdapter(getContext(), list));
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(getContext(), ((TextView) v.findViewById(R.id.grid_item_title)).getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-
-        return view;
-    }
 
     public void addToFavorites(String programID, int userID, String url, String token) throws ExecutionException, InterruptedException {
         new CreateFavorites().execute(programID, userID, url, token).get();
@@ -68,6 +48,10 @@ public class FavoritesFragment extends Fragment {
 
     public void deleteFavorites(String url, String id, String token) throws ExecutionException, InterruptedException {
         new DeleteFavorites().execute(url, id, token).get();
+    }
+
+    public void deleteFavoritesDialog(){
+
     }
 
 }

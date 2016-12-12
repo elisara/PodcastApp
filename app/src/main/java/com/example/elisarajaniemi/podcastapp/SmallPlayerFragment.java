@@ -93,7 +93,6 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
             if (mActivity.pServ.getStatus()==3){
                 if (!podcastId.equalsIgnoreCase(mActivity.pServ.getPodcastObject().programID)) picLoaded = false;
             }
-
             // Displaying play or pause icon
             if (mActivity.pServ.mPlayer != null) {
 
@@ -107,8 +106,19 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
                     text2.setText(mActivity.pServ.getPodcastObject().title);
                 }
 
-                if(mActivity.pServ.getStatus()>1&&picLoaded==false) {
+                if(mActivity.pServ.getStatus()>1&&picLoaded==false && !mActivity.pServ.getPodcastObject().imageURL.equals("")) {
                     mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_0.1,h_0.1/" + mActivity.pServ.getPodcastObject().imageURL + ".jpg", new SimpleImageLoadingListener() {
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+                            podcastImage.setImageBitmap(loadedImage);
+                            picLoaded = true;
+                        }
+                    });
+
+                }
+                else if(mActivity.pServ.getStatus()>1&&picLoaded==false && mActivity.pServ.getPodcastObject().imageURL.equals("")) {
+                    mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_0.1,h_0.1/" + mActivity.pServ.getPodcastObject().serieImageURL + ".jpg", new SimpleImageLoadingListener() {
                         @Override
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 
