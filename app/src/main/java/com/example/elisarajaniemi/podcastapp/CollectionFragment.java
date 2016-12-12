@@ -69,6 +69,7 @@ public class CollectionFragment extends Fragment {
     public SearchItems searchItems = SearchItems.getInstance();
     public HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
     public AutoplayItems autoplayItems = AutoplayItems.getInstance();
+    public QueueItems queueItems = QueueItems.getInstance();
     public Playlists playlists = Playlists.getInstance();
     //private ArrayList<PodcastItem> listAll = podcastItems.getItems();
     private int playlistID = 0;
@@ -81,6 +82,7 @@ public class CollectionFragment extends Fragment {
     private TextView collectionName;
     private LinearLayout header;
     private PodcastItem piFromAdapter;
+
 
     private boolean fromFavorites, fromSearch, fromHistory, fromQueue;
     private History historyClass;
@@ -278,20 +280,23 @@ public class CollectionFragment extends Fragment {
             list.clear();
         }
 
-        if (list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory) {
+        if (list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
             list = serieItems.getSerieItems();
             if(list!=null&&list.size()>0)
             collectionName.setText(serieItems.getSerieItems().get(0).collectionName);
 
-        } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory) {
+        } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
             list = playlistPodcastItems.getItems();
 
-        } else if (list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory) {
+        } else if (list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
             list = favoritePodcastItems.getItems();
-        } else if (list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory) {
+        } else if (list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory && !fromQueue) {
             list = searchItems.getSearchItems();
-        } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory) {
+        } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory && !fromQueue) {
             list = historyPodcastItems.getItems();
+        } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && !fromHistory && fromQueue) {
+            list = autoplayItems.getItems();
+
         }
 
 
@@ -332,12 +337,12 @@ public class CollectionFragment extends Fragment {
             else {
                 textView.setText("Metropolia");
             }
-        } else if (playlistID != 0) {
+        } else if (playlistID != 0||fromQueue) {
             textView.setText("Empty");
 
         }
 
-        if(!list.get(0).collectionName.toLowerCase().contains("metropolia") && pi != null && playlistID  == 0) {
+        if(!list.isEmpty() && !list.get(0).collectionName.toLowerCase().contains("metropolia") && pi != null && playlistID  == 0) {
             Collections.sort(list, new Comparator<PodcastItem>() {
                 public int compare(PodcastItem pod1, PodcastItem pod2) {
                     return pod2.programID.compareToIgnoreCase(pod1.programID); // To compare string values
@@ -348,8 +353,7 @@ public class CollectionFragment extends Fragment {
 
         for (int i = 0; i < list.size(); i++) {
         }
-        //autoplayItems.clearList();
-        //autoplayItems.addAll(list);
+
         listAdapter = new ExpandableListViewAdapter(getContext(), list);
         listAdapter.notifyDataSetChanged();
         simpleExpandableListView.deferNotifyDataSetChanged();

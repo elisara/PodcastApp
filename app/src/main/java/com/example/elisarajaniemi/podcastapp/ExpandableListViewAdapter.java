@@ -31,6 +31,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     private FavoritesFragment favoritesFragment;
     private PlaylistsFragment playlistsFragment;
     public AutoplayItems autoplayItems = AutoplayItems.getInstance();
+    public QueueItems queueItems =QueueItems.getInstance();
 
     private ImageButton playBtn;
     private TextView tv, tv2;
@@ -127,7 +128,9 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 playerFragment.setArguments(bundle2);
                 ((MainActivity) context).setFragment(playerFragment);
                 autoplayItems.clearList();
+                autoplayItems.addAll(queueItems.getItems());
                 autoplayItems.addAll(groupList);
+                System.out.println("Lisätty aotoplayhin");
 
 
 

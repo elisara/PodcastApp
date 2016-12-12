@@ -22,7 +22,7 @@ public class AddToLists {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
         alertDialogBuilder.setTitle("Add to");
-
+        final QueueItems queueItems =QueueItems.getInstance();
         String user = PreferenceManager.getDefaultSharedPreferences(context).getString("user", "");
 
         LinearLayout lp = new LinearLayout(context);
@@ -98,6 +98,7 @@ public class AddToLists {
         toQueue.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //System.out.println("Clicked to queue");
+                queueItems.addOne(podcastItem);
                 alertDialog.cancel();
             }
         });

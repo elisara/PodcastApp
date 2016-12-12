@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
             ft.replace(R.id.frag_container, frontPageFragment);
-            ft.replace(R.id.player_frag_container, spf);
+            ft.add(R.id.player_frag_container, spf);
             ft.commitAllowingStateLoss();
             hidePlayer();
             showPlayer();
@@ -252,6 +252,11 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         System.out.println("--------- MainActivity STOP --------------");
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.remove(spf);
+
+
+
 
     }
 
