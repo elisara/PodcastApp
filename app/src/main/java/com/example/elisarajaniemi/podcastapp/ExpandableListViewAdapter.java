@@ -28,7 +28,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     public QueueItems queueItems =QueueItems.getInstance();
 
     private ImageButton playBtn;
-    private TextView tv, tv2;
+    private TextView title, collectionName;
 
 
     public ExpandableListViewAdapter(Context context, ArrayList<PodcastItem> groupList) {
@@ -53,8 +53,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        String description = groupList.get(groupPosition).description;
-        return description;
+        PodcastItem podcastItem = groupList.get(groupPosition);
+        return podcastItem;
     }
 
     @Override
@@ -98,13 +98,13 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         }
 
         final PodcastItem podcastItem = (PodcastItem) getGroup(groupPosition);
-        tv = (TextView) myView.findViewById(R.id.episodeName);
-        tv2 = (TextView) myView.findViewById(R.id.length);
+        title = (TextView) myView.findViewById(R.id.episodeName);
+        collectionName = (TextView) myView.findViewById(R.id.collection);
         playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
 
-        String length = DateUtils.formatElapsedTime(podcastItem.length);
-        tv.setText(podcastItem.title);
-        tv2.setText(length);
+
+        title.setText(podcastItem.title);
+        collectionName.setText(podcastItem.collectionName);
         playBtn.setId(groupPosition);
         playBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -151,7 +151,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        String description = (String)getChild(groupPosition, childPosition);
+        PodcastItem podcastItem = (PodcastItem) getChild(groupPosition, childPosition);
         View myView = convertView;
         if (myView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -159,7 +159,12 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         }
 
         TextView descriptionView = (TextView) myView.findViewById(R.id.description_view);
-        descriptionView.setText(description);
+        descriptionView.setText(podcastItem.description);
+
+        TextView lengthView = (TextView) myView.findViewById(R.id.length);
+        String length = DateUtils.formatElapsedTime(podcastItem.length);
+        lengthView.setText(length);
+
 
         return myView;
     }
