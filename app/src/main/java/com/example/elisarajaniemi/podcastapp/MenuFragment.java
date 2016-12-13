@@ -44,6 +44,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.menu_layout, container , false);
         user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
+        token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "");
 
         new GetUsersHelper().execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
                 "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
@@ -76,14 +77,14 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         this.mainActivity = (MainActivity) getActivity();
         usernameView.setText(user);
 
-        if(user.length() < 1){
+        if(token.equalsIgnoreCase("")){
             userLayout.setVisibility(View.GONE);
             playList.setVisibility(View.GONE);
             favorite.setVisibility(View.GONE);
             history.setVisibility(View.GONE);
             continuePlay.setVisibility(View.GONE);
         }
-        if(user.length() > 0){
+        if(!token.equalsIgnoreCase("")){
             signIn.setText("Logout");
         }
 
@@ -158,7 +159,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
             case R.id.signIn:
 
-                if(user.length() <1) {
+                if(token.equalsIgnoreCase("")) {
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
                     alertDialogBuilder.setTitle("Login");
 
@@ -189,10 +190,11 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
                             user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
+                            token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "");
 
-                            if(user.length() > 0) {
+                            if(!token.equalsIgnoreCase("")) {
+                                Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
                                 System.out.println("--------User in list-------");
                                 signIn.setText("Logout");
                                 usernameView.setText(user);
