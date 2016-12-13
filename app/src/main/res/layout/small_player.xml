@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:background="@android:color/background_light"
+    android:layout_height="75dp"
     android:gravity="center"
     android:orientation="horizontal"
-    android:weightSum="100">
+    android:weightSum="100"
+    android:background="@color/colorPrimaryDark">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -20,14 +20,13 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_marginBottom="-8dp"
             android:layout_marginTop="-6dp"
-             />
+            android:progressBackgroundTint="@color/unAvailableIcon"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="100"
-            android:background="@color/colorPrimaryDark"
-            android:elevation="10dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -41,13 +40,15 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="48"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <TextView
                     android:id="@+id/smallPlayerText2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+
                     android:gravity="center"
                     android:textColor="@color/primaryText"
                     />
@@ -55,8 +56,9 @@
                 <TextView
                     android:id="@+id/smallPlayerText1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+
                     android:gravity="center"
                     android:textSize="12dp"
                     android:textColor="@color/primaryText"
@@ -70,7 +72,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:tint="@color/colorAccent"
-               />
+                />
 
             <ImageView
                 android:id="@+id/smallPlayerSkipBtn"

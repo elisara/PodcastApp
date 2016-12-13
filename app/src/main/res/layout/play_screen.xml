@@ -136,13 +136,7 @@
             android:layout_gravity="center"
             android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/queueBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_library_books_black_24dp"
-                android:tint="@drawable/text_color"/>
+
 
             <ImageView
                 android:id="@+id/playlistBtn"
