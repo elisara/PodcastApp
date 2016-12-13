@@ -208,16 +208,20 @@ public class MainActivity extends AppCompatActivity {
     }
     public void openPlayer(){
         //System.out.println("-----Open playerFagment");
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        boolean fragmentPopped = fragmentManager.popBackStackImmediate("pf", 0);
-        if (!fragmentPopped) {
-            Fragment fragment = new PlayerFragment();
-            ft.replace(R.id.frag_container, fragment);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.addToBackStack("pf");
-            ft.commitAllowingStateLoss();
+        try {
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            boolean fragmentPopped = fragmentManager.popBackStackImmediate("pf", 0);
+            if (!fragmentPopped) {
+                Fragment fragment = new PlayerFragment();
+                ft.replace(R.id.frag_container, fragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack("pf");
+                ft.commitAllowingStateLoss();
+            }
         }
+        catch (IllegalStateException ignored){
 
+        }
     }
 
     public void showPlayer() {
