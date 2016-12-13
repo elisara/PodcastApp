@@ -68,7 +68,6 @@ public class RegisterAndLogin{
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", 0).apply();
                 login(username, password ,context);
                 loggedIn = true;
-                System.out.println("TOKEN: " + token);
             }else if(this.exists) {
                 Toast.makeText(context, "Username already in use", Toast.LENGTH_SHORT).show();
             }
@@ -99,7 +98,6 @@ public class RegisterAndLogin{
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            System.out.println("TOKEN AFTER FINDING TOKEN: "+ token);
             if (!token.equalsIgnoreCase("")) {
                 loggedIn = true;
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
