@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         title = (TextView) toolbar.findViewById(R.id.title);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/ethnocentric_rg.otf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/introrustg-base2line.otf");
         title.setTypeface(custom_font);
 
         smallPlayerLayout = (LinearLayout) findViewById(R.id.player_frag_container);
