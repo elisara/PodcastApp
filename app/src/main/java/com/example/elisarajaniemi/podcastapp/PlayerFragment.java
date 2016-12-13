@@ -38,9 +38,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private Favorites favorites;
     private PlaylistsFragment playlistsFragment;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
-    Boolean picLoaded = true;
 
-    String currentPodcastId = " ";
 
 
     MainActivity mActivity;
@@ -73,8 +71,22 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             }
         }
         podcastPic = (ImageView) view.findViewById(R.id.podcastPic);
-        addImage(piFromClick);
+        addImage();
+        /**if(!piFromClick.imageURL.equals("")) {
+            imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + piFromClick.imageURL + ".jpg", podcastPic);
+        }
+        else {
+            imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + piFromClick.serieImageURL + ".jpg", podcastPic);
+        }
+        mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_500,h_500,c_fit/" + piFromClick.imageURL + ".jpg", new SimpleImageLoadingListener() {
+            ///w_500,h_500,c_fit
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                podcastPic.setImageBitmap(loadedImage);
+            }
+        });
 
+            */
 
         if(!PreferenceManager.getDefaultSharedPreferences(getContext()).getString("", "").equalsIgnoreCase("")) {
             try {
@@ -220,14 +232,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             if(mActivity.pServ.getStatus() == 3) {
-                if (!currentPodcastId.equalsIgnoreCase(mActivity.pServ.getPodcastObject().programID)) picLoaded = false;
                 int millis = mActivity.pServ.mPlayer.getCurrentPosition();
                 int millisLeft = mActivity.pServ.mPlayer.getDuration() - mActivity.pServ.mPlayer.getCurrentPosition();
 
-            if(!picLoaded){
-                addImage(mActivity.pServ.getPodcastObject());
-                picLoaded = true;
-            }
             // Displaying Total Duration time
             fullTime.setText("" + utils.milliSecondsToTimer(millisLeft));
             // Displaying time completed playing
@@ -241,18 +248,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 playBtn.setImageResource(R.drawable.ic_pause_circle_filled_black_24dp);
             else playBtn.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
 
-            if (mActivity.pServ.getStatus()==3) currentPodcastId = mActivity.pServ.getPodcastObject().programID;
             // Running this thread after 100 milliseconds
-            handler.postDelayed(this, 1000);
+            handler.postDelayed(this, 100);
 
         }
     };
-    public void addImage(PodcastItem pi){
+    public void addImage(){
         if(!piFromClick.imageURL.equals("")) {
-            imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + pi.imageURL + ".jpg", podcastPic);
+            imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + piFromClick.imageURL + ".jpg", podcastPic);
         }
         else {
-            imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + pi.serieImageURL + ".jpg", podcastPic);
+            imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + piFromClick.serieImageURL + ".jpg", podcastPic);
         }
     }
 
