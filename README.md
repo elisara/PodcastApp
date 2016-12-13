@@ -58,7 +58,6 @@ An application to listen to YLE and Metropolia podcasts.
 <img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-175645.png" width="200">
 <img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-175758.png" width="200">
 <img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-180018.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-180118.png" width="200">
 <img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-180131.png" width="200">
 <img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-180603.png" width="200">
 
