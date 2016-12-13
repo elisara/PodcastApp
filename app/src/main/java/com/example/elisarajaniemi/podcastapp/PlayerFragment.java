@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, OnBufferingUpdateListener, SeekBar.OnSeekBarChangeListener, ServiceCallbacks {
-    private ImageView replayBtn, playBtn, forwardBtn, previousBtn, nextBtn, queueBtn, playlistBtn, favoriteBtn, shareBtn, podcastPic;
+    private ImageView replayBtn, playBtn, forwardBtn, previousBtn, nextBtn, playlistBtn, favoriteBtn, shareBtn, podcastPic;
     private SeekBar seekbar;
     private TextView currentTime, fullTime, title;
     private int mediaFileLengthInMilliseconds;
@@ -96,7 +96,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         previousBtn = (ImageView) view.findViewById(R.id.previousBtn);
         nextBtn = (ImageView) view.findViewById(R.id.nextBtn);
-        queueBtn = (ImageView) view.findViewById(R.id.queueBtn);
+
         playlistBtn = (ImageView) view.findViewById(R.id.playlistBtn);
         favoriteBtn = (ImageView) view.findViewById(R.id.favoriteBtn);
         shareBtn = (ImageView) view.findViewById(R.id.shareBtn);
@@ -107,7 +107,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         forwardBtn.setOnClickListener(this);
         previousBtn.setOnClickListener(this);
         nextBtn.setOnClickListener(this);
-        queueBtn.setOnClickListener(this);
+
         playlistBtn.setOnClickListener(this);
         favoriteBtn.setOnClickListener(this);
         shareBtn.setOnClickListener(this);
@@ -180,10 +180,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 mActivity.pServ.mPlayer.setOnBufferingUpdateListener(this);
 
                 break;
-            case R.id.queueBtn:
 
-
-                break;
             case R.id.playlistBtn:
                 playlistsFragment.addToPlaylistDialog(piFromClick, getContext());
                 break;
