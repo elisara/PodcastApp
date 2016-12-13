@@ -142,29 +142,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_pause_circle_filled_black_24dp).setTicker("joku teksti").setContent(notificationView);
-        //notificationView.setImageViewBitmap(R.id.notifiationImage, pi.picture);
-        if(!pi.imageURL.equals("")) {
-            imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_0.1,h_0.1/" + pi.imageURL + ".jpg", new SimpleImageLoadingListener() {
-                ///w_500,h_500,c_fit
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    //podcastPic.setImageBitmap(loadedImage);
-                    notificationView.setImageViewBitmap(R.id.notifiationImage, loadedImage);
-                }
-            });
-        }
-        else if(pi.imageURL.equals("")) {
-            imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_0.1,h_0.1/" + pi.serieImageURL + ".jpg", new SimpleImageLoadingListener() {
-                ///w_500,h_500,c_fit
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    //podcastPic.setImageBitmap(loadedImage);
-                    notificationView.setImageViewBitmap(R.id.notifiationImage, loadedImage);
-                }
-            });
-        }
 
-        notificationView.setInt(R.id.notifiationImage, "setBackgroundColor", R.color.colorPrimary);
         notificationView.setInt(R.id.notifiationText1, "setBackgroundColor", R.color.colorPrimary);
         notificationView.setInt(R.id.notifiationText2, "setBackgroundColor", R.color.colorPrimary);
         notificationView.setInt(R.id.notificationPlayBtn, "setBackgroundColor", R.color.colorPrimary);

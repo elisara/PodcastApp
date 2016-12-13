@@ -188,7 +188,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
             //System.out.print(i + ". ");
             podcastItem = getSinglePodcast(jsonArray.getJSONObject(i));
 
-            if (podcastItem.programID != null && !podcastItem.categorys.contains("Uutiset")) {
+            if (podcastItem.programID != null) {
                 if (tempPodcastList.size() == 0)//&& podcastItem.length < 600
                     tempPodcastList.add(podcastItem);
                 else {
