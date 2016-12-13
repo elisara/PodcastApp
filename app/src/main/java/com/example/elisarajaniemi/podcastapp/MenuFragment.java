@@ -60,7 +60,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         favorite = (TextView) view.findViewById(R.id.favorites);
         queue = (TextView) view.findViewById(R.id.queue);
         history = (TextView) view.findViewById(R.id.history);
-        continuePlay = (TextView) view.findViewById(R.id.continuePlaying);
+
         signIn = (TextView) view.findViewById(R.id.signIn);
         usernameView = (TextView) view.findViewById(R.id.username);
         userLayout = (LinearLayout) view.findViewById(R.id.user_layout);
@@ -71,7 +71,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         favorite.setOnClickListener(this);
         queue.setOnClickListener(this);
         history.setOnClickListener(this);
-        continuePlay.setOnClickListener(this);
+
         signIn.setOnClickListener(this);
         autoplay.setOnClickListener(this);
 
@@ -89,7 +89,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
             playList.setVisibility(View.GONE);
             favorite.setVisibility(View.GONE);
             history.setVisibility(View.GONE);
-            continuePlay.setVisibility(View.GONE);
+
         }
         if(user.length() > 0){
             signIn.setText("Logout");
@@ -143,12 +143,6 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("history")
                         .replace(R.id.frag_container, collectionFragment).commit();
 
-                break;
-
-            case R.id.continuePlaying:
-                System.out.println("CONTINUE");
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .remove(this).commit();
                 break;
 
             case R.id.favorites:
@@ -216,7 +210,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                 playList.setVisibility(View.VISIBLE);
                                 favorite.setVisibility(View.VISIBLE);
                                 history.setVisibility(View.VISIBLE);
-                                continuePlay.setVisibility(View.VISIBLE);
+
                             }
                         }
                     });

@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_alignParentLeft="true"
     android:gravity="left"
+
     android:background="@color/colorPrimary"
     android:minWidth="200dp"
     android:layout_width="match_parent"
@@ -12,7 +13,9 @@
     <LinearLayout
         android:id="@+id/loggedIn"
         android:orientation="vertical"
-        android:padding="30dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -20,7 +23,7 @@
             android:id="@+id/user_layout"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="30dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -29,7 +32,7 @@
                 android:id="@+id/profileIcon"
                 android:src="@drawable/ic_person_black_24dp"
                 android:tint="@color/availableIcon"
-
+                android:paddingTop="30dp"
                 android:layout_width="80dp"
                 android:layout_height="80dp" />
 
@@ -55,7 +58,10 @@
             android:textStyle="bold"
             android:textColor="@drawable/text_color"
             android:clickable="true"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -66,7 +72,10 @@
             android:textStyle="bold"
             android:textColor="@drawable/text_color"
             android:clickable="true"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -78,7 +87,10 @@
             android:textStyle="bold"
             android:textColor="@drawable/text_color"
             android:clickable="true"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -90,22 +102,15 @@
             android:textStyle="bold"
             android:textColor="@drawable/text_color"
             android:clickable="true"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/continuePlaying"
-            android:text="Continue playing"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="@drawable/text_color"
-            android:clickable="true"
-            android:paddingTop="16dp"
-            android:background="@android:color/transparent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
     </LinearLayout>
     </LinearLayout>
 
@@ -124,6 +129,11 @@
         <CheckBox
             android:id="@+id/autoplay"
             android:text="Autoplay"
+            android:paddingRight="30dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="10dp"
+
             android:textColor="@color/primaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -135,6 +145,10 @@
             android:clickable="true"
             android:textSize="20dp"
             android:textStyle="bold"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="30dp"
+
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
