@@ -9,11 +9,6 @@ An application to listen to YLE and Metropolia podcasts.
 1. Download the APK to your device
 2. Install the application via the APK
 
-OR
-
-1. Clone this project
-2. Open the project in Android Studio
-3. Run the project in Android Studio
 ```
 
 ## Features
@@ -42,7 +37,6 @@ OR
 
 ## Screen shots
 
-Screen shots in future
 <img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173754.png" width="200">
 <img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173758.png" width="200">
 <img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173802.png" width="200">
