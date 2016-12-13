@@ -28,7 +28,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     public QueueItems queueItems =QueueItems.getInstance();
 
     private ImageButton playBtn;
-    private TextView tv, tv2;
+    private TextView podcastName, collectionName;
 
 
     public ExpandableListViewAdapter(Context context, ArrayList<PodcastItem> groupList) {
@@ -53,8 +53,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        String description = groupList.get(groupPosition).description;
-        return description;
+        final PodcastItem childPodcastItem = groupList.get(groupPosition);
+        return childPodcastItem;
     }
 
     @Override
@@ -98,13 +98,12 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         }
 
         final PodcastItem podcastItem = (PodcastItem) getGroup(groupPosition);
-        tv = (TextView) myView.findViewById(R.id.episodeName);
-        tv2 = (TextView) myView.findViewById(R.id.length);
+        podcastName = (TextView) myView.findViewById(R.id.episodeName);
         playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
+        collectionName = (TextView) myView.findViewById(R.id.collection);
 
-        String length = DateUtils.formatElapsedTime(podcastItem.length);
-        tv.setText(podcastItem.title);
-        tv2.setText(length);
+        podcastName.setText(podcastItem.title);
+        collectionName.setText(podcastItem.collectionName);
         playBtn.setId(groupPosition);
         playBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -151,15 +150,20 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        String description = (String)getChild(groupPosition, childPosition);
+        PodcastItem child = (PodcastItem) getChild(groupPosition, childPosition);
         View myView = convertView;
         if (myView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            myView = infalInflater.inflate(R.layout.child_items, parent, false);
+            myView = infalInflater.inflate(R.layout.child_item, parent, false);
         }
 
         TextView descriptionView = (TextView) myView.findViewById(R.id.description_view);
-        descriptionView.setText(description);
+        descriptionView.setText(child.description);
+
+        TextView lengthView = (TextView) myView.findViewById(R.id.length);
+        String length = DateUtils.formatElapsedTime(child.length);
+        lengthView.setText(length);
+
 
         return myView;
     }

@@ -7,6 +7,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -186,6 +188,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                     final EditText password = new EditText(getActivity());
                     password.setHint("Password");
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     lp.addView(password);
 
                     alertDialogBuilder.setView(lp);
@@ -194,8 +197,8 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                     //LOGIN
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Login", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            username_ = username.getText().toString();
-                            password_ = password.getText().toString();
+                            username_ = username.getText().toString().trim();
+                            password_ = password.getText().toString().trim();
                             try {
                                 rali.login(username_, password_, getContext());
                             } catch (ExecutionException e) {
@@ -244,10 +247,12 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                             final EditText password = new EditText(getActivity());
                             password.setHint("Password");
+                            password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                             lp.addView(password);
 
                             final EditText password2 = new EditText(getActivity());
                             password2.setHint("Confirm password");
+                            password2.setTransformationMethod(PasswordTransformationMethod.getInstance());
                             lp.addView(password2);
 
                             final EditText email = new EditText(getActivity());
@@ -258,9 +263,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                             alertDialog2.setButton(AlertDialog.BUTTON_POSITIVE,"Register",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
-                                    username_ = username.getText().toString();
-                                    password_ = password.getText().toString();
-                                    password2_ = password2.getText().toString();
+                                    username_ = username.getText().toString().trim();
+                                    password_ = password.getText().toString().trim();
+                                    password2_ = password2.getText().toString().trim();
                                     email_ = email.getText().toString();
                                     try {
                                         rali.registerUser(username_, password_, password2_, email_, getContext());
