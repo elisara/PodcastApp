@@ -48,6 +48,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.menu_layout, container , false);
         user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
+        token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "");
         doAutoplay = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("autoplay", true);
 
         new GetUsersHelper().execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
@@ -193,8 +194,8 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                     //LOGIN
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Login", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            username_ = username.getText().toString();
-                            password_ = password.getText().toString();
+                            username_ = username.getText().toString().trim();
+                            password_ = password.getText().toString().trim();
                             try {
                                 rali.login(username_, password_, getContext());
                             } catch (ExecutionException e) {
@@ -204,8 +205,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             }
                             Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
                             user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
+                            token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "");
 
-                            if(user.length() > 0) {
+                            if(!token.equalsIgnoreCase("")) {
                                 System.out.println("--------User in list-------");
                                 signIn.setText("Logout");
                                 usernameView.setText(user);
@@ -257,9 +259,9 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                             alertDialog2.setButton(AlertDialog.BUTTON_POSITIVE,"Register",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
-                                    username_ = username.getText().toString();
-                                    password_ = password.getText().toString();
-                                    password2_ = password2.getText().toString();
+                                    username_ = username.getText().toString().trim();
+                                    password_ = password.getText().toString().trim();
+                                    password2_ = password2.getText().toString().trim();
                                     email_ = email.getText().toString();
                                     try {
                                         rali.registerUser(username_, password_, password2_, email_, getContext());
