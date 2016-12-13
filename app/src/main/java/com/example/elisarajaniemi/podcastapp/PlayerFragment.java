@@ -76,7 +76,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         addImage(piFromClick);
 
 
-        if(!PreferenceManager.getDefaultSharedPreferences(getContext()).getString("", "").equalsIgnoreCase("")) {
+        if(!PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "").equalsIgnoreCase("")) {
             try {
                 history.getHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
                 for (int i = 0; i < historyPodcastItems.getItems().size(); i++) {
