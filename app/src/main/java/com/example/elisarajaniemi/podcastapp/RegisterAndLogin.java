@@ -47,7 +47,7 @@ public class RegisterAndLogin{
         testIfExists(username, password, context);
 
         if (password.equals(password2)) {
-            testIfExists(username, password, context);
+            //testIfExists(username, password, context);
             System.out.println("Register: Password match");
 
             if (this.exists == false && !loggedIn) {
@@ -72,9 +72,8 @@ public class RegisterAndLogin{
             }else if(this.exists) {
                 Toast.makeText(context, "Username already in use", Toast.LENGTH_SHORT).show();
             }
-
-                else
-             {
+            else
+            {
                 System.out.println("Register: User existed");
                 loggedIn = false;
             }
@@ -100,6 +99,7 @@ public class RegisterAndLogin{
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            System.out.println("TOKEN AFTER FINDING TOKEN: "+ token);
             if (!token.equalsIgnoreCase("")) {
                 loggedIn = true;
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();

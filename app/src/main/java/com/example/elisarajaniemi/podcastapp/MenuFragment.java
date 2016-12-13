@@ -147,7 +147,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
             case R.id.favorites:
                 try {
-                    favorites.getFavorites("http://media.mw.metropolia.fi/arsu/favourites/?token=", PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
+                    favorites.getFavorites("http://media.mw.metropolia.fi/arsu/favourites/?token=", PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
@@ -198,7 +198,6 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            Toast.makeText(getContext(), "User " + username_ + " logged in", Toast.LENGTH_SHORT).show();
                             user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
                             token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "");
 
@@ -267,9 +266,12 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                         e.printStackTrace();
                                     }
                                     user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
+                                    token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "");
 
                                     if(user.length() > 0) {
-                                        Toast.makeText(getContext(), "User " + username_ + " created", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "User " + user + " created", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Token " + token + " created", Toast.LENGTH_SHORT).show();
+
                                         signIn.setText("Logout");
                                         usernameView.setText(user);
                                         userLayout.setVisibility(View.VISIBLE);
