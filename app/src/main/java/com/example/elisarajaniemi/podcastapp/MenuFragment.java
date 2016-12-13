@@ -101,7 +101,6 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         else{
             autoplay.setChecked(false);
         }
-
         return view;
     }
 
