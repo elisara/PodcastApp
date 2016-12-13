@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="72dp"
     android:background="@android:color/background_light"
     android:gravity="center"
     android:orientation="horizontal"
@@ -26,6 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="100"
+            android:background="@color/colorPrimaryDark"
+            android:elevation="10dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -33,7 +35,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="22"
-                android:background="@color/colorPrimary"/>
+                />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -48,7 +50,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textColor="@color/primaryText"
-                    android:background="@color/colorPrimary"/>
+                    />
 
                 <TextView
                     android:id="@+id/smallPlayerText1"
@@ -58,7 +60,7 @@
                     android:gravity="center"
                     android:textSize="12dp"
                     android:textColor="@color/primaryText"
-                    android:background="@color/colorPrimary"/>
+                    />
 
             </LinearLayout>
 
@@ -68,7 +70,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:tint="@color/colorAccent"
-                android:background="@color/colorPrimary"/>
+               />
 
             <ImageView
                 android:id="@+id/smallPlayerSkipBtn"
@@ -76,7 +78,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:tint="@color/availableIcon"
-                android:background="@color/colorPrimary"/>
+                />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
