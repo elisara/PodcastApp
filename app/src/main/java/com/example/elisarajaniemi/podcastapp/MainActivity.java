@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -109,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         title = (TextView) toolbar.findViewById(R.id.title);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/ethnocentric_rg.otf");
+        title.setTypeface(custom_font);
 
         smallPlayerLayout = (LinearLayout) findViewById(R.id.player_frag_container);
         smallPlayerLayout.setVisibility(LinearLayout.GONE);

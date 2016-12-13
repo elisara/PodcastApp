@@ -86,6 +86,7 @@ public class CollectionFragment extends Fragment {
     private TextView collectionName;
     private LinearLayout header;
     private PodcastItem piFromAdapter;
+    private int lastExpandedPosition = 0;
 
     private boolean fromFavorites, fromSearch, fromHistory, fromQueue;
     private History historyClass;
@@ -112,7 +113,7 @@ public class CollectionFragment extends Fragment {
         collectionName = (TextView) view.findViewById(R.id.collectionName);
 
         width = getResources().getDisplayMetrics().widthPixels;
-        height = (getResources().getDisplayMetrics().heightPixels) / 3;
+        height = (getResources().getDisplayMetrics().heightPixels)/3;
 
         header.requestLayout();
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
@@ -160,9 +161,23 @@ public class CollectionFragment extends Fragment {
         fillList();
         simpleExpandableListView.deferNotifyDataSetChanged();
         listAdapter.notifyDataSetChanged();
+
+        simpleExpandableListView.expandGroup(lastExpandedPosition);
         if(pi!= null){
-            expandOne();
+            //expandOne();
         }
+
+        simpleExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if (lastExpandedPosition != -1
+                        && groupPosition != lastExpandedPosition) {
+                    simpleExpandableListView.collapseGroup(lastExpandedPosition);
+                }
+                lastExpandedPosition = groupPosition;
+                //collapseFirst();
+            }
+        });
         simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -200,6 +215,7 @@ public class CollectionFragment extends Fragment {
         }
     }
 
+    /**
     private void expandOne() {
         int count = listAdapter.getGroupCount();
         for (int i = 0; i < count; i++) {
@@ -209,8 +225,17 @@ public class CollectionFragment extends Fragment {
                 simpleExpandableListView.setSelection(i);
             }
         }
-
     }
+
+    private void collapseFirst(){
+        int count = listAdapter.getGroupCount();
+        for (int i = 0; i < count; i++) {
+            piFromAdapter = (PodcastItem) listAdapter.getGroup(i);
+            if (piFromAdapter.title.equals(pi.title) && !pi.title.equals("")) {
+                simpleExpandableListView.collapseGroup(i);
+            }
+        }
+    }*/
 
     //method to collapse all groups
     private void collapseAll() {
