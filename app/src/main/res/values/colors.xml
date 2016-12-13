@@ -8,4 +8,5 @@
     <color name="unAvailableIcon">#757575</color>
     <color name="primaryText">#FFFFFF</color>
     <color name="secondaryText">#060001</color>
+    <color name="splasColor">#110d01</color>
 </resources>
