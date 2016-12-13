@@ -6,7 +6,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/avaruus"/>
+            android:src="@drawable/avaruus2"/>
     </item>
 
 </layer-list>
