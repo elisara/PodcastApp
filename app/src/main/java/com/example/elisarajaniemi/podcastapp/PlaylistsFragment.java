@@ -61,6 +61,9 @@ import javax.crypto.NoSuchPaddingException;
 
 public class PlaylistsFragment extends Fragment {
 
+    private final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."+
+            "eyJpZCI6MywidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUBleGFtcGxlLmNvbSIsImlzX2FkbWluIjpudWxs" +
+            "LCJkYXRlIjoiMjAxNi0xMS0xNVQxNjowMToyMy4wMDBaIiwiaWF0IjoxNDc5MjgxNDI5LCJleHAiOjE1MTA4MTc0Mjl9.5BTFGggjtGCSh7ssNjWokmM7CAHHR9omvcGCqYXLlso";
 
     private Thread t;
     private ListView listView;
@@ -238,9 +241,7 @@ public class PlaylistsFragment extends Fragment {
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 alertDialog2.cancel();
                 PlaylistItem playlistItem = playlists.getPlaylists().get(position);
-                new PutPodcastToPlaylist().execute(podcastItem.programID.replace("-", ""), "http://media.mw.metropolia.fi/arsu/playlists/" + playlistItem.id + "?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-                        "eyJpZCI6MywidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUBleGFtcGxlLmNvbSIsImlzX2FkbWluIjpudWxs" +
-                        "LCJkYXRlIjoiMjAxNi0xMS0xNVQxNjowMToyMy4wMDBaIiwiaWF0IjoxNDc5MjgxNDI5LCJleHAiOjE1MTA4MTc0Mjl9.5BTFGggjtGCSh7ssNjWokmM7CAHHR9omvcGCqYXLlso");
+                new PutPodcastToPlaylist().execute(podcastItem.programID.replace("-", ""), "http://media.mw.metropolia.fi/arsu/playlists/" + playlistItem.id + "?token=" + TOKEN);
 
             }
         });
@@ -298,7 +299,6 @@ class CreateNewPlaylist extends AsyncTask<Object, String, String> {
                     JSONObject jObject = new JSONObject(output);
                     message = jObject.getString("message");
                     System.out.println("Database message: " + message);
-                    //new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0) + "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0"));
                 } catch (JSONException e) {
                     System.out.println(e);
                 }

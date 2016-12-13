@@ -56,6 +56,8 @@ import javax.crypto.NoSuchPaddingException;
 
 public class CollectionFragment extends Fragment {
 
+    private final String YLE_API = "app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28";
+
     private ListView listView;
     private GetMetropoliaPodcastHelper getMetropoliaPodcastHelper;
     private String message;
@@ -123,7 +125,7 @@ public class CollectionFragment extends Fragment {
         //CHECK FROM WHICH FRAGMENT THE USER IS COMING AND WHAT LIST TO SHOW
         if (playlistID != 0 && fromFavorites == false && fromHistory == false) {
             try {
-                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromplaylist").get();
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?" + YLE_API, "fromplaylist").get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -131,7 +133,7 @@ public class CollectionFragment extends Fragment {
             }
         } else if (playlistID == 0 && fromFavorites == true && fromHistory == false) {
             try {
-                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromfavorites").get();
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?" + YLE_API, "fromfavorites").get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -140,7 +142,7 @@ public class CollectionFragment extends Fragment {
 
         } else if (playlistID == 0 && fromHistory == true && fromFavorites == false) {
             try {
-                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "fromHistory").get();
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/", ".json?" + YLE_API, "fromHistory").get();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -148,7 +150,7 @@ public class CollectionFragment extends Fragment {
             }
         } else if (pi != null) {
             try {
-                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28" + "&app_key=2acb02a2a89f0d366e569b228320619b&series=" + pi.serieID, "fromseries").get();
+                new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/", "items.json?"+ YLE_API + "&series=" + pi.serieID, "fromseries").get();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -248,7 +250,6 @@ public class CollectionFragment extends Fragment {
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
             list = playlistPodcastItems.getItems();
-
         } else if (list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
             list = favoritePodcastItems.getItems();
         } else if (list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory && !fromQueue) {
@@ -257,7 +258,6 @@ public class CollectionFragment extends Fragment {
             list = historyPodcastItems.getItems();
         } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && !fromHistory && fromQueue) {
             list = autoplayItems.getItems();
-
         }
 
 

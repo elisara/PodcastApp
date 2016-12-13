@@ -27,6 +27,11 @@ import java.util.concurrent.ExecutionException;
 
 public class RegisterAndLogin{
 
+    private final String TOKEN = "http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+            "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
+            "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
+            "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM";
+
     private boolean loggedIn;
     private User user;
     Users users = Users.getInstance();
@@ -134,10 +139,7 @@ public class RegisterAndLogin{
         this.encryptedUsername = myCrypt.doEncoding(username).trim();
         this.encryptedEmail = myCrypt.doEncoding(email).toString();
 
-        new GetUsersHelper().execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-                "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
-                "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
-                "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM").get();
+        new GetUsersHelper().execute(TOKEN).get();
 
         for (int i = 0; i < Users.getInstance().getUsers().size(); i++) {
             if (users.getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)) {
@@ -227,6 +229,10 @@ class GetToken extends AsyncTask<String, String, String> {
 class Register extends AsyncTask<String, String, String> {
 
     //String token = "";
+    private final String TOKEN = "http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+            "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
+            "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
+            "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM";
 
     protected void onPreExecute() {
         super.onPreExecute();
@@ -236,10 +242,7 @@ class Register extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
 
         try {
-            URL url = new URL("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-                    "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
-                    "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
-                    "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM");
+            URL url = new URL(TOKEN);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
