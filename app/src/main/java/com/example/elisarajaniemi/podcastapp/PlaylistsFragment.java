@@ -230,7 +230,7 @@ public class PlaylistsFragment extends Fragment {
 
     public void addToPlaylistDialog(final PodcastItem podcastItem, final Context context){
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
-        alertDialogBuilder.setTitle("Add to");
+        alertDialogBuilder.setTitle("Add to playlist");
 
         LinearLayout lp = new LinearLayout(context);
         lp.setOrientation(LinearLayout.VERTICAL);

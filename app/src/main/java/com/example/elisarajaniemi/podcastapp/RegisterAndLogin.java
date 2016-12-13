@@ -47,7 +47,7 @@ public class RegisterAndLogin{
         testIfExists(username, password, context);
 
         if (password.equals(password2)) {
-            testIfExists(username, password, context);
+            //testIfExists(username, password, context);
             System.out.println("Register: Password match");
 
             if (this.exists == false && !loggedIn) {
@@ -58,6 +58,7 @@ public class RegisterAndLogin{
 
                 try {
                     new Register().execute(encryptedUsername, encryptedPassword, encryptedEmail).get();
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -67,13 +68,11 @@ public class RegisterAndLogin{
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", "").apply();
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", 0).apply();
                 login(username, password ,context);
-                loggedIn = true;
             }else if(this.exists) {
                 Toast.makeText(context, "Username already in use", Toast.LENGTH_SHORT).show();
             }
-
-                else
-             {
+            else
+            {
                 System.out.println("Register: User existed");
                 loggedIn = false;
             }
@@ -99,18 +98,20 @@ public class RegisterAndLogin{
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            System.out.println("TOKEN AFTER FINDING TOKEN: "+ token);
             if (!token.equalsIgnoreCase("")) {
                 loggedIn = true;
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", token).apply();
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", userID).apply();
+                new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0) + "?token=" + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "")).get();
+
             }
         } else {
             System.out.println("Login: User doesn't exist or user is already logged in.");
             loggedIn = false;
         }
 
-        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0) + "?token=" + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0")).get();
 
 
         return username;
@@ -128,15 +129,21 @@ public class RegisterAndLogin{
 
     }
 
-    public boolean testIfExists(String username, String email, Context context) {
+    public boolean testIfExists(String username, String email, Context context) throws ExecutionException, InterruptedException {
+
+        new GetUsersHelper().execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+                "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
+                "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
+                "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM").get();
+
 
         //here check if user is registered
-        this.encryptedUsername = myCrypt.doEncoding(username).trim();
+        this.encryptedUsername = myCrypt.doEncoding(username).toString();
         this.encryptedEmail = myCrypt.doEncoding(email).toString();
 
         for (int i = 0; i < Users.getInstance().getUsers().size(); i++) {
 
-            if (users.getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)) {
+            if (users.getUsers().get(i).username.equalsIgnoreCase(encryptedUsername)) {
                 //currentUser.addCurrentUser(Users.getInstance().getUsers().get(i));
                 token = users.getUsers().get(i).token;
                 userID = users.getUsers().get(i).id;
