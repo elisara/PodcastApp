@@ -255,13 +255,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        System.out.println("--------- MainActivity START --------------");
+        System.out.println("---------- MainActivity START --------------");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        System.out.println("--------- MainActivity STOP --------------");
+        System.out.println("---------- MainActivity STOP --------------");
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.remove(spf);
 

@@ -113,7 +113,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        System.out.println("------------------------onStartcommand");
+        System.out.println("---------- Service onStartCommand --------------");
 
         String action = intent.getAction();
         if (action.equalsIgnoreCase(START_SERVICE)) {
@@ -253,7 +253,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     public void setSpeed() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             float speed = mPlayer.getPlaybackParams().getSpeed();
-            System.out.println("play spped: " + speed);
+
             int mediaFileLengthInMilliseconds = mPlayer.getDuration();
             mPlayer.pause();
             if (speed <= 1.0)
@@ -271,7 +271,8 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.println("----------Service OnDestroy");
+        System.out.println("---------- Service OnDestroy --------------");
+
         cancelNotification();
         if (mPlayer != null) {
             try {
@@ -343,7 +344,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        System.out.println("PlayerServise onHandleIntent");
+        System.out.println("---------- Service onHandleIntent --------------");
 
     }
 
