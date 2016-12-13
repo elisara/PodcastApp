@@ -159,45 +159,47 @@ public class CollectionFragment extends Fragment {
 
         simpleExpandableListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
         fillList();
-        simpleExpandableListView.deferNotifyDataSetChanged();
-        listAdapter.notifyDataSetChanged();
+        //simpleExpandableListView.deferNotifyDataSetChanged();
+        //listAdapter.notifyDataSetChanged();
 
         //EXPAND THE FIRST ITEM OF THE LIST
-        simpleExpandableListView.expandGroup(lastExpandedPosition);
-        simpleExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                if (lastExpandedPosition != -1
-                        && groupPosition != lastExpandedPosition) {
-                    simpleExpandableListView.collapseGroup(lastExpandedPosition);
-                }
-                lastExpandedPosition = groupPosition;
-            }
-        });
-        simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                PodcastItem podcastItem = list.get(groupPosition);
-                return false;
-            }
-        });
-
-        simpleExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                return true;
-            }
-        });
-
-        if (fromFavorites == true) {
-            simpleExpandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        if(list.size() > 0 && list != null) {
+            simpleExpandableListView.expandGroup(lastExpandedPosition);
+            simpleExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
                 @Override
-                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    final int favoriteID = position;
-                    favorites.deleteFavoritesDialog(getContext(), podcastIDArray, favoriteID, favoritePodcastItems, listAdapter);
+                public void onGroupExpand(int groupPosition) {
+                    if (lastExpandedPosition != -1
+                            && groupPosition != lastExpandedPosition) {
+                        simpleExpandableListView.collapseGroup(lastExpandedPosition);
+                    }
+                    lastExpandedPosition = groupPosition;
+                }
+            });
+            simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                @Override
+                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                    PodcastItem podcastItem = list.get(groupPosition);
+                    return false;
+                }
+            });
+
+            simpleExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                     return true;
                 }
             });
+
+            if (fromFavorites == true) {
+                simpleExpandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        final int favoriteID = position;
+                        favorites.deleteFavoritesDialog(getContext(), podcastIDArray, favoriteID, favoritePodcastItems, listAdapter);
+                        return true;
+                    }
+                });
+            }
         }
 
         return view;
@@ -310,10 +312,13 @@ public class CollectionFragment extends Fragment {
         for (int i = 0; i < list.size(); i++) {
         }
 
-        listAdapter = new ExpandableListViewAdapter(getContext(), list);
-        listAdapter.notifyDataSetChanged();
-        simpleExpandableListView.deferNotifyDataSetChanged();
-        simpleExpandableListView.setAdapter(listAdapter);
+        if(list.size() > 0 && list != null) {
+            listAdapter = new ExpandableListViewAdapter(getContext(), list);
+            listAdapter.notifyDataSetChanged();
+            simpleExpandableListView.deferNotifyDataSetChanged();
+            simpleExpandableListView.setAdapter(listAdapter);
+        }
+
 
     }
 
