@@ -58,7 +58,6 @@ public class RegisterAndLogin{
 
                 try {
                     new Register().execute(encryptedUsername, encryptedPassword, encryptedEmail).get();
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -68,6 +67,8 @@ public class RegisterAndLogin{
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", "").apply();
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", 0).apply();
                 login(username, password ,context);
+                loggedIn = true;
+                System.out.println("TOKEN: " + token);
             }else if(this.exists) {
                 Toast.makeText(context, "Username already in use", Toast.LENGTH_SHORT).show();
             }
@@ -131,19 +132,17 @@ public class RegisterAndLogin{
 
     public boolean testIfExists(String username, String email, Context context) throws ExecutionException, InterruptedException {
 
+        //here check if user is registered
+        this.encryptedUsername = myCrypt.doEncoding(username).trim();
+        this.encryptedEmail = myCrypt.doEncoding(email).toString();
+
         new GetUsersHelper().execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
                 "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
                 "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
                 "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM").get();
 
-
-        //here check if user is registered
-        this.encryptedUsername = myCrypt.doEncoding(username).toString();
-        this.encryptedEmail = myCrypt.doEncoding(email).toString();
-
         for (int i = 0; i < Users.getInstance().getUsers().size(); i++) {
-
-            if (users.getUsers().get(i).username.equalsIgnoreCase(encryptedUsername)) {
+            if (users.getUsers().get(i).username.equalsIgnoreCase(this.encryptedUsername)) {
                 //currentUser.addCurrentUser(Users.getInstance().getUsers().get(i));
                 token = users.getUsers().get(i).token;
                 userID = users.getUsers().get(i).id;
