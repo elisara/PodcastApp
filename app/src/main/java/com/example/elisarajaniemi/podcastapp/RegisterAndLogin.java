@@ -41,7 +41,7 @@ public class RegisterAndLogin{
     SharedPreferences sharedpreferences;
 
 
-    public void registerUser(String username, String password, String password2, String email, Context context) throws ExecutionException, InterruptedException {
+    public boolean registerUser(String username, String password, String password2, String email, Context context) throws ExecutionException, InterruptedException {
 
         exists = false;
         testIfExists(username, password, context);
@@ -82,9 +82,10 @@ public class RegisterAndLogin{
             System.out.println("Register: Password didn't match");
             loggedIn = false;
         }
+        return loggedIn;
     }
 
-    public void login(String username, String password, Context context) throws ExecutionException, InterruptedException {
+    public String login(String username, String password, Context context) throws ExecutionException, InterruptedException {
         exists = false;
         testIfExists(username, password, context);
 
@@ -100,17 +101,20 @@ public class RegisterAndLogin{
                 e.printStackTrace();
             }
 
-            if (!token.equalsIgnoreCase("")) {
-                loggedIn = true;
-                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
-                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", token).apply();
-                PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", userID).apply();
-                new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/" + PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0) + "?token=" + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0")).get();
-            }
+            loggedIn = true;
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", token).apply();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", userID).apply();
+
         } else {
             System.out.println("Login: User doesn't exist or user is already logged in.");
             loggedIn = false;
         }
+
+        new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0) + "?token=" + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0")).get();
+
+
+        return username;
 
     }
 

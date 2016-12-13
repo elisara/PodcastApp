@@ -243,7 +243,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
             if (mActivity.pServ.getStatus()==3) currentPodcastId = mActivity.pServ.getPodcastObject().programID;
             // Running this thread after 100 milliseconds
-            handler.postDelayed(this, 1000);
+            handler.postDelayed(this, 100);
 
         }
     };

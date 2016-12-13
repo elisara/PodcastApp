@@ -1,6 +1,7 @@
 package com.example.elisarajaniemi.podcastapp;
 
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,7 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
     private final Handler handler = new Handler();
     MainActivity mActivity;
     Boolean picLoaded = false;
-    String currentPodcastId = " ";
+    String podcastId = " ";
 
 
     @Override
@@ -90,7 +91,7 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
     private Runnable updateTask = new Runnable() {
         public void run() {
             if (mActivity.pServ.getStatus()==3){
-                if (!currentPodcastId.equalsIgnoreCase(mActivity.pServ.getPodcastObject().programID)) picLoaded = false;
+                if (!podcastId.equalsIgnoreCase(mActivity.pServ.getPodcastObject().programID)) picLoaded = false;
             }
             // Displaying play or pause icon
             if (mActivity.pServ.mPlayer != null) {
@@ -127,7 +128,7 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
                     });
 
                 }
-                if (mActivity.pServ.getStatus()==3) currentPodcastId = mActivity.pServ.getPodcastObject().programID;
+                if (mActivity.pServ.getStatus()==3)podcastId = mActivity.pServ.getPodcastObject().programID;
                 // Running this thread after 100 milliseconds
                 handler.postDelayed(this, 100);
 
