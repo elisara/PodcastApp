@@ -63,7 +63,6 @@ public class RegisterAndLogin{
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", "").apply();
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", 0).apply();
@@ -100,12 +99,12 @@ public class RegisterAndLogin{
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-
-            loggedIn = true;
-            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
-            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", token).apply();
-            PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", userID).apply();
-
+            if (!token.equalsIgnoreCase("")) {
+                loggedIn = true;
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", username).apply();
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("token", token).apply();
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("id", userID).apply();
+            }
         } else {
             System.out.println("Login: User doesn't exist or user is already logged in.");
             loggedIn = false;
