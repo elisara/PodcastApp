@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,6 +39,8 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     private History historyClass;
     private String user;
     private MainActivity mainActivity;
+    private CheckBox autoplay;
+    private boolean doAutoplay;
 
 
     @Override
@@ -45,6 +48,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.menu_layout, container , false);
         user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
         token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "");
+        doAutoplay = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("autoplay", true);
 
         new GetUsersHelper().execute("http://media.mw.metropolia.fi/arsu/users?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
                 "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
@@ -59,6 +63,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         signIn = (TextView) view.findViewById(R.id.signIn);
         usernameView = (TextView) view.findViewById(R.id.username);
         userLayout = (LinearLayout) view.findViewById(R.id.user_layout);
+        autoplay = (CheckBox) view.findViewById(R.id.autoplay);
 
 
         playList.setOnClickListener(this);
@@ -67,6 +72,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         history.setOnClickListener(this);
         continuePlay.setOnClickListener(this);
         signIn.setOnClickListener(this);
+        autoplay.setOnClickListener(this);
 
         plf = new PlaylistsFragment();
         //mf = new MenuFragment();
@@ -86,6 +92,13 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         }
         if(!token.equalsIgnoreCase("")){
             signIn.setText("Logout");
+        }
+
+        if(doAutoplay){
+            autoplay.setChecked(true);
+        }
+        else{
+            autoplay.setChecked(false);
         }
 
         return view;
@@ -301,6 +314,15 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                     getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }
 
+                break;
+
+            case R.id.autoplay:
+                if(autoplay.isChecked()){
+                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("autoplay", true).apply();
+                }
+                else{
+                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("autoplay", false).apply();
+                }
                 break;
         }
 
