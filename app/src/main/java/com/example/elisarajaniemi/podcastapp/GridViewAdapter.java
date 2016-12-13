@@ -58,7 +58,6 @@ public class GridViewAdapter extends BaseAdapter {
                 .build();
 
         ImageLoader.getInstance().init(config);
-        //imageLoader = ImageLoader.getInstance().init(config);
 
 
         if (myView == null) {
