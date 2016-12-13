@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
     MainActivity mActivity;
 
-    private final String YLE_APP_KEY = "app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28";
+    private final String YLE_APP_KEY = "";
 
     private String result = "";
     public ArrayList<PodcastItem> tempPodcastList;

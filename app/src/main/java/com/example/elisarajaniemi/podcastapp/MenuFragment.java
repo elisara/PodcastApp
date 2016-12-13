@@ -26,10 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MenuFragment extends DialogFragment implements View.OnClickListener {
 
-    private final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-            "eyJpZCI6MiwidXNlcm5hbWUiOiJtb2kiLCJwYXNzd29yZCI6ImhlcHMiLCJlbWFpbCI6Im1vaUB0ZXN0LmZpIiwiZGF0Z" +
-            "SI6IjIwMTYtMTAtMjhUMTA6NDI6NTcuMDAwWiIsImlhdCI6MTQ3OTEwODI1NCwiZXhwIjoxNTEwNjQ0MjU0fQ." +
-            "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM";
+    private final String TOKEN = "";
 
     //private MainActivity ma;
     private TextView playList, favorite, queue, history, continuePlay, signIn, usernameView;

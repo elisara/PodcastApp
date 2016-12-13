@@ -32,8 +32,8 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String YLE_API = "app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28";
-    private final String METROPOLIA_APIKEY = "495i4orWwXCqiW5IuOQUzuAlGmfFeky7BzMPe-X19inh9MRm5RqGhQDUEh5avkZNFjC6mYT6w2xGXdQjm9XfakwHloH027i-tkLX77yFMZJlC3wGWqIjyHIXnvPzvHzW";
+    private final String YLE_API = "";
+    private final String METROPOLIA_APIKEY = "";
 
     private ImageButton menuBtn, searchBtn;
     private Search search;

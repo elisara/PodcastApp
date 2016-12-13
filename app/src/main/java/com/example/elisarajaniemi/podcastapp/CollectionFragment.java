@@ -56,7 +56,7 @@ import javax.crypto.NoSuchPaddingException;
 
 public class CollectionFragment extends Fragment {
 
-    private final String YLE_API = "app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28";
+    private final String YLE_API = "";
 
     private ListView listView;
     private GetMetropoliaPodcastHelper getMetropoliaPodcastHelper;
