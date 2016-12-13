@@ -20,7 +20,6 @@ public class AddToLists {
 
     public void addToListsDialog(final Context context, final PodcastItem podcastItem, final PlaylistsFragment playlistsFragment, final Favorites favorites){
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
-        //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
         alertDialogBuilder.setTitle("Add to");
         final QueueItems queueItems =QueueItems.getInstance();
         String user = PreferenceManager.getDefaultSharedPreferences(context).getString("user", "");
@@ -43,15 +42,12 @@ public class AddToLists {
         toPlaylist.setTextSize(20);
         toPlaylist.setTextColor(Color.BLACK);
         toPlaylist.setPadding(30, 20, 20, 20);
-        //lp.addView(toPlaylist);
 
         final TextView toFavorites = new TextView(context);
         toFavorites.setText("Favorites");
         toFavorites.setTextColor(Color.BLACK);
         toFavorites.setPadding(30, 20, 20, 10);
         toFavorites.setTextSize(20);
-        //lp.addView(toFavorites);
-
 
         if(!user.equalsIgnoreCase("") ) {
             lp.addView(toPlaylist);
@@ -71,17 +67,13 @@ public class AddToLists {
 
         toPlaylist.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //playlistsFragment = new PlaylistsFragment();
                 alertDialog.cancel();
-                //addToPlaylist = true;
-                //podcastItem = value;
                 playlistsFragment.addToPlaylistDialog(podcastItem, context);
             }
         });
 
         toFavorites.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //favorites = new Favorites();
                 System.out.println("Clicked on: " + podcastItem.programID + ", CurrentUser: " + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
                 try {
                     favorites.addToFavorites(podcastItem.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0),
@@ -97,7 +89,6 @@ public class AddToLists {
 
         toQueue.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //System.out.println("Clicked to queue");
                 queueItems.addOne(podcastItem);
                 alertDialog.cancel();
             }
