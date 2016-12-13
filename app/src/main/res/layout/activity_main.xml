@@ -32,7 +32,7 @@
 
             <TextView
                 android:id="@+id/title"
-                android:text="PodcastApp"
+                android:text="PodVerse"
                 android:layout_gravity="center"
                 android:textSize="25dp"
                 android:clickable="true"
