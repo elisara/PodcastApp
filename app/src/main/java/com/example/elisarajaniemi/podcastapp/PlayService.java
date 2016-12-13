@@ -11,7 +11,6 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -326,9 +325,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("autoplay", true)) {
-            playNext();
-        }
+        playNext();
 
     }
 

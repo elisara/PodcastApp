@@ -32,18 +32,36 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/episodeName"
-            android:text="Podcast"
+            android:text="test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/collection"
-            android:textSize="12dp"
-            android:textColor="@color/unAvailableIcon"
-            android:text="COllection"
-            android:paddingRight="16dp"
+        <LinearLayout
+            android:paddingTop="2dp"
+            android:layout_gravity="right"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/ic_access_time_black_24dp"
+                android:layout_width="20dp"
+                android:tint="@color/unAvailableIcon"
+                android:layout_gravity="center"
+                android:paddingRight="5dp"
+                android:background="@android:color/transparent"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:id="@+id/length"
+                android:layout_gravity="center"
+                android:textSize="12dp"
+                android:textColor="@color/unAvailableIcon"
+                android:text="test"
+                android:paddingRight="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -61,4 +79,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
     </LinearLayout>
+
+
 </LinearLayout>
