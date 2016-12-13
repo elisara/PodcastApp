@@ -250,14 +250,25 @@ public class CollectionFragment extends Fragment {
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
             list = playlistPodcastItems.getItems();
+            collectionName.setText("Playlist");
+
         } else if (list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
             list = favoritePodcastItems.getItems();
+            collectionName.setText("Favorites");
+
         } else if (list.size() == 0 && playlistID == 0 && fromSearch && !fromFavorites && !fromHistory && !fromQueue) {
             list = searchItems.getSearchItems();
+            collectionName.setText("Search results");
+
         } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory && !fromQueue) {
             list = historyPodcastItems.getItems();
+            collectionName.setText("History");
+
         } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && !fromHistory && fromQueue) {
             list = autoplayItems.getItems();
+            collectionName.setText("Queue");
+
+
         }
 
 
