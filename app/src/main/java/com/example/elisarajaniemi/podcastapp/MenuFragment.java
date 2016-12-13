@@ -205,6 +205,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                 e.printStackTrace();
                             }
                             user = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("user", "");
+                            token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "");
 
                             if(!token.equalsIgnoreCase("")) {
                                 System.out.println("--------User in list-------");
