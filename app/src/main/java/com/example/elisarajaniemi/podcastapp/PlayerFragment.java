@@ -250,9 +250,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public void addImage(PodcastItem pi){
         if(!piFromClick.imageURL.equals("")) {
             imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + pi.imageURL + ".jpg", podcastPic);
+
         }
         else {
             imageLoader.displayImage("http://images.cdn.yle.fi/image//upload/w_500,h_500,c_fit/" + pi.serieImageURL + ".jpg", podcastPic);
+
         }
     }
 

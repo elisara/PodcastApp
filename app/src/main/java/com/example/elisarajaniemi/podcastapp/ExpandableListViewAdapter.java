@@ -28,7 +28,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     public QueueItems queueItems =QueueItems.getInstance();
 
     private ImageButton playBtn;
-    private TextView podcastName, collectionName;
+    private TextView tv, tv2;
 
 
     public ExpandableListViewAdapter(Context context, ArrayList<PodcastItem> groupList) {
@@ -53,8 +53,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        final PodcastItem childPodcastItem = groupList.get(groupPosition);
-        return childPodcastItem;
+        String description = groupList.get(groupPosition).description;
+        return description;
     }
 
     @Override
@@ -98,12 +98,13 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         }
 
         final PodcastItem podcastItem = (PodcastItem) getGroup(groupPosition);
-        podcastName = (TextView) myView.findViewById(R.id.episodeName);
+        tv = (TextView) myView.findViewById(R.id.episodeName);
+        tv2 = (TextView) myView.findViewById(R.id.length);
         playBtn = (ImageButton) myView.findViewById(R.id.episodeIcon);
-        collectionName = (TextView) myView.findViewById(R.id.collection);
 
-        podcastName.setText(podcastItem.title);
-        collectionName.setText(podcastItem.collectionName);
+        String length = DateUtils.formatElapsedTime(podcastItem.length);
+        tv.setText(podcastItem.title);
+        tv2.setText(length);
         playBtn.setId(groupPosition);
         playBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -150,20 +151,15 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        PodcastItem child = (PodcastItem) getChild(groupPosition, childPosition);
+        String description = (String)getChild(groupPosition, childPosition);
         View myView = convertView;
         if (myView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            myView = infalInflater.inflate(R.layout.child_item, parent, false);
+            myView = infalInflater.inflate(R.layout.child_items, parent, false);
         }
 
         TextView descriptionView = (TextView) myView.findViewById(R.id.description_view);
-        descriptionView.setText(child.description);
-
-        TextView lengthView = (TextView) myView.findViewById(R.id.length);
-        String length = DateUtils.formatElapsedTime(child.length);
-        lengthView.setText(length);
-
+        descriptionView.setText(description);
 
         return myView;
     }
