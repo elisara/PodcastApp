@@ -162,11 +162,8 @@ public class CollectionFragment extends Fragment {
         simpleExpandableListView.deferNotifyDataSetChanged();
         listAdapter.notifyDataSetChanged();
 
+        //EXPAND THE FIRST ITEM OF THE LIST
         simpleExpandableListView.expandGroup(lastExpandedPosition);
-        if(pi!= null){
-            //expandOne();
-        }
-
         simpleExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
@@ -175,7 +172,6 @@ public class CollectionFragment extends Fragment {
                     simpleExpandableListView.collapseGroup(lastExpandedPosition);
                 }
                 lastExpandedPosition = groupPosition;
-                //collapseFirst();
             }
         });
         simpleExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -215,28 +211,6 @@ public class CollectionFragment extends Fragment {
         }
     }
 
-    /**
-    private void expandOne() {
-        int count = listAdapter.getGroupCount();
-        for (int i = 0; i < count; i++) {
-            piFromAdapter = (PodcastItem) listAdapter.getGroup(i);
-            if (piFromAdapter.title.equals(pi.title) && !pi.title.equals("")) {
-                simpleExpandableListView.expandGroup(i);
-                simpleExpandableListView.setSelection(i);
-            }
-        }
-    }
-
-    private void collapseFirst(){
-        int count = listAdapter.getGroupCount();
-        for (int i = 0; i < count; i++) {
-            piFromAdapter = (PodcastItem) listAdapter.getGroup(i);
-            if (piFromAdapter.title.equals(pi.title) && !pi.title.equals("")) {
-                simpleExpandableListView.collapseGroup(i);
-            }
-        }
-    }*/
-
     //method to collapse all groups
     private void collapseAll() {
         int count = listAdapter.getGroupCount();
@@ -259,12 +233,12 @@ public class CollectionFragment extends Fragment {
     }
 
 
+    //GET THE RIGHT LIST DEPENDING ON FROM WHICH FRAGMENT THE USER IS COMING FROM
     public void fillList() {
 
         if (list.size() != 0 || list != null) {
             list.clear();
         }
-
         if (list.size() == 0 && playlistID == 0 && !fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
             list = serieItems.getSerieItems();
             if (list != null && list.size() > 0)

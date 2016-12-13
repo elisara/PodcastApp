@@ -62,8 +62,6 @@ import javax.crypto.NoSuchPaddingException;
 public class PlaylistsFragment extends Fragment {
 
 
-
-
     private Thread t;
     private ListView listView;
     private PlaylistsArrayAdapter adapter;
@@ -87,12 +85,6 @@ public class PlaylistsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PlaylistItem value = playlists.getPlaylists().get(position);
-
-                System.out.println("Playlistin nimi playlistsfragmentissa: " + value.name);
-                System.out.println("Playlistin ID playlistsfragmentissa: " + value.id);
-
-
-                //new GetYlePodcastHelper((MainActivity) getContext()).execute("https://external.api.yle.fi/v1/programs/items/1-3742971.json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28", "true");
 
                 try {
                     new GetPlaylistPodcasts().execute("http://media.mw.metropolia.fi/arsu/playlists/"+value.id +
@@ -119,7 +111,6 @@ public class PlaylistsFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
                 final PlaylistItem value = playlists.getPlaylists().get(position);
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
-                //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
                 alertDialogBuilder.setTitle("Delete Playlist");
 
                 System.out.println("PlaylistID: " + position);
@@ -221,13 +212,6 @@ public class PlaylistsFragment extends Fragment {
     }
 
 
-    public void addToExcistingPlaylist(int playlistID, PodcastItem podcastItem){
-
-        //lista.add(0,podcastItem);
-        //System.out.println("LISTA: " + lista.get(0).title);
-    }
-
-
     public void addToPlaylistDialog(final PodcastItem podcastItem, final Context context){
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         alertDialogBuilder.setTitle("Add to playlist");
@@ -283,10 +267,6 @@ class CreateNewPlaylist extends AsyncTask<Object, String, String> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
     }
     @Override
     protected String doInBackground(Object... params) {
@@ -358,11 +338,8 @@ class PutPodcastToPlaylist extends AsyncTask<Object, String, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
     }
+
     @Override
     protected String doInBackground(Object... params) {
 
@@ -459,15 +436,10 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
             try {
                 JSONObject jObject = new JSONObject(result);
 
-
-                //System.out.println("Playlist juttuja: " + jObject);
-
-
                 JSONArray jsonArray = new JSONArray(jObject.getString("content"));
                 for (int i = 0; i < jsonArray.length(); i++){
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     PodcastItem podcastItem = new PodcastItem(jsonObject.getString("id"), jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
-                    //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
                     podcastIDArray.addPodcastID(podcastItem);
                 }
 
@@ -506,17 +478,11 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
 }
 
 class DeletePlaylist extends AsyncTask<Object, String, String> {
-    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
-
     String message;
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
     }
 
     @Override

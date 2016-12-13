@@ -57,8 +57,9 @@ public class GridViewAdapter extends BaseAdapter {
                 .cacheOnDisc(true)
                 .build();
 
-        ImageLoader.getInstance().init(config);
-
+        if(!ImageLoader.getInstance().isInited()) {
+            ImageLoader.getInstance().init(config);
+        }
 
         if (myView == null) {
             myView = LayoutInflater.from(context).inflate(R.layout.gridview_item, parent, false);
