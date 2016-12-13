@@ -186,6 +186,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                     final EditText password = new EditText(getActivity());
                     password.setHint("Password");
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     lp.addView(password);
 
                     alertDialogBuilder.setView(lp);
@@ -249,6 +250,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                             final EditText password2 = new EditText(getActivity());
                             password2.setHint("Confirm password");
+                            password2.setTransformationMethod(PasswordTransformationMethod.getInstance());
                             lp.addView(password2);
 
                             final EditText email = new EditText(getActivity());
