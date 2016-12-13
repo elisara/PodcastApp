@@ -95,27 +95,23 @@ public class SmallPlayerFragment extends Fragment implements View.OnClickListene
             }
             // Displaying play or pause icon
             if (mActivity.pServ.mPlayer != null) {
-
                 if (mActivity.pServ.mPlayer.isPlaying())
                     button1.setImageResource(R.drawable.ic_pause_black_50dp);
-                else button1.setImageResource(R.drawable.ic_play_arrow_black_50dp);
+                else
+                    button1.setImageResource(R.drawable.ic_play_arrow_black_50dp);
                 if (mActivity.pServ.getStatus() == 3) {
-                    //podcastImage.setImageBitmap(mActivity.pServ.getPodcastObject().picture);
                     bar.setProgress((int) (((float) mActivity.pServ.mPlayer.getCurrentPosition() / mActivity.pServ.mPlayer.getDuration()) * 100));
                     text1.setText(mActivity.pServ.getPodcastObject().collectionName);
                     text2.setText(mActivity.pServ.getPodcastObject().title);
                 }
-
                 if(mActivity.pServ.getStatus()>1&&picLoaded==false && !mActivity.pServ.getPodcastObject().imageURL.equals("")) {
                     mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_0.1,h_0.1/" + mActivity.pServ.getPodcastObject().imageURL + ".jpg", new SimpleImageLoadingListener() {
                         @Override
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-
                             podcastImage.setImageBitmap(loadedImage);
                             picLoaded = true;
                         }
                     });
-
                 }
                 else if(mActivity.pServ.getStatus()>1&&picLoaded==false && mActivity.pServ.getPodcastObject().imageURL.equals("")) {
                     mActivity.imageLoader.loadImage("http://images.cdn.yle.fi/image/upload/w_0.1,h_0.1/" + mActivity.pServ.getPodcastObject().serieImageURL + ".jpg", new SimpleImageLoadingListener() {

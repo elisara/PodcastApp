@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -69,7 +70,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             pi2 = (PodcastItem) getArguments().getSerializable("podcastItem");
             if (pi2 != null) {
                 piFromClick = pi2;
-                //System.out.println("Podcast URL ELSE IF: " + piFromClick.decryptedURL);
             }
         }
         podcastPic = (ImageView) view.findViewById(R.id.podcastPic);
@@ -105,7 +105,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         replayBtn.setOnClickListener(this);
         playBtn.setOnClickListener(this);
         forwardBtn.setOnClickListener(this);
-
         previousBtn.setOnClickListener(this);
         nextBtn.setOnClickListener(this);
         queueBtn.setOnClickListener(this);
@@ -183,6 +182,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 break;
             case R.id.queueBtn:
 
+
                 break;
             case R.id.playlistBtn:
                 playlistsFragment.addToPlaylistDialog(piFromClick, getContext());
@@ -190,11 +190,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             case R.id.favoriteBtn:
                 try {
                     favorites.addToFavorites(piFromClick.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0), "http://media.mw.metropolia.fi/arsu/favourites?token=",PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+                    Toast.makeText(getContext(), "Successfully added to favorites", Toast.LENGTH_SHORT).show();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
                 break;
             case R.id.shareBtn:
                 Intent sendIntent = new Intent();
