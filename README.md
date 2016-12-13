@@ -43,30 +43,30 @@ OR
 ## Screen shots
 
 Screen shots in future
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173754.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173758.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173802.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173812.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173827.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173836.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173842.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173852.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173900.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173907.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173912.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-173937.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-174338.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-174355.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-175441.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-175454.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-175506.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-175522.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-175645.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-175758.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-180018.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-180118.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-180131.png" width="200">
-<img src="https://github.com/elisara/PodcastApp/blob/master/Screenshots/Screenshot_20161213-180603.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173754.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173758.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173802.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173812.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173827.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173836.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173842.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173852.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173900.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173907.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173912.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-173937.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-174338.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-174355.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-175441.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-175454.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-175506.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-175522.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-175645.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-175758.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-180018.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-180118.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-180131.png" width="200">
+<img src="https://github.com/elisara/PodcastApp/blob/master/screenshots/Screenshot_20161213-180603.png" width="200">
 
 ## Team
 
