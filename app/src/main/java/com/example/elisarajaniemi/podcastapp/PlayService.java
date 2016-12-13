@@ -325,6 +325,7 @@ public class PlayService extends IntentService implements MediaPlayer.OnErrorLis
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+        playNext();
 
     }
 

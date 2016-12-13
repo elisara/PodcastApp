@@ -295,7 +295,7 @@ public class CollectionFragment extends Fragment {
                 collectionName.setText("Metropolia");
             }
         } else if (playlistID != 0||fromQueue) {
-            collectionName.setText("Empty playlist");
+            collectionName.setText("Empty");
 
         }
 
