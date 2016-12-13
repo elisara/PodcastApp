@@ -51,13 +51,14 @@ public class GridViewAdapter extends BaseAdapter {
                 .build();
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-               /** .showStubImage(R.drawable.ic_add_black_24dp)
-                //.showImageForEmptyUri(R.drawable.ic_add_black_24dp)
+                .showStubImage(R.drawable.ic_add_black_24dp)
+                .showImageForEmptyUri(R.drawable.ic_add_black_24dp)
                 .showImageOnFail(R.drawable.ic_add_black_24dp)
-                .cacheOnDisc(true)*/
+                .cacheOnDisc(true)
                 .build();
 
-        imageLoader = ImageLoader.getInstance();
+        ImageLoader.getInstance().init(config);
+        //imageLoader = ImageLoader.getInstance().init(config);
 
 
         if (myView == null) {
@@ -74,12 +75,12 @@ public class GridViewAdapter extends BaseAdapter {
         imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
         imageView.setBackgroundColor(Color.BLACK);
         if (!list.get(position).collectionName.contains("Metropolia")) {
-            imageLoader.displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
+            ImageLoader.getInstance().displayImage("http://images.cdn.yle.fi/image/upload//w_" + width + ",h_" + height + ",c_fill/" + list.get(position).imageURL + ".jpg", imageView, options);
 
         } else {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
             imageView.setLayoutParams(layoutParams);
-            imageLoader.displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
+            ImageLoader.getInstance().displayImage("https://s3.postimg.org/gzeoosubn/kissaholder.jpg", imageView, options);
         }
 
 
