@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -244,6 +245,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                             final EditText password = new EditText(getActivity());
                             password.setHint("Password");
+                            password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                             lp.addView(password);
 
                             final EditText password2 = new EditText(getActivity());
