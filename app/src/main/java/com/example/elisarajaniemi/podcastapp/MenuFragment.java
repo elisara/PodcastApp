@@ -29,7 +29,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
     private final String TOKEN = "";
 
     //private MainActivity ma;
-    private TextView playList, favorite, queue, history, continuePlay, signIn, usernameView;
+    private TextView playList, favorite, queue, history, signIn, usernameView;
     private PlaylistsFragment plf;
     private LinearLayout userLayout;
     //private MenuFragment mf;
@@ -277,7 +277,6 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                         playList.setVisibility(View.VISIBLE);
                                         favorite.setVisibility(View.VISIBLE);
                                         history.setVisibility(View.VISIBLE);
-                                        continuePlay.setVisibility(View.VISIBLE);
                                     }
                                     else {
                                         Toast.makeText(getContext(), "Registering failed", Toast.LENGTH_SHORT).show();

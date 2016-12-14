@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Elisa Rajaniemi on 27.10.2016.
@@ -175,6 +176,17 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         uutiset = prefs.getBoolean("uutiset", true);
         urheilu = prefs.getBoolean("urheilu", true);
         metropolia = prefs.getBoolean("metropolia", true);
+
+        if(metropolia == true){
+            String apiKey = "495i4orWwXCqiW5IuOQUzuAlGmfFeky7BzMPe-X19inh9MRm5RqGhQDUEh5avkZNFjC6mYT6w2xGXdQjm9XfakwHloH027i-tkLX77yFMZJlC3wGWqIjyHIXnvPzvHzW";
+            try {
+                new GetMetropoliaPodcastHelper((MainActivity) getContext()).execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true").get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
 
         prefCategoryList.add(viihde);
         prefCategoryList.add(musiikki);
