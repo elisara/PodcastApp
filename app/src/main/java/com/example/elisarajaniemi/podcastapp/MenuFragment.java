@@ -32,7 +32,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
             "fOTXWAjP7pvnpCfowHgJ6qHEAWXiGQmvZAibLOkqqdM";
 
     //private MainActivity ma;
-    private TextView playList, favorite, queue, history, continuePlay, signIn, usernameView;
+    private TextView playList, favorite, queue, history, signIn, usernameView;
     private PlaylistsFragment plf;
     private LinearLayout userLayout;
     //private MenuFragment mf;
