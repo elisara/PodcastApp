@@ -64,7 +64,7 @@ public class PodcastItem implements Serializable {
         this.description = description;
         this.length = length;
         this.category = category;
-        this.tags = tags;
+        this.tags = "Metropolia";
         this.collectionName = "Metropolia";
         this.collectionID = collectionID;
         this.imageURL = imageURL;

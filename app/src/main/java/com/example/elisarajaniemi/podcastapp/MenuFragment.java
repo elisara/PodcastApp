@@ -272,7 +272,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
                                     if(user.length() > 0) {
                                         Toast.makeText(getContext(), "User " + user + " created", Toast.LENGTH_SHORT).show();
-                                        Toast.makeText(getContext(), "Token " + token + " created", Toast.LENGTH_SHORT).show();
+
 
                                         signIn.setText("Logout");
                                         usernameView.setText(user);
@@ -280,7 +280,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                         playList.setVisibility(View.VISIBLE);
                                         favorite.setVisibility(View.VISIBLE);
                                         history.setVisibility(View.VISIBLE);
-                                        continuePlay.setVisibility(View.VISIBLE);
+
                                     }
                                     else {
                                         Toast.makeText(getContext(), "Registering failed", Toast.LENGTH_SHORT).show();
