@@ -33,7 +33,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class MyCrypt {
 
-    private final String YLE_SECRET = "5824ec07e5183ac5";
+    private final String YLE_SECRET = "";
 
     public MyCrypt(){
 
