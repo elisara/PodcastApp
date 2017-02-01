@@ -32,8 +32,8 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String YLE_API = "";
-    private final String METROPOLIA_APIKEY = "";
+    private final String YLE_API = "app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b";
+
 
     private ImageButton menuBtn, searchBtn;
     private Search search;
@@ -87,8 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         try {
-            //new GetMetropoliaPodcastHelper((MainActivity) context).execute("http://dev.mw.metropolia.fi/aanimaisema/plugins/api_audio_search/index.php/?key=" + apiKey + "&category=%20&link=true").get();
-            new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?" + YLE_API + "&availability=ondemand&mediaobject=audio&order=playcount.6h:desc&limit=50&type=radioprogram", "fromepisodes").get();
+             new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?" + YLE_API + "&availability=ondemand&mediaobject=audio&order=playcount.6h:desc&limit=50&type=radioprogram", "fromepisodes").get();
             //new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.24h:desc&limit=100&type=radioprogram", "fromepisodes").get();
             //new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.24h:desc&limit=100&type=radioprogram&offset=100", "fromepisodes").get();
             //new GetYlePodcastHelper((MainActivity) context).execute("https://external.api.yle.fi/v1/programs/", "items.json?app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b&availability=ondemand&mediaobject=audio&order=playcount.24h:desc&limit=100&type=radioprogram&offset=200", "fromepisodes").get();

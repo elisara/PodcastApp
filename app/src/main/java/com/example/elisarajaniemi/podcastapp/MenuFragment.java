@@ -25,8 +25,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.ExecutionException;
 
@@ -93,15 +96,15 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         this.mainActivity = (MainActivity) getActivity();
         usernameView.setText(user);
 
-        if(user.length() < 1){
+        if(auth.getCurrentUser() == null){
             userLayout.setVisibility(View.GONE);
             playList.setVisibility(View.GONE);
             favorite.setVisibility(View.GONE);
             history.setVisibility(View.GONE);
 
         }
-        if(user.length() > 0){
-            signIn.setText("Logout");
+        if(auth.getCurrentUser() != null){
+            login();
         }
 
         if(doAutoplay){
@@ -175,7 +178,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
             case R.id.signIn:
 
-                if(user.length() <1) {
+                if(auth.getCurrentUser() == null) {
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
                     alertDialogBuilder.setTitle("Login");
 
@@ -198,7 +201,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                     //LOGIN
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Login", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            email_ = email.getText().toString().trim();
+                            email_ = email.getText().toString().trim().toLowerCase();
                             password_ = password.getText().toString().trim();
                             System.out.println(email_ + " " + password_);
 
@@ -208,6 +211,8 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                                             System.out.println("signInWithEmail:onComplete:" + task.isSuccessful());
+                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                            usernameView.setText(user.getEmail());
 
 
                                             // If sign in fails, display a message to the user. If sign in succeeds
@@ -222,13 +227,15 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                             // ...
                                         }
                                     });
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            /**FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             System.out.println(user.getEmail());
-
                             DatabaseReference myRef = database.getReference("users/").child(user.getUid());
 
                             myRef.child("favorites").push().setValue("viesti1");
                             myRef.child("favorites").push().setValue("viesti2");
+                            */
+                            login();
+
 
                         }
                     });
@@ -251,11 +258,13 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             lp.setOrientation(LinearLayout.VERTICAL);
                             lp.setPadding(16,16,16,16);
 
+                            final EditText userName = new EditText(getActivity());
+                            userName.setHint("Username");
+                            lp.addView(userName);
+
                             final EditText email = new EditText(getActivity());
                             email.setHint("Email");
                             lp.addView(email);
-                            alertDialogBuilder.setView(lp);
-                            AlertDialog alertDialog2 = alertDialogBuilder.create();
 
                             final EditText password = new EditText(getActivity());
                             password.setHint("Password");
@@ -266,13 +275,15 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             password2.setHint("Confirm password");
                             password2.setTransformationMethod(PasswordTransformationMethod.getInstance());
                             lp.addView(password2);
+                            alertDialogBuilder.setView(lp);
+                            AlertDialog alertDialog2 = alertDialogBuilder.create();
 
                             alertDialog2.setButton(AlertDialog.BUTTON_POSITIVE,"Register",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
-                                    //username_ = username.getText().toString().trim();
+                                    username_ = userName.getText().toString().trim();
                                     password_ = password.getText().toString().trim();
                                     password2_ = password2.getText().toString().trim();
-                                    email_ = email.getText().toString();
+                                    email_ = email.getText().toString().toLowerCase().trim();
                                     System.out.println(email_ + " " + password_);
                                     auth.createUserWithEmailAndPassword(email_, password_)
                                             .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -280,14 +291,19 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if (task.isSuccessful()) {
                                                 System.out.println("Authentication successful" + task.isSuccessful());
+                                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+                                                myRef.child("username").setValue(username_);
+                                                login();
+
                                             } else {
                                                 System.out.println("Authentication failed" + task.getException());
                                                 //Toast.makeText(getActivity(), "Authentication failed.", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                    System.out.println(user.getEmail());
+                                    //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    //System.out.println(user.getEmail());
                                     alertDialog.cancel();
 
                                 }
@@ -312,7 +328,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 }
                 else{
                     //LOGOUT
-                    rali.logout(getContext());
+                    auth.signOut();
                     mainActivity.hidePlayer();
                     mainActivity.pServ.stopMusic();
                     mainActivity.pServ.cancelNotification();
@@ -347,6 +363,35 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         getDialog().getWindow().setLayout((int)width, height);
         getDialog().getWindow().setAttributes(p);
     }
+    public void login(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("username");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String value = (String) dataSnapshot.getValue();
+                usernameView.setText(value);
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+        });
+
+        signIn.setText("Logout");
+        userLayout.setVisibility(View.VISIBLE);
+        playList.setVisibility(View.VISIBLE);
+        favorite.setVisibility(View.VISIBLE);
+        history.setVisibility(View.VISIBLE);
+    }
+
 }
 
 

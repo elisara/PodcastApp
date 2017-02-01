@@ -56,10 +56,10 @@ import javax.crypto.NoSuchPaddingException;
 
 public class CollectionFragment extends Fragment {
 
-    private final String YLE_API = "";
+    private final String YLE_API = "app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b";
 
     private ListView listView;
-    private GetMetropoliaPodcastHelper getMetropoliaPodcastHelper;
+
     private String message;
     private ArrayList<PodcastItem> list;
     private PodcastItem pi;
@@ -77,7 +77,7 @@ public class CollectionFragment extends Fragment {
     public AutoplayItems autoplayItems = AutoplayItems.getInstance();
     public QueueItems queueItems = QueueItems.getInstance();
     public Playlists playlists = Playlists.getInstance();
-    //private ArrayList<PodcastItem> listAll = podcastItems.getItems();
+
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
     private ExpandableListViewAdapter listAdapter;

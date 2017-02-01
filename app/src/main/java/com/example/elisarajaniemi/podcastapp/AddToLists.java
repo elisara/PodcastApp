@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -17,8 +21,12 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class AddToLists {
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     public void addToListsDialog(final Context context, final PodcastItem podcastItem, final PlaylistsFragment playlistsFragment, final Favorites favorites){
+
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         alertDialogBuilder.setTitle("Add to");
         final QueueItems queueItems =QueueItems.getInstance();
@@ -49,7 +57,7 @@ public class AddToLists {
         toFavorites.setPadding(30, 20, 20, 10);
         toFavorites.setTextSize(20);
 
-        if(!user.equalsIgnoreCase("") ) {
+        if(auth.getCurrentUser() != null) {
             lp.addView(toPlaylist);
             lp.addView(toFavorites);
 
@@ -76,7 +84,7 @@ public class AddToLists {
             public void onClick(View v) {
                 System.out.println("Clicked on: " + podcastItem.programID + ", CurrentUser: " + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
                 try {
-                    favorites.addToFavorites(podcastItem.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0),
+                    favorites.addToFavorites(podcastItem.programID, PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0),
                             "http://media.mw.metropolia.fi/arsu/favourites?token=", PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
                 } catch (ExecutionException e) {
                     e.printStackTrace();

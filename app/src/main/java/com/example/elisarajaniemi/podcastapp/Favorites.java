@@ -19,6 +19,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,11 +47,23 @@ import java.util.concurrent.ExecutionException;
 public class Favorites {
 
     PodcastItems podcastItems = PodcastItems.getInstance();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
 
     public void addToFavorites(String programID, int userID, String url, String token) throws ExecutionException, InterruptedException {
-        new CreateFavorites().execute(programID, userID, url, token).get();
+
+
+     System.out.println(user.getEmail());
+     DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+
+     myRef.child("favorites").push().setValue(programID);
+
+
+
+        //new CreateFavorites().execute(programID, userID, url, token).get();
     }
 
     public void getFavorites(String url, String token) throws ExecutionException, InterruptedException {
