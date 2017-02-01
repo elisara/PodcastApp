@@ -27,6 +27,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +75,9 @@ public class PlaylistsFragment extends Fragment {
     private String playlistName, message;
     private ArrayList<PlaylistItem> list;
     Playlists playlists = Playlists.getInstance();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
     @Override
@@ -189,17 +197,17 @@ public class PlaylistsFragment extends Fragment {
 
         alertDialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int id) {
-                String token = PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0");
-                int userID = PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0);
+
                 playlistName = input.getText().toString();
-                try {
-                    new CreateNewPlaylist().execute(token, playlistName, userID).get();
-                    new GetPlayListsHelper().execute("http://media.mw.metropolia.fi/arsu/playlists/user/"+ userID + "?token=" + token).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+
+
+                DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+                myRef.child("playlists").child(playlistName).child("0").setValue("tyhjää");
+
+
+
+
+
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
             }
         })

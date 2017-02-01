@@ -56,9 +56,8 @@ public class Favorites {
     public void addToFavorites(String programID, int userID, String url, String token) throws ExecutionException, InterruptedException {
 
 
-     System.out.println(user.getEmail());
-     DatabaseReference myRef = database.getReference("users/").child(user.getUid());
 
+     DatabaseReference myRef = database.getReference("users/").child(user.getUid());
      myRef.child("favorites").push().setValue(programID);
 
 
