@@ -21,8 +21,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,10 +49,11 @@ import java.util.concurrent.ExecutionException;
 
 public class Favorites {
 
-    PodcastItems podcastItems = PodcastItems.getInstance();
+    private PodcastItems podcastItems = PodcastItems.getInstance();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
 
 
 
@@ -58,7 +62,11 @@ public class Favorites {
 
 
      DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-     myRef.child("favorites").push().setValue(programID);
+     myRef.child("favorites").push().child("programid").setValue(programID);
+
+
+
+
 
 
 
@@ -66,7 +74,26 @@ public class Favorites {
     }
 
     public void getFavorites(String url, String token) throws ExecutionException, InterruptedException {
-        new GetFavorites().execute(url, token).get();
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    String value = postSnapshot.child("programid").getValue(String.class);
+                    System.out.println("favorite: "+value);
+                    PodcastItem podcastItem = new PodcastItem("0", value);
+                    podcastIDArray.addPodcastID(podcastItem);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        //new GetFavorites().execute(url, token).get();
     }
 
     public void deleteFavorites(String url, String id, String token) throws ExecutionException, InterruptedException {

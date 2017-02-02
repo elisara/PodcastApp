@@ -368,6 +368,8 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
+
+
         DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("username");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
