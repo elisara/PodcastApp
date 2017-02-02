@@ -181,7 +181,7 @@ public class PlaylistsFragment extends Fragment {
     }
 
 
-    public void createNewPlaylist(final Context context){
+    public String createNewPlaylist(final Context context){
         AlertDialog.Builder alertDialogBuilder =  new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
 
         alertDialogBuilder.setTitle("Create new playlist");
@@ -200,12 +200,8 @@ public class PlaylistsFragment extends Fragment {
 
                 playlistName = input.getText().toString();
 
-
                 DatabaseReference myRef = database.getReference("users/").child(user.getUid());
                 myRef.child("playlists").child(playlistName).child("0").setValue("tyhjää");
-
-
-
 
 
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
@@ -218,6 +214,7 @@ public class PlaylistsFragment extends Fragment {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+        return playlistName;
     }
 
 
@@ -247,14 +244,23 @@ public class PlaylistsFragment extends Fragment {
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 alertDialog2.cancel();
                 PlaylistItem playlistItem = playlists.getPlaylists().get(position);
-                new PutPodcastToPlaylist().execute(podcastItem.programID.replace("-", ""), "http://media.mw.metropolia.fi/arsu/playlists/" + playlistItem.id + "?token=" + TOKEN);
+
+                DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+                myRef.child("playlists").child(playlistItem.name).push().setValue(podcastItem.programID);
+
+
+                //new PutPodcastToPlaylist().execute(podcastItem.programID.replace("-", ""), "http://media.mw.metropolia.fi/arsu/playlists/" + playlistItem.id + "?token=" + TOKEN);
 
             }
         });
         //create a new playlist
         addPlaylist.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                createNewPlaylist(context);
+                String playlistName = createNewPlaylist(context);
+                System.out.println("palylistnimi: " +playlistName);
+                //DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+                //myRef.child("playlists").child(playlistName).push().setValue(podcastItem.programID);
+
                 alertDialog2.cancel();
 
 
@@ -262,11 +268,14 @@ public class PlaylistsFragment extends Fragment {
         });
         alertDialog2.show();
     }
+
 }
 
 
-class CreateNewPlaylist extends AsyncTask<Object, String, String> {
-    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
+
+
+/**class CreateNewPlaylist extends AsyncTask<Object, String, String> {
+
 
     String message;
 
@@ -333,7 +342,7 @@ class CreateNewPlaylist extends AsyncTask<Object, String, String> {
         super.onPostExecute(result);
         System.out.println("Result: " + result);
     }
-}
+}*/
 
 
 class PutPodcastToPlaylist extends AsyncTask<Object, String, String> {

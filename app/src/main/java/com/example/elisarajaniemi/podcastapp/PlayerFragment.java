@@ -16,6 +16,10 @@ import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.concurrent.ExecutionException;
@@ -39,12 +43,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private Favorites favorites;
     private PlaylistsFragment playlistsFragment;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
-    Boolean picLoaded = true;
-
-    String currentPodcastId = " ";
-
-
-    MainActivity mActivity;
+    private Boolean picLoaded = true;
+    private String currentPodcastId = " ";
+    private MainActivity mActivity;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
     @Override
@@ -76,7 +80,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         addImage(piFromClick);
 
 
-        if(!PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "").equalsIgnoreCase("")) {
+        /**if(!PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "").equalsIgnoreCase("")) {
             try {
                 history.getHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
                 for (int i = 0; i < historyPodcastItems.getItems().size(); i++) {
@@ -88,7 +92,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+        myRef.child("history").push().setValue(piFromClick.programID);
 
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
         playBtn = (ImageView) view.findViewById(R.id.playBtn);

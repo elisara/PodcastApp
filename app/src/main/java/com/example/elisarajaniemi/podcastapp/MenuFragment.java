@@ -213,6 +213,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                                             System.out.println("signInWithEmail:onComplete:" + task.isSuccessful());
                                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             usernameView.setText(user.getEmail());
+                                            login();
 
 
                                             // If sign in fails, display a message to the user. If sign in succeeds
@@ -234,7 +235,7 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                             myRef.child("favorites").push().setValue("viesti1");
                             myRef.child("favorites").push().setValue("viesti2");
                             */
-                            login();
+
 
 
                         }
