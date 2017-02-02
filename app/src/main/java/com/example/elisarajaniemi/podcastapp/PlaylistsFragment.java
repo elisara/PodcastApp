@@ -78,6 +78,8 @@ public class PlaylistsFragment extends Fragment {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private boolean toExistingPlaylist = false;
+    private PodcastItem playListPodcastItem;
 
 
     @Override
@@ -86,6 +88,8 @@ public class PlaylistsFragment extends Fragment {
 
         mf = new MenuFragment();
         list = new ArrayList<>();
+
+        playListPodcastItem = new PodcastItem();
 
         listView = (ListView) view.findViewById(R.id.playlist_list);
         adapter = new PlaylistsArrayAdapter(getContext(), playlists.getPlaylists());
@@ -200,15 +204,19 @@ public class PlaylistsFragment extends Fragment {
 
                 playlistName = input.getText().toString();
 
-
                 DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-                myRef.child("playlists").child(playlistName).child("0").setValue("tyhjää");
+
+                if (toExistingPlaylist == true){
+                    myRef.child("playlists").child(playlistName).push().setValue(playListPodcastItem.programID);
+                } else{
+                    myRef.child("playlists").child(playlistName).child("0").setValue("tyhjää");
+                }
 
 
 
 
 
-                ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
+                ArrayList<PodcastItem> addedList = new ArrayList<>();
             }
         })
                 .setNegativeButton("CANCEL",new DialogInterface.OnClickListener() {
@@ -218,6 +226,7 @@ public class PlaylistsFragment extends Fragment {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+        System.out.println("Playlistname: " + playlistName);
     }
 
 
@@ -254,6 +263,8 @@ public class PlaylistsFragment extends Fragment {
         //create a new playlist
         addPlaylist.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                toExistingPlaylist = true;
+                playListPodcastItem = podcastItem;
                 createNewPlaylist(context);
                 alertDialog2.cancel();
 
