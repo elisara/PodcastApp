@@ -78,6 +78,8 @@ public class PlaylistsFragment extends Fragment {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private boolean toExistingPlaylist = false;
+    private PodcastItem playListPodcastItem;
 
 
     @Override
@@ -86,6 +88,8 @@ public class PlaylistsFragment extends Fragment {
 
         mf = new MenuFragment();
         list = new ArrayList<>();
+
+        playListPodcastItem = new PodcastItem();
 
         listView = (ListView) view.findViewById(R.id.playlist_list);
         adapter = new PlaylistsArrayAdapter(getContext(), playlists.getPlaylists());
@@ -181,7 +185,7 @@ public class PlaylistsFragment extends Fragment {
     }
 
 
-    public String createNewPlaylist(final Context context){
+    public void createNewPlaylist(final Context context){
         AlertDialog.Builder alertDialogBuilder =  new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
 
         alertDialogBuilder.setTitle("Create new playlist");
@@ -200,8 +204,14 @@ public class PlaylistsFragment extends Fragment {
 
                 playlistName = input.getText().toString();
 
+
                 DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-                myRef.child("playlists").child(playlistName).child("0").setValue("tyhjää");
+
+                if (toExistingPlaylist == true){
+                    myRef.child("playlists").child(playlistName).push().setValue(playListPodcastItem.programID);
+                } else{
+                    myRef.child("playlists").child(playlistName).child("0").setValue("tyhjää");
+                }
 
 
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
@@ -214,7 +224,6 @@ public class PlaylistsFragment extends Fragment {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        return playlistName;
     }
 
 
@@ -256,11 +265,9 @@ public class PlaylistsFragment extends Fragment {
         //create a new playlist
         addPlaylist.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String playlistName = createNewPlaylist(context);
-                System.out.println("palylistnimi: " +playlistName);
-                //DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-                //myRef.child("playlists").child(playlistName).push().setValue(podcastItem.programID);
-
+                toExistingPlaylist = true;
+                playListPodcastItem = podcastItem;
+                createNewPlaylist(context);
                 alertDialog2.cancel();
 
 
@@ -268,7 +275,6 @@ public class PlaylistsFragment extends Fragment {
         });
         alertDialog2.show();
     }
-
 }
 
 
