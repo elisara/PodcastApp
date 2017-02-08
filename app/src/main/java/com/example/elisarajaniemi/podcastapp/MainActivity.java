@@ -5,8 +5,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -77,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         context = this;
+        PodcastDataBase pcdb = new PodcastDataBase(context);
+        DataProvider dataProvider = new DataProvider();
+
         System.out.println("---------- MainActivity OnCreate --------------");
 
         // Create global configuration and initialize ImageLoader with this config
@@ -157,6 +162,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         checkForUpdates();
+
+        /**Cursor cur =  getContentResolver().query(Uri.parse("content://com.example.elisarajaniemi.podcastapp/data"),null,null,null,null);
+
+        if (cur.getCount()>0){
+            cur.moveToFirst();
+            while (!cur.isAfterLast()){
+                System.out.println("CURSOR: " + cur.getString(1));
+                cur.moveToNext();
+            }
+        }*/
 
     }
 

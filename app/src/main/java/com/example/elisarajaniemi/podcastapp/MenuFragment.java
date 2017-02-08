@@ -158,13 +158,13 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
                 break;
 
             case R.id.favorites:
-                try {
+                /**try {
                     favorites.getFavorites("http://media.mw.metropolia.fi/arsu/favourites/?token=", PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
                 System.out.println("FAVS");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();

@@ -32,6 +32,13 @@ public class PodcastDataBase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE);
+        ContentValues values = new ContentValues();
+
+        values.put("favorite", "1-123456");
+        values.put("favorite", "1-234567");
+        values.put("favorite", "1-345678");
+        db.insert(DATABASE_NAME, null, values);
+
     }
 
     @Override

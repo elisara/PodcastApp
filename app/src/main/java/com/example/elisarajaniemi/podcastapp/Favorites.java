@@ -2,7 +2,9 @@ package com.example.elisarajaniemi.podcastapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -54,6 +56,7 @@ public class Favorites {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
+    private FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
 
 
 
@@ -64,17 +67,16 @@ public class Favorites {
      DatabaseReference myRef = database.getReference("users/").child(user.getUid());
      myRef.child("favorites").push().child("programid").setValue(programID);
 
-
-
-
-
-
-
         //new CreateFavorites().execute(programID, userID, url, token).get();
     }
 
-    public void getFavorites(String url, String token) throws ExecutionException, InterruptedException {
+    public void getFavorites()  {
         DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
+
+
+
+
+
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -85,6 +87,7 @@ public class Favorites {
                     System.out.println("favorite: "+value);
                     PodcastItem podcastItem = new PodcastItem("0", value);
                     podcastIDArray.addPodcastID(podcastItem);
+
                 }
             }
 

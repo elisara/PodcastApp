@@ -56,6 +56,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         addToLists = new AddToLists();
         playlistsFragment = new PlaylistsFragment();
         favorites = new Favorites();
+        favorites.getFavorites();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit().putBoolean("kulttuuri", true);

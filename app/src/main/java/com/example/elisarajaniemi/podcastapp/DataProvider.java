@@ -33,11 +33,6 @@ public class DataProvider extends ContentProvider {
 
     private PodcastDataBase podcastDataBase = null;
 
-
-
-
-
-
     @Override
     public boolean onCreate() {
 
