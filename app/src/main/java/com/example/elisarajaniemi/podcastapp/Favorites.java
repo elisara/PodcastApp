@@ -57,34 +57,55 @@ public class Favorites {
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
     private FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
+    private String podcastId;
 
 
 
     public void addToFavorites(String programID, int userID, String url, String token) throws ExecutionException, InterruptedException {
 
+        podcastId = programID;
 
-
-     DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-     myRef.child("favorites").push().child("programid").setValue(programID);
-
-        //new CreateFavorites().execute(programID, userID, url, token).get();
-    }
-
-    public void getFavorites()  {
         DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
-
-
-
-
 
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                podcastIDArray.clearList();
+                boolean löyty = false;
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String value = postSnapshot.child("programid").getValue(String.class);
-                    System.out.println("favorite: "+value);
+                    if (value.equals(Favorites.this.podcastId)) löyty = true;
+                }
+                if(!löyty) {
+                    DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+                    myRef.child("favorites").push().child("programid").setValue(podcastId);
+                    getFavorites();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+        //new CreateFavorites().execute(programID, userID, url, token).get();
+    }
+
+    public void getFavorites() {
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
+
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                podcastIDArray.clearList();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String value = postSnapshot.child("programid").getValue(String.class);
+                    //System.out.println("favorite: " + value);
                     PodcastItem podcastItem = new PodcastItem("0", value);
                     podcastIDArray.addPodcastID(podcastItem);
 
@@ -99,11 +120,34 @@ public class Favorites {
         //new GetFavorites().execute(url, token).get();
     }
 
-    public void deleteFavorites(String url, String id, String token) throws ExecutionException, InterruptedException {
-        new DeleteFavorites().execute(url, id, token).get();
+    public void deleteFavorites(final String id) throws ExecutionException, InterruptedException {
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
+
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                podcastIDArray.clearList();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String value = postSnapshot.child("programid").getValue(String.class);
+
+                    if (value.equals(id)) {
+                        postSnapshot.child("programid").getRef().removeValue();
+                    }
+                }
+                getFavorites();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
-    public void deleteFavoritesDialog(final Context context, final PodcastIDArray podcastIDArray, final int favoriteID, final FavoritePodcastItems favoritePodcastItems, final ExpandableListViewAdapter listViewAdapter){
+    public void deleteFavoritesDialog(final Context context, final PodcastIDArray podcastIDArray, final int favoriteID, final FavoritePodcastItems favoritePodcastItems, final ExpandableListViewAdapter listViewAdapter) {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         //AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.CustomDialog));
         alertDialogBuilder.setTitle("Delete favorite");
@@ -126,8 +170,9 @@ public class Favorites {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 try {
-                    deleteFavorites("http://media.mw.metropolia.fi/arsu/favourites/", podcastIDArray.getItems().get(favoriteID).id, "?token=" + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
-                    favoritePodcastItems.deletePodcast(favoriteID);
+                    deleteFavorites(podcastIDArray.getItems().get(favoriteID - 1).programID);
+
+                    favoritePodcastItems.deletePodcast(favoriteID - 1);
                     listViewAdapter.notifyDataSetChanged();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -243,14 +288,14 @@ class GetFavorites extends AsyncTask<Object, String, String> {
             }
             result = buffer.toString();
             try {
-                JSONArray jsonArray  = new JSONArray(result);
+                JSONArray jsonArray = new JSONArray(result);
 
                 //System.out.println("Favorites juttuja: " + jsonArray);
 
                 //JSONArray jsonArray = new JSONArray(jObject.getString("content"));
-                for (int i = 0; i < jsonArray.length(); i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    PodcastItem podcastItem = new PodcastItem(jsonObject.getString("id"), jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
+                    PodcastItem podcastItem = new PodcastItem(jsonObject.getString("id"), jsonObject.getString("podcast_id").substring(0, 1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
                     //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
                     podcastIDArray.addPodcastID(podcastItem);
                 }
