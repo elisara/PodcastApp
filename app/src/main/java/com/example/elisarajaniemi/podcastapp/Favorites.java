@@ -55,44 +55,33 @@ public class Favorites {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
+    private FavoritePodcastIDArray favoritePodcastIDArray = FavoritePodcastIDArray.getInstance();
     private FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
-    private String podcastId;
 
 
 
-    public void addToFavorites(String programID, int userID, String url, String token) throws ExecutionException, InterruptedException {
 
-        podcastId = programID;
+    public void addToFavorites(final String programID) {
 
         DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
-
-
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                podcastIDArray.clearList();
+                favoritePodcastIDArray.clearList();
                 boolean löyty = false;
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String value = postSnapshot.child("programid").getValue(String.class);
-                    if (value.equals(Favorites.this.podcastId)) löyty = true;
+                    if (value.equals(programID)) löyty = true;
                 }
                 if(!löyty) {
                     DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-                    myRef.child("favorites").push().child("programid").setValue(podcastId);
+                    myRef.child("favorites").push().child("programid").setValue(programID);
                     getFavorites();
                 }
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {   }
         });
-
-
-
-        //new CreateFavorites().execute(programID, userID, url, token).get();
     }
 
     public void getFavorites() {
@@ -102,12 +91,12 @@ public class Favorites {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                podcastIDArray.clearList();
+                favoritePodcastIDArray.clearList();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String value = postSnapshot.child("programid").getValue(String.class);
                     //System.out.println("favorite: " + value);
                     PodcastItem podcastItem = new PodcastItem("0", value);
-                    podcastIDArray.addPodcastID(podcastItem);
+                    favoritePodcastIDArray.addPodcastID(podcastItem);
 
                 }
             }
@@ -117,7 +106,7 @@ public class Favorites {
 
             }
         });
-        //new GetFavorites().execute(url, token).get();
+
     }
 
     public void deleteFavorites(final String id) throws ExecutionException, InterruptedException {
@@ -127,7 +116,7 @@ public class Favorites {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                podcastIDArray.clearList();
+                favoritePodcastIDArray.clearList();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String value = postSnapshot.child("programid").getValue(String.class);
 
@@ -195,191 +184,9 @@ public class Favorites {
 
 }
 
-class CreateFavorites extends AsyncTask<Object, String, String> {
-    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
-
-    String message;
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
-    }
-
-    @Override
-    protected String doInBackground(Object... params) {
-
-        try {
-            URL url = new URL((String) params[2] + params[3]);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            String input = "{\"podcast_id\":\"" + params[0] + "\",\"user_id\":\"" + params[1] + "\"}";
-            //input = input.replace("\n", "");
-            //System.out.println(input);
-
-            OutputStream os = conn.getOutputStream();
-            os.write(input.getBytes());
-            os.flush();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            String output;
-
-            while ((output = br.readLine()) != null) {
-                try {
-                    JSONObject jObject = new JSONObject(output);
-                    message = jObject.getString("message");
-                    //System.out.println("Database message: " + message);
-                } catch (JSONException e) {
-                    System.out.println(e);
-                }
-            }
-
-            conn.disconnect();
-        } catch (
-                IOException e
-                )
-
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-}
-
-class GetFavorites extends AsyncTask<Object, String, String> {
-
-    private String result = "";
-    private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
-
-    protected void onPreExecute() {
-        super.onPreExecute();
-        podcastIDArray.clearList();
-    }
-
-    @Override
-    protected String doInBackground(Object... params) {
 
 
-        HttpURLConnection connection = null;
-        BufferedReader reader = null;
-
-        try {
-            URL url = new URL((String) params[0] + params[1]);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
 
 
-            InputStream stream = connection.getInputStream();
 
-            reader = new BufferedReader(new InputStreamReader(stream));
-
-            StringBuffer buffer = new StringBuffer();
-            String line = "";
-
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
-            }
-            result = buffer.toString();
-            try {
-                JSONArray jsonArray = new JSONArray(result);
-
-                //System.out.println("Favorites juttuja: " + jsonArray);
-
-                //JSONArray jsonArray = new JSONArray(jObject.getString("content"));
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    PodcastItem podcastItem = new PodcastItem(jsonObject.getString("id"), jsonObject.getString("podcast_id").substring(0, 1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
-                    //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
-                    podcastIDArray.addPodcastID(podcastItem);
-                }
-
-            } catch (JSONException e) {
-                Log.e("JSONException", "Error: " + e.toString());
-            }
-
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return result;
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);
-    }
-
-}
-
-class DeleteFavorites extends AsyncTask<Object, String, String> {
-    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
-
-    String message;
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
-    }
-
-    @Override
-    protected String doInBackground(Object... params) {
-
-        try {
-            URL url = new URL((String) params[0] + params[1] + params[2]);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("DELETE");
-            conn.setRequestProperty("Content-Type", "application/json");
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            String output;
-
-            while ((output = br.readLine()) != null) {
-                try {
-                    JSONObject jObject = new JSONObject(output);
-                    message = jObject.getString("message");
-                    //System.out.println("Database message: " + message);
-                } catch (JSONException e) {
-                    System.out.println(e);
-                }
-            }
-
-            conn.disconnect();
-        } catch (
-                IOException e
-                )
-
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-}
 

@@ -139,13 +139,13 @@ public class MenuFragment extends DialogFragment implements View.OnClickListener
 
             case R.id.history:
                 System.out.println("HISTORY");
-                try {
+                /**try {
                     historyClass.getHistoryItems("http://media.mw.metropolia.fi/arsu/history?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(this).commit();
                 collectionFragment = new CollectionFragment();

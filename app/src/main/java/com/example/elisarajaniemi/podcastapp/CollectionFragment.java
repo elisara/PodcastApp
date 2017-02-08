@@ -91,7 +91,7 @@ public class CollectionFragment extends Fragment {
     private int lastExpandedPosition = 0;
 
     private boolean fromFavorites, fromSearch, fromHistory, fromQueue;
-    private History historyClass;
+    private History history;
     private int width, height;
 
     @Override
@@ -104,7 +104,7 @@ public class CollectionFragment extends Fragment {
         fromHistory = getArguments().getBoolean("fromHistory");
         fromQueue = getArguments().getBoolean("fromQueue");
 
-        historyClass = new History();
+        history = new History();
         list = new ArrayList<>();
 
         favorites = new Favorites();
@@ -253,6 +253,7 @@ public class CollectionFragment extends Fragment {
             collectionName.setText("Playlist");
 
         } else if (list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
+            favorites.getFavorites();
             list = favoritePodcastItems.getItems();
             collectionName.setText("Favorites");
 
@@ -261,6 +262,7 @@ public class CollectionFragment extends Fragment {
             collectionName.setText("Search results");
 
         } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory && !fromQueue) {
+            history.getHistory();
             list = historyPodcastItems.getItems();
             collectionName.setText("History");
 

@@ -93,8 +93,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 e.printStackTrace();
             }
         }*/
-        DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-        myRef.child("history").push().setValue(piFromClick.programID);
+        history.addToHistory(piFromClick.programID);
+        //DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+        //myRef.child("history").push().child("programid").setValue(piFromClick.programID);
+
 
         replayBtn = (ImageView) view.findViewById(R.id.replayBtn);
         playBtn = (ImageView) view.findViewById(R.id.playBtn);
@@ -191,14 +193,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 playlistsFragment.addToPlaylistDialog(piFromClick, getContext());
                 break;
             case R.id.favoriteBtn:
-                try {
-                    favorites.addToFavorites(piFromClick.programID.replace("-", ""), PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("id", 0), "http://media.mw.metropolia.fi/arsu/favourites?token=",PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", ""));
+
+                    favorites.addToFavorites(piFromClick.programID);
                     Toast.makeText(getContext(), "Successfully added to favorites", Toast.LENGTH_SHORT).show();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
 
                 break;
             case R.id.shareBtn:

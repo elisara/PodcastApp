@@ -41,6 +41,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
     private PlaylistsFragment playlistsFragment;
     private AddToLists addToLists;
     private Favorites favorites;
+    private History history;
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
 
@@ -56,7 +57,9 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         addToLists = new AddToLists();
         playlistsFragment = new PlaylistsFragment();
         favorites = new Favorites();
+        history = new History();
         favorites.getFavorites();
+        history.getHistory();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit().putBoolean("kulttuuri", true);

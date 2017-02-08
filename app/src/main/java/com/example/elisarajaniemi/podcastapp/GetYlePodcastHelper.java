@@ -23,19 +23,21 @@ import java.util.ArrayList;
  */
 
 public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
-    MainActivity mActivity;
+    private MainActivity mActivity;
 
     private final String YLE_APP_KEY = "app_id=950fdb28&app_key=2acb02a2a89f0d366e569b228320619b";
 
     private String result = "";
-    public ArrayList<PodcastItem> tempPodcastList;
-    public PodcastItems podcastItems = PodcastItems.getInstance();
-    PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
-    FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
-    HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
-    SerieItems serieItems = SerieItems.getInstance();
-    public PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
-
+    private ArrayList<PodcastItem> tempPodcastList;
+    private PodcastItems podcastItems = PodcastItems.getInstance();
+    private PlaylistPodcastItems playlistPodcastItems = PlaylistPodcastItems.getInstance();
+    private FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
+    private HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
+    private SerieItems serieItems = SerieItems.getInstance();
+    private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
+    private PlaylistPodcastIDArray playlistPodcastIDArray = PlaylistPodcastIDArray.getInstance();
+    private HistoryPodcastIDArray historyPodcastIDArray = HistoryPodcastIDArray.getInstance();
+    private FavoritePodcastIDArray favoritePodcastIDArray = FavoritePodcastIDArray.getInstance();
     public GetYlePodcastHelper(MainActivity mActivity) {
         this.mActivity = mActivity;
 
@@ -63,8 +65,8 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     break;
                 case "fromplaylist":
                     playlistPodcastItems.clearList();
-                    for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
-                        result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
+                    for (int i = 0; i < playlistPodcastIDArray.getItems().size(); i++) {
+                        result = makeConnection(params[0] + playlistPodcastIDArray.getItems().get(i).programID + params[1]);
                         try {
                             playlistPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                         } catch (JSONException e) {
@@ -74,8 +76,8 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     break;
                 case "fromfavorites":
                     favoritePodcastItems.clearList();
-                    for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
-                        result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
+                    for (int i = 0; i < favoritePodcastIDArray.getItems().size(); i++) {
+                        result = makeConnection(params[0] + favoritePodcastIDArray.getItems().get(i).programID + params[1]);
                         try {
                             favoritePodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                         } catch (JSONException e) {
@@ -85,8 +87,8 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     break;
                 case "fromHistory":
                     historyPodcastItems.clearList();
-                    for (int i = 0; i < podcastIDArray.getItems().size(); i++) {
-                        result = makeConnection(params[0] + podcastIDArray.getItems().get(i).programID + params[1]);
+                    for (int i = 0; i < historyPodcastIDArray.getItems().size(); i++) {
+                        result = makeConnection(params[0] +historyPodcastIDArray.getItems().get(i).programID + params[1]);
                         try {
                             historyPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                         } catch (JSONException e) {

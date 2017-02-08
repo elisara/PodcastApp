@@ -3,6 +3,14 @@ package com.example.elisarajaniemi.podcastapp;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,200 +31,85 @@ import java.util.concurrent.ExecutionException;
 
 public class History {
 
-    public void getHistoryItems(String url) throws ExecutionException, InterruptedException {
-        new GetHistory().execute(url).get();
-    }
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private HistoryPodcastIDArray historyPodcastIDArray = HistoryPodcastIDArray.getInstance();
 
-    public void createHistoryItems(String url, String programID) throws ExecutionException, InterruptedException {
-        new CreateHistory().execute(url, programID).get();
-    }
-
-    public void deleteHistoryItems(String url, String id, String token) throws ExecutionException, InterruptedException {
-        new DeleteHistory().execute(url, id, token).get();
-    }
-}
-
-class GetHistory extends AsyncTask<Object, String, String> {
-
-    private String result = "";
-    private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
-
-    protected void onPreExecute() {
-        super.onPreExecute();
-        podcastIDArray.clearList();
-    }
-
-    @Override
-    protected String doInBackground(Object... params) {
+    public void getHistory()  {
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("history");
 
 
-        HttpURLConnection connection = null;
-        BufferedReader reader = null;
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                historyPodcastIDArray.clearList();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String value = postSnapshot.child("programid").getValue(String.class);
+                    //System.out.println("favorite: " + value);
+                    PodcastItem podcastItem = new PodcastItem("0", value);
+                    historyPodcastIDArray.addPodcastID(podcastItem);
 
-        try {
-            URL url = new URL((String) params[0]);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-
-            InputStream stream = connection.getInputStream();
-
-            reader = new BufferedReader(new InputStreamReader(stream));
-
-            StringBuffer buffer = new StringBuffer();
-            String line = "";
-
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
-            }
-            result = buffer.toString();
-            try {
-                JSONArray jsonArray  = new JSONArray(result);
-
-                //JSONArray jsonArray = new JSONArray(jObject.getString("content"));
-                for (int i = 0; i < jsonArray.length(); i++){
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    PodcastItem podcastItem = new PodcastItem(jsonObject.getString("id"), jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
-                    //System.out.println("Playlist podcasts: https://external.api.yle.fi/v1/programs/items/" + podcastID + ".json?app_key=2acb02a2a89f0d366e569b228320619b&app_id=950fdb28");
-                    podcastIDArray.addPodcastID(podcastItem);
-                }
-
-            } catch (JSONException e) {
-                Log.e("JSONException", "Error: " + e.toString());
-            }
-
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return result;
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);
-    }
-
-}
-class CreateHistory extends AsyncTask<Object, String, String> {
-    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
-
-    String message;
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
-    }
-
-    @Override
-    protected String doInBackground(Object... params) {
-
-        try {
-            URL url = new URL((String) params[0]);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            String input = "{\"podcast_id\":\"" + params[1] + "\"}";
-            //input = input.replace("\n", "");
-            //System.out.println(input);
-
-            OutputStream os = conn.getOutputStream();
-            os.write(input.getBytes());
-            os.flush();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            String output;
-
-            while ((output = br.readLine()) != null) {
-                try {
-                    JSONObject jObject = new JSONObject(output);
-                    message = jObject.getString("message");
-                    //System.out.println("Database message: " + message);
-                } catch (JSONException e) {
-                    System.out.println(e);
                 }
             }
 
-            conn.disconnect();
-        } catch (
-                IOException e
-                )
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-}
+            }
+        });
 
-class DeleteHistory extends AsyncTask<Object, String, String> {
-    //ProgressDialog pdLoading = new ProgressDialog(AsyncExample.this);
 
-    String message;
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-        //this method will be running on UI thread
-        //pdLoading.setMessage("\tLoading...");
-        //pdLoading.show();
     }
 
-    @Override
-    protected String doInBackground(Object... params) {
+    public void addToHistory(final String programID) {
 
-        try {
-            URL url = new URL((String) params[0] + params[1] + params[2]);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("DELETE");
-            conn.setRequestProperty("Content-Type", "application/json");
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            String output;
-
-            while ((output = br.readLine()) != null) {
-                try {
-                    JSONObject jObject = new JSONObject(output);
-                    message = jObject.getString("message");
-                    //System.out.println("Database message: " + message);
-                } catch (JSONException e) {
-                    System.out.println(e);
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("history");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                historyPodcastIDArray.clearList();
+                boolean löyty = false;
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String value = postSnapshot.child("programid").getValue(String.class);
+                    if (value.equals(programID)) löyty = true;
+                }
+                if(!löyty) {
+                    DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+                    myRef.child("history").push().child("programid").setValue(programID);
+                    getHistory();
                 }
             }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {   }
+        });
 
-            conn.disconnect();
-        } catch (
-                IOException e
-                )
+    }
 
-        {
-            e.printStackTrace();
-        }
-        return null;
+    public void deleteHistory(final String id)  {
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("history");
+
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                historyPodcastIDArray.clearList();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String value = postSnapshot.child("programid").getValue(String.class);
+
+                    if (value.equals(id)) {
+                        postSnapshot.child("programid").getRef().removeValue();
+                    }
+                }
+                getHistory();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
+

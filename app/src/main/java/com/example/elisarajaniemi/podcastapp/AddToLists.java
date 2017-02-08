@@ -83,14 +83,9 @@ public class AddToLists {
         toFavorites.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 System.out.println("Clicked on: " + podcastItem.programID + ", CurrentUser: " + PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
-                try {
-                    favorites.addToFavorites(podcastItem.programID, PreferenceManager.getDefaultSharedPreferences(context).getInt("id", 0),
-                            "http://media.mw.metropolia.fi/arsu/favourites?token=", PreferenceManager.getDefaultSharedPreferences(context).getString("token", "0"));
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
+                    favorites.addToFavorites(podcastItem.programID);
+
                 alertDialog.cancel();
             }
         });
