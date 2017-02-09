@@ -25,6 +25,7 @@ public class PodcastIDArray {
         }
     }
 
+
     public ArrayList<PodcastItem> getItems(){
         return items;
     }

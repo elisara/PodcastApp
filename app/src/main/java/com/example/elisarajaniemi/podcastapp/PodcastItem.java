@@ -51,8 +51,8 @@ public class PodcastItem implements Serializable {
 
     }
 
-    public PodcastItem(String id, String programID){
-        this.id = id;
+    public PodcastItem(String programID){
+
         this.programID = programID;
     }
 

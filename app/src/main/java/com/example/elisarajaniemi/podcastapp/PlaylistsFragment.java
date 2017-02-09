@@ -460,7 +460,7 @@ class GetPlaylistPodcasts extends AsyncTask<String, String, String> {
                 JSONArray jsonArray = new JSONArray(jObject.getString("content"));
                 for (int i = 0; i < jsonArray.length(); i++){
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    PodcastItem podcastItem = new PodcastItem(jsonObject.getString("id"), jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
+                    PodcastItem podcastItem = new PodcastItem( jsonObject.getString("podcast_id").substring(0,1) + "-" + jsonObject.getString("podcast_id").substring(1, jsonObject.getString("podcast_id").length()));
                     podcastIDArray.addPodcastID(podcastItem);
                 }
 

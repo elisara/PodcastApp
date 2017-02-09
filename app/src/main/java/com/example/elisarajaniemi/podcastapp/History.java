@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -35,81 +36,34 @@ public class History {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private HistoryPodcastIDArray historyPodcastIDArray = HistoryPodcastIDArray.getInstance();
+    private ArrayList<String> historyIdList = new ArrayList<>();
 
     public void getHistory()  {
         DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("history");
-
-
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 historyPodcastIDArray.clearList();
+                historyIdList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String value = postSnapshot.child("programid").getValue(String.class);
-                    //System.out.println("favorite: " + value);
-                    PodcastItem podcastItem = new PodcastItem("0", value);
-                    historyPodcastIDArray.addPodcastID(podcastItem);
-
+                    historyIdList.add(postSnapshot.getValue(String.class));
                 }
+                historyPodcastIDArray.addAllIds(historyIdList);
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {    }
         });
-
-
     }
 
     public void addToHistory(final String programID) {
-
-
-        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("history");
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                historyPodcastIDArray.clearList();
-                boolean löyty = false;
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String value = postSnapshot.child("programid").getValue(String.class);
-                    if (value.equals(programID)) löyty = true;
-                }
-                if(!löyty) {
-                    DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-                    myRef.child("history").push().child("programid").setValue(programID);
-                    getHistory();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {   }
-        });
-
+        PodcastItem podcastItem = new PodcastItem(programID);
+        historyPodcastIDArray.addPodcastID(podcastItem);
+        historyIdList = historyPodcastIDArray.getIdList();
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+        myRef.child("history").setValue(historyIdList);
+        getHistory();
     }
 
-    public void deleteHistory(final String id)  {
-        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("history");
 
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                historyPodcastIDArray.clearList();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String value = postSnapshot.child("programid").getValue(String.class);
-
-                    if (value.equals(id)) {
-                        postSnapshot.child("programid").getRef().removeValue();
-                    }
-                }
-                getHistory();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 }
 

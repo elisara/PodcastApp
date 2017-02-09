@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,83 +58,45 @@ public class Favorites {
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private FavoritePodcastIDArray favoritePodcastIDArray = FavoritePodcastIDArray.getInstance();
     private FavoritePodcastItems favoritePodcastItems = FavoritePodcastItems.getInstance();
+    private ArrayList<String> favoriteIdList = new ArrayList<>();
 
 
 
 
     public void addToFavorites(final String programID) {
+        PodcastItem podcastItem = new PodcastItem(programID);
+        favoritePodcastIDArray.addPodcastID(podcastItem);
+        favoriteIdList = favoritePodcastIDArray.getIdList();
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid());
+        myRef.child("favorites").setValue(favoriteIdList);
+        getFavorites();
 
-        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                favoritePodcastIDArray.clearList();
-                boolean löyty = false;
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String value = postSnapshot.child("programid").getValue(String.class);
-                    if (value.equals(programID)) löyty = true;
-                }
-                if(!löyty) {
-                    DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-                    myRef.child("favorites").push().child("programid").setValue(programID);
-                    getFavorites();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {   }
-        });
     }
 
     public void getFavorites() {
         DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
-
-
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 favoritePodcastIDArray.clearList();
+                favoriteIdList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String value = postSnapshot.child("programid").getValue(String.class);
-                    //System.out.println("favorite: " + value);
-                    PodcastItem podcastItem = new PodcastItem("0", value);
-                    favoritePodcastIDArray.addPodcastID(podcastItem);
-
+                    favoriteIdList.add(postSnapshot.getValue(String.class));
                 }
+                favoritePodcastIDArray.addAllIds(favoriteIdList);
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {    }
         });
 
     }
 
-    public void deleteFavorites(final String id) throws ExecutionException, InterruptedException {
+    public void deleteFavorites(final String id) {
+        favoriteIdList.clear();
+        favoriteIdList = favoritePodcastIDArray.removePodcast(id);
         DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
-
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                favoritePodcastIDArray.clearList();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String value = postSnapshot.child("programid").getValue(String.class);
-
-                    if (value.equals(id)) {
-                        postSnapshot.child("programid").getRef().removeValue();
-                    }
-                }
-                getFavorites();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
+        myRef.setValue(favoriteIdList);
+        getFavorites();
     }
 
     public void deleteFavoritesDialog(final Context context, final PodcastIDArray podcastIDArray, final int favoriteID, final FavoritePodcastItems favoritePodcastItems, final ExpandableListViewAdapter listViewAdapter) {
@@ -158,16 +121,11 @@ public class Favorites {
 
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                try {
-                    deleteFavorites(podcastIDArray.getItems().get(favoriteID - 1).programID);
 
+                    deleteFavorites(favoritePodcastIDArray.getItems().get(favoriteID - 1).programID);
                     favoritePodcastItems.deletePodcast(favoriteID - 1);
                     listViewAdapter.notifyDataSetChanged();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
 
             }
         });
