@@ -74,6 +74,7 @@ public class Favorites {
     }
 
     public void getFavorites() {
+
         DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("favorites");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
