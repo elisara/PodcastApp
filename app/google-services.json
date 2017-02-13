@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "1089628278990",
+    "firebase_url": "https://podverse-7ad9a.firebaseio.com",
+    "project_id": "podverse-7ad9a",
+    "storage_bucket": "podverse-7ad9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089628278990:android:d4d8dc0ec55da164",
+        "android_client_info": {
+          "package_name": "com.example.elisarajaniemi.podcastapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1089628278990-5cf0jpjf1260vs7eo4i08enqkpf4f8ht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.elisarajaniemi.podcastapp",
+            "certificate_hash": "85FA078737530F95355AB37FD81377D1EEE0ADA1"
+          }
+        },
+        {
+          "client_id": "1089628278990-8cj95ohm7ldu3ho5baegn1iprktgnb6d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.elisarajaniemi.podcastapp",
+            "certificate_hash": "76316E5140BAA3BBF0038DB13C9A8C2DE1054ECF"
+          }
+        },
+        {
+          "client_id": "1089628278990-7anppcnrs1bippfnjgbps064lsmreif6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIshHMq2esbEHnxoxV-6wg04l85j4iqtg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1089628278990-7anppcnrs1bippfnjgbps064lsmreif6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
