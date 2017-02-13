@@ -63,7 +63,7 @@ public class PlaylistsFragment extends Fragment {
     private MenuFragment mf;
     private String playlistName, message;
     private ArrayList<PlaylistItem> list;
-    Playlists playlists = Playlists.getInstance();
+    private Playlists playlists = Playlists.getInstance();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -180,17 +180,23 @@ public class PlaylistsFragment extends Fragment {
     }
 
     public void getPlaylists() {
-        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("playlists");
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("playlists").child("list");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 playlistArray.clearList();
-
+                playlists.clearPlaylists();
+                int i = 0;
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     ArrayList<String> lista = (ArrayList<String>) postSnapshot.getValue();
                     playlistArray.addPlaylist(lista);
-                    System.out.println("Playlists: " + lista);
+                    System.out.println("Playlists: " + lista.get(0));
+                    PlaylistItem itemi = new PlaylistItem(i, lista.get(0));
+                    playlists.addPlaylist(itemi);
+                    i++;
                 }
+                adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -198,6 +204,7 @@ public class PlaylistsFragment extends Fragment {
             }
         });
     }
+
 
 
     public void createNewPlaylist(final Context context){
@@ -225,7 +232,8 @@ public class PlaylistsFragment extends Fragment {
 
                 DatabaseReference myRef = database.getReference("users/").child(user.getUid());
                 playlistArray.addPlaylist(lista);
-                System.out.println("playlistArray: " + playlistArray.getList().size());
+                System.out.println("playlistArray size: " + playlistArray.getList().size());
+                System.out.println("Lista: " + lista);
                 myRef.child("playlists").setValue(playlistArray);
                 /**if (toExistingPlaylist == true){
                  myRef.child("playlists").child(playlistName).push().setValue(playListPodcastItem.programID);

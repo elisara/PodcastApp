@@ -62,7 +62,7 @@ public class PlaylistArray {
      }
      */
     public ArrayList<ArrayList> getList(){
-        return lists.get(0);
+        return lists;
     }
 
     public void deletePodcast(int position){
