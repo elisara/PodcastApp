@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
@@ -17,20 +16,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,18 +44,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 
 /**
@@ -80,6 +69,8 @@ public class PlaylistsFragment extends Fragment {
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private boolean toExistingPlaylist = false;
     private PodcastItem playListPodcastItem;
+    private PlaylistArray playlistArray = PlaylistArray.getInstance();
+    private ArrayList<String> playlistIDArray = new ArrayList<>();
 
 
     @Override
@@ -91,6 +82,10 @@ public class PlaylistsFragment extends Fragment {
 
         playListPodcastItem = new PodcastItem();
 
+        getPlaylists();
+
+
+
         listView = (ListView) view.findViewById(R.id.playlist_list);
         adapter = new PlaylistsArrayAdapter(getContext(), playlists.getPlaylists());
         listView.setAdapter(adapter);
@@ -99,14 +94,14 @@ public class PlaylistsFragment extends Fragment {
             public void onItemClick(AdapterView<?> av, View v, int position, long rowId) {
                 PlaylistItem value = playlists.getPlaylists().get(position);
 
-                try {
-                    new GetPlaylistPodcasts().execute("http://media.mw.metropolia.fi/arsu/playlists/"+value.id +
-                            "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0")).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                /**try {
+                 new GetPlaylistPodcasts().execute("http://media.mw.metropolia.fi/arsu/playlists/"+value.id +
+                 "?token=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString("token", "0")).get();
+                 } catch (InterruptedException e) {
+                 e.printStackTrace();
+                 } catch (ExecutionException e) {
+                 e.printStackTrace();
+                 }*/
 
 
                 CollectionFragment collectionFragment = new CollectionFragment();
@@ -184,6 +179,26 @@ public class PlaylistsFragment extends Fragment {
         return view;
     }
 
+    public void getPlaylists() {
+        DatabaseReference myRef = database.getReference("users/").child(user.getUid()).child("playlists");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                playlistArray.clearList();
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    ArrayList<String> lista = (ArrayList<String>) postSnapshot.getValue();
+                    playlistArray.addPlaylist(lista);
+                    System.out.println("Playlists: " + lista);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
 
     public void createNewPlaylist(final Context context){
         AlertDialog.Builder alertDialogBuilder =  new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
@@ -204,14 +219,19 @@ public class PlaylistsFragment extends Fragment {
 
                 playlistName = input.getText().toString();
 
+                ArrayList<String> lista = new ArrayList<String>();
+                lista.add(playlistName);
+                lista.add(playListPodcastItem.programID);
 
                 DatabaseReference myRef = database.getReference("users/").child(user.getUid());
-
-                if (toExistingPlaylist == true){
-                    myRef.child("playlists").child(playlistName).push().setValue(playListPodcastItem.programID);
-                } else{
-                    myRef.child("playlists").child(playlistName).child("0").setValue("tyhjää");
-                }
+                playlistArray.addPlaylist(lista);
+                System.out.println("playlistArray: " + playlistArray.getList().size());
+                myRef.child("playlists").setValue(playlistArray);
+                /**if (toExistingPlaylist == true){
+                 myRef.child("playlists").child(playlistName).push().setValue(playListPodcastItem.programID);
+                 } else{
+                 myRef.child("playlists").child(playlistName).child("0").setValue("tyhjää");
+                 }*/
 
 
                 ArrayList<PodcastItem> addedList = new ArrayList<PodcastItem>();
@@ -276,6 +296,8 @@ public class PlaylistsFragment extends Fragment {
         alertDialog2.show();
     }
 }
+
+
 
 
 

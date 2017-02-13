@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -77,6 +78,8 @@ public class CollectionFragment extends Fragment {
     public AutoplayItems autoplayItems = AutoplayItems.getInstance();
     public QueueItems queueItems = QueueItems.getInstance();
     public Playlists playlists = Playlists.getInstance();
+    private PlaylistsFragment playlistsFragment = new PlaylistsFragment();
+    private FirebaseAuth auth;
 
     private int playlistID = 0;
     private ExpandableListView simpleExpandableListView;
@@ -103,6 +106,8 @@ public class CollectionFragment extends Fragment {
         fromSearch = getArguments().getBoolean("fromSearch");
         fromHistory = getArguments().getBoolean("fromHistory");
         fromQueue = getArguments().getBoolean("fromQueue");
+
+        auth = FirebaseAuth.getInstance();
 
         history = new History();
         list = new ArrayList<>();
@@ -249,11 +254,12 @@ public class CollectionFragment extends Fragment {
                 collectionName.setText(serieItems.getSerieItems().get(0).collectionName);
 
         } else if (list.size() == 0 && playlistID != 0 && !fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
+            if(auth.getCurrentUser() != null) playlistsFragment.getPlaylists();
             list = playlistPodcastItems.getItems();
             collectionName.setText("Playlist");
 
         } else if (list.size() == 0 && playlistID == 0 && fromFavorites && !fromSearch && !fromHistory && !fromQueue) {
-            favorites.getFavorites();
+            if(auth.getCurrentUser() != null) favorites.getFavorites();
             list = favoritePodcastItems.getItems();
             collectionName.setText("Favorites");
 
@@ -262,7 +268,7 @@ public class CollectionFragment extends Fragment {
             collectionName.setText("Search results");
 
         } else if (list.size() == 0 && playlistID == 0 && !fromSearch && !fromFavorites && fromHistory && !fromQueue) {
-            history.getHistory();
+            if(auth.getCurrentUser() != null) history.getHistory();
             list = historyPodcastItems.getItems();
             collectionName.setText("History");
 
@@ -452,3 +458,5 @@ class DecodeYleURL extends AsyncTask<PodcastItem, String, String> {
 
 
 }
+
+

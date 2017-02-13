@@ -35,7 +35,7 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
     private HistoryPodcastItems historyPodcastItems = HistoryPodcastItems.getInstance();
     private SerieItems serieItems = SerieItems.getInstance();
     private PodcastIDArray podcastIDArray = PodcastIDArray.getInstance();
-    private PlaylistPodcastIDArray playlistPodcastIDArray = PlaylistPodcastIDArray.getInstance();
+    private PlaylistArray playlistArray = PlaylistArray.getInstance();
     private HistoryPodcastIDArray historyPodcastIDArray = HistoryPodcastIDArray.getInstance();
     private FavoritePodcastIDArray favoritePodcastIDArray = FavoritePodcastIDArray.getInstance();
     public GetYlePodcastHelper(MainActivity mActivity) {
@@ -65,8 +65,8 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
                     break;
                 case "fromplaylist":
                     playlistPodcastItems.clearList();
-                    for (int i = 0; i < playlistPodcastIDArray.getItems().size(); i++) {
-                        result = makeConnection(params[0] + playlistPodcastIDArray.getItems().get(i).programID + params[1]);
+                    for (int i = 1; i < playlistArray.getList().size(); i++) {
+                        result = makeConnection(params[0] + playlistArray.getList().get(i)+ params[1]);
                         try {
                             playlistPodcastItems.addPodcastItem(getSinglePodcast(new JSONObject(result).getJSONObject("data")));
                         } catch (JSONException e) {
@@ -253,9 +253,9 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
         podcastItem.setCategorys(categorys);
         podcastItem.setLength(podcastLength(jObject.getString("duration").substring(2)));
         if (jObject.getJSONObject("partOfSeries").has("id"))
-        podcastItem.setSerieID(jObject.getJSONObject("partOfSeries").getString("id"));
+            podcastItem.setSerieID(jObject.getJSONObject("partOfSeries").getString("id"));
         if (jObject.getJSONObject("partOfSeries").getJSONObject("image").has("id"))
-        podcastItem.setSerieImageURL(jObject.getJSONObject("partOfSeries").getJSONObject("image").getString("id"));
+            podcastItem.setSerieImageURL(jObject.getJSONObject("partOfSeries").getJSONObject("image").getString("id"));
 
         if(!jObject.getJSONObject("itemTitle").has("fi")||
                 !jObject.getJSONObject("description").has("fi")||
@@ -266,3 +266,5 @@ public class GetYlePodcastHelper extends AsyncTask<String, String, String> {
     }
 
 }
+
+

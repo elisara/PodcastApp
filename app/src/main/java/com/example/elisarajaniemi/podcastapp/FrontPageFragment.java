@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +46,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
     private History history;
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
+    private FirebaseAuth auth;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,9 +61,13 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
         playlistsFragment = new PlaylistsFragment();
         favorites = new Favorites();
         history = new History();
-        favorites.getFavorites();
-        history.getHistory();
 
+        auth = FirebaseAuth.getInstance();
+
+        if(auth.getCurrentUser() != null) {
+            favorites.getFavorites();
+            history.getHistory();
+        }
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit().putBoolean("kulttuuri", true);
 
@@ -238,5 +245,7 @@ public class FrontPageFragment extends Fragment implements AdapterView.OnItemSel
     }
 
 }
+
+
 
 

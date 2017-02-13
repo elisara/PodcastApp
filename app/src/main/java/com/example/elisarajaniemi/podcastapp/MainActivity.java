@@ -39,20 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageButton menuBtn, searchBtn;
     private Search search;
-    private AlertDialog alertDialog;
-    private MenuFragment mf;
+
     public SmallPlayerFragment spf;
     private TextView title;
-    private boolean categoryOpen, menuOpen;
     private FrontPageFragment frontPageFragment;
     private CollectionFragment collectionFragment;
     boolean mIsBound = false;
     private PlayerFragment pf;
-    private PodcastItem pi, pi2;
     private Context context = null;
-    private Bitmap pic;
     private LinearLayout smallPlayerLayout;
-    public PodcastItems podcastItems = PodcastItems.getInstance();
     PlayService pServ;
     ImageLoader imageLoader;
     android.support.v4.app.FragmentManager fragmentManager;
@@ -76,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //skikkeböö
+
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         context = this;
@@ -121,10 +116,7 @@ public class MainActivity extends AppCompatActivity {
         smallPlayerLayout = (LinearLayout) findViewById(R.id.player_frag_container);
         smallPlayerLayout.setVisibility(LinearLayout.GONE);
 
-        menuOpen = false;
-        categoryOpen = false;
 
-        mf = new MenuFragment();
         frontPageFragment = new FrontPageFragment();
         pServ = new PlayService("PodcastApp");
         collectionFragment = new CollectionFragment();
@@ -192,19 +184,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    public boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName()) && pServ.isStarted()) {
-
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     @Override
     public void onNewIntent(Intent playerIntent) {
         boolean reloadFragmentFromNotification = playerIntent.getBooleanExtra("isPlayerFragment", false);
@@ -225,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void openPlayer(){
-        //System.out.println("-----Open playerFagment");
+
         try {
             FragmentTransaction ft = fragmentManager.beginTransaction();
             boolean fragmentPopped = fragmentManager.popBackStackImmediate("pf", 0);
